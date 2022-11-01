@@ -7,6 +7,7 @@ type ModalWrapperProps = {
   close: VoidFunction
   title: string
   fullscreen?: boolean
+  size?: "xl" | "sm" | "lg" | undefined
 }
 
 const ModalWrapper: FunctionComponent<PropsWithChildren<ModalWrapperProps>> = ({
@@ -15,6 +16,7 @@ const ModalWrapper: FunctionComponent<PropsWithChildren<ModalWrapperProps>> = ({
   title,
   fullscreen,
   children,
+  size = "xl",
 }) => {
   /*******************************************************************************************************************
    *
@@ -35,7 +37,7 @@ const ModalWrapper: FunctionComponent<PropsWithChildren<ModalWrapperProps>> = ({
    *******************************************************************************************************************/
 
   return (
-    <Modal fullscreen={fullscreen ? true : undefined} show={show} size={"xl"} onHide={close} centered>
+    <Modal fullscreen={fullscreen ? true : undefined} show={show} size={size} onHide={close} centered>
       <Modal.Header className={"justify-content-between"}>
         <Modal.Title>{title}</Modal.Title>
         <div className="btn btn-icon btn-xl ms-2" aria-label="Close" onClick={close}>
