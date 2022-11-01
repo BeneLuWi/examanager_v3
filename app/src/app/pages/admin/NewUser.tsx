@@ -75,7 +75,7 @@ const NewUser: FunctionComponent<NewUserProps> = ({}) => {
           <Form.Group className="mb-3">
             <Form.Check name="isAdmin" type="checkbox" id="admin-check" label="Admin" />
           </Form.Group>
-          <Button variant="primary" type="submit">
+          <Button variant="success" type="submit">
             Erstellen
           </Button>
         </Form>
