@@ -1,9 +1,19 @@
 import logging
+from enum import Enum, auto
 
+from bson import ObjectId
 from pydantic import BaseSettings
 from dotenv import load_dotenv
 
 load_dotenv()
+
+
+class DatabaseNames(Enum):
+    school_classes = auto()
+    students = auto()
+    tasks = auto()
+    exams = auto()
+    results = auto()
 
 
 class ExamManagerSettings(BaseSettings):
@@ -51,3 +61,21 @@ You can **read items**.
 Bla 
 
 """
+
+
+class PyObjectId(ObjectId):
+    """Used to translate between mongo db's specific ObjectId and python string id (used in the serialized json)"""
+
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        if not ObjectId.is_valid(v):
+            raise ValueError("Invalid ObjectId")
+        return ObjectId(v)
+
+    @classmethod
+    def __modify_schema__(cls, field_schema):
+        field_schema.update(type="string")
