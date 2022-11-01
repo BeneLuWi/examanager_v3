@@ -72,16 +72,9 @@ const Login: FunctionComponent<LoginProps> = () => {
         {(styles) => (
           <a.div style={styles}>
             <Form onSubmit={handleSubmit} className="border p-3 rounded bg-white">
-              <div className="d-flex align-items-center mb-3">
-                <img
-                  src={process.env.PUBLIC_URL + "/logo192.png"}
-                  className={"me-1"}
-                  alt="Project Logo"
-                  style={{ width: 40 }}
-                />
-                <span className="fs-3 text-nowrap">Boilerplate</span>
+              <div className="d-flex flex-column align-items-center mb-3">
+                <img src={process.env.PUBLIC_URL + "/logo.png"} alt="Examanager Logo" style={{ width: 200 }} />
               </div>
-
               <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label>Username</Form.Label>
                 <Form.Control name="username" type="text" placeholder="Enter Username" disabled={loading} />
