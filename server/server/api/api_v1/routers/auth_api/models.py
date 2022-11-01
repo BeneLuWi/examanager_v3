@@ -1,7 +1,10 @@
 from enum import Enum
+
 from bson import ObjectId
 from fastapi import HTTPException
 from pydantic import BaseModel, Field
+
+from server.server.config import PyObjectId
 
 
 class Role(Enum):
@@ -10,8 +13,8 @@ class Role(Enum):
     roles get monotonically more rights. It is possible to add roles between existing roles.
     """
 
-    USER = 1
-    ADMIN = 3
+    USER = 0
+    ADMIN = 1
 
 
 class LoginRequest(BaseModel):
@@ -25,24 +28,6 @@ class LoginRequest(BaseModel):
                 "password": "password - not yet hashed",
             }
         }
-
-
-class PyObjectId(ObjectId):
-    """Used to translate between mongo db's specific ObjectId and python string id (used in the serialized json)"""
-
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        if not ObjectId.is_valid(v):
-            raise ValueError("Invalid ObjectId")
-        return ObjectId(v)
-
-    @classmethod
-    def __modify_schema__(cls, field_schema):
-        field_schema.update(type="string")
 
 
 class User(BaseModel):
