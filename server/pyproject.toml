@@ -7,7 +7,7 @@ target-version = ['py310']
 name = "server"
 version = "0.1.0"
 description = ""
-authors = ["Benedikt Lüken-Winkels <belu02@dfki.de>"]
+authors = ["Benedikt Lüken-Winkels <b.lueken.winkels@gmail.com>", "David Kaub <kaubdav@posteo.de>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
