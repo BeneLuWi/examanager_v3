@@ -236,36 +236,29 @@ async def find_user_by_username(username: str) -> Optional[UserModel]:
         return UserModel.parse_obj(user)
 
 
-async def update_user_by_request(username: str, update_user_request: UpdateUserRequest):
-    return await update_user_in_db(
-        username=username, user_model=parse_update_user_request_to_user_model(update_user_request)
-    )
+async def update_user_by_request(update_user_request: UpdateUserRequest):
+    return await update_user_in_db(user_model=parse_update_user_request_to_user_model(update_user_request))
 
 
-async def update_user_password_by_request(username: str, update_password_request: UpdatePasswordRequest) -> User:
-    return await update_user_in_db(
-        username=username, user_model=parse_update_password_request_to_user_model(update_password_request)
-    )
+async def update_user_password_by_request(update_password_request: UpdatePasswordRequest) -> User:
+    return await update_user_in_db(user_model=parse_update_password_request_to_user_model(update_password_request))
 
 
-async def update_user_in_db(username: str, user_model: UpdateUserModel) -> User:
-    if not username == user_model.username:
-        raise HTTPException(status_code=400, detail=f"Invalid request")
-
+async def update_user_in_db(user_model: UpdateUserModel) -> User:
     user = {k: v for k, v in user_model.dict().items() if v is not None}
     user = jsonable_encoder(user)
 
     if len(user) >= 1:
-        update_result = await mongo_db["users"].update_one({"username": username}, {"$set": user})
+        update_result = await mongo_db["users"].update_one({"username": user_model.username}, {"$set": user})
 
         if update_result.modified_count == 1:
-            if (updated_user := await mongo_db["users"].find_one({"username": username})) is not None:
+            if (updated_user := await mongo_db["users"].find_one({"username": user_model.username})) is not None:
                 return updated_user
 
-    if (existing_user := await mongo_db["users"].find_one({"username": username})) is not None:
+    if (existing_user := await mongo_db["users"].find_one({"username": user_model.username})) is not None:
         return existing_user
 
-    raise HTTPException(status_code=404, detail=f"User{username} not found")
+    raise HTTPException(status_code=404, detail=f"User{user_model.username} not found")
 
 
 async def delete_user_in_db(user_id: str) -> bool:

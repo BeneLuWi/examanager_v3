@@ -79,7 +79,7 @@ async def get_current_user(current_user: JwTokenData = Depends(get_token_from_he
     return current_user
 
 
-@router.delete("/deleteUser/{username}", dependencies=[Security(validate_token_with_scope, scopes=[Role.ADMIN.name])])
+@router.delete("/deleteUser", dependencies=[Security(validate_token_with_scope, scopes=[Role.ADMIN.name])])
 async def delete(username):
     """
     The delete method deletes a user from the mongodb instance. Only users with the admin role can call this function.
@@ -130,8 +130,8 @@ async def get_user(username):
     return await find_user_by_username(username=username)
 
 
-@router.put("/update_user/{username}", dependencies=[Security(validate_token_with_scope, scopes=[Role.ADMIN.name])])
-async def update_user(username, update_user_request: UpdateUserRequest):
+@router.put("/update_user", dependencies=[Security(validate_token_with_scope, scopes=[Role.ADMIN.name])])
+async def update_user(update_user_request: UpdateUserRequest):
     """
     The update_user method updates a database entry of a user. Only users with the admin role can call this function.
     The method also checks if the username is already taken.
@@ -140,17 +140,16 @@ async def update_user(username, update_user_request: UpdateUserRequest):
     """
 
     # if we want to change a username to an already taken username
-    if update_user_request.username and update_user_request.username != username:
+    if update_user_request.username and update_user_request.username != update_user_request.username:
         if await find_user_by_username(update_user_request.username):
             raise HTTPException(500, detail="Username already taken")
             # jsonify(msg="username already taken"), 500
 
-    return await update_user_by_request(username=username, update_user_request=update_user_request)
+    return await update_user_by_request(update_user_request=update_user_request)
 
 
-@router.put("/update_password/{username}", response_model=User)
+@router.put("/update_password", response_model=User)
 async def update_password(
-    username,
     update_password_request: UpdatePasswordRequest,
     user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name]),
 ):
@@ -159,11 +158,11 @@ async def update_password(
     method a JWT is required but with no role requirements.
     :return: database response if successful, else error message and 500
     """
-    if not username == user.username:
+    if not update_password_request.username == user.username:
         raise HTTPException(
             status_code=401,
             detail="Can not access user data from other users",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    return await update_user_password_by_request(username=username, update_password_request=update_password_request)
+    return await update_user_password_by_request(update_password_request=update_password_request)
