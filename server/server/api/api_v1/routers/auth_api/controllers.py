@@ -19,7 +19,6 @@ from server.server.api.api_v1.routers.auth_api.utils import (
     create_access_token_for_user,
     validate_token_with_scope,
     get_token_from_header,
-    delete_user_in_db_by_username,
     list_users,
     find_user_by_username,
     update_user_by_request,
