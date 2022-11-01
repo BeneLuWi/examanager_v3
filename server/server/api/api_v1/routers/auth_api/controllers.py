@@ -1,11 +1,32 @@
 import logging
+from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Security
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 
-from server.server.api.api_v1.routers.auth_api.models import JwToken, User
-from server.server.api.api_v1.routers.auth_api.utils import authenticate_user
+from server.server.api.api_v1.routers.auth_api.models import (
+    JwToken,
+    User,
+    CreateUserRequest,
+    Role,
+    JwTokenData,
+    UpdateUserRequest,
+    UpdatePasswordRequest,
+)
+from server.server.api.api_v1.routers.auth_api.utils import (
+    authenticate_user,
+    create_access_token_for_user,
+    validate_token_with_scope,
+    get_token_from_header,
+    delete_user_in_db_by_username,
+    list_users,
+    find_user_by_username,
+    update_user_by_request,
+    get_current_user_with_scope,
+    update_user_password_by_request,
+    add_user,
+)
 from server.server.config import ExamManagerSettings
 
 router = APIRouter()
@@ -16,32 +37,13 @@ logger = logging.getLogger(settings.APP_NAME)
 
 
 @router.post("/token", response_model=JwToken)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     """
     The token method is used to verify a login attempt. The posted data gets checked with the mongodb instance. If the
     login credentials are correct a token is created. Gets data from login form and checks with db entries
     :return: JWT if succesful, else failure message
     """
     user: User = await authenticate_user(form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    access_token = create_access_token_for_user(user)
-    return {"access_token": access_token, "token_type": "bearer"}
-
-
-@router.get("/update_token", response_model=JwToken)
-async def update_token(user: User = Depends(get_current_active_user)):
-    """
-    Allows a client to manually update the token without reentering username and password
-    """
-
-    # todo blacklist old tokens (until they expire) if new token was created and
-    # see also: https://stackoverflow.com/questions/62413698/how-to-use-refresh-token-with-fastapi#63093369
-
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -102,7 +104,7 @@ async def all_users():
 
 
 @router.get("/get_user/{username}")
-async def get_user(username, user: User = Security(get_current_user_with_scope, scopes=[Role.VISITOR.name])):
+async def get_user(username, user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name])):
     """
     The get_user method reads the data from a single user from the mongodb instance and adds them to a dictionary.
     :return: dictionary with all user information from the specified username from the mongodb instance
@@ -150,7 +152,7 @@ async def update_user(username, update_user_request: UpdateUserRequest):
 async def update_password(
     username,
     update_password_request: UpdatePasswordRequest,
-    user: User = Security(get_current_user_with_scope, scopes=[Role.VISITOR.name]),
+    user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name]),
 ):
     """
     This method lets the current user change his password. The user can only change his own password. To access this

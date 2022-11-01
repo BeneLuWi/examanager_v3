@@ -1,6 +1,9 @@
 import logging
 
 from pydantic import BaseSettings
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class ExamManagerSettings(BaseSettings):
@@ -12,5 +15,5 @@ class ExamManagerSettings(BaseSettings):
     JWT_ALGORITHM: str
     JWT_TOKEN_TIMEOUT_IN_MINUTES: int
     VERSION: str = "demo"
-    INIT_ADMIN_USER: bool = True
+    INIT_ADMIN_USER: bool = False
     ADMIN_USER_PASSWORD: str = "ChangeMe"
