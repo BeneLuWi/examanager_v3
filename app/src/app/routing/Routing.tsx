@@ -6,7 +6,6 @@ import RequireAuth from "./RequireAuth"
 import { Roles } from "../auth/types"
 import Landing from "../pages/landing/Landing"
 import SchoolClasses from "../pages/school_classes/SchoolClasses"
-import Students from "../pages/students/Students"
 import Exams from "../pages/exams/Exams"
 import Results from "../pages/results/Results"
 import Statistics from "../pages/statistics/Statistics"
@@ -50,14 +49,6 @@ const Routing: FunctionComponent<RoutingProps> = ({}) => {
           element={
             <RequireAuth role={Roles.USER}>
               <SchoolClasses />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="students"
-          element={
-            <RequireAuth role={Roles.USER}>
-              <Students />
             </RequireAuth>
           }
         />

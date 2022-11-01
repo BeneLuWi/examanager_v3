@@ -1,7 +1,9 @@
-import React, { FunctionComponent, useState } from "react"
+import React, { FunctionComponent, useEffect, useState } from "react"
 import { SchoolClass, SchoolClassContextType } from "./types"
 import NewSchoolClass from "./NewSchoolClass"
 import SchoolClassList from "./SchoolClassList"
+import axios from "axios"
+import { toast } from "react-toastify"
 
 type SchoolClassesProps = {}
 
@@ -18,13 +20,21 @@ const SchoolClasses: FunctionComponent<SchoolClassesProps> = ({}) => {
 
   const [schoolClasses, setSchoolClasses] = useState<SchoolClass[]>()
 
+  useEffect(() => {
+    updateSchoolClasses()
+  }, [])
+
   /*******************************************************************************************************************
    *
    *  Functions
    *
    *******************************************************************************************************************/
 
-  const updateSchoolClasses = () => {}
+  const updateSchoolClasses = () =>
+    axios
+      .get("api/school_class")
+      .then((res) => setSchoolClasses(res.data))
+      .catch(() => toast("Fehler beim Laden Klassen", { type: "error" }))
 
   /*******************************************************************************************************************
    *

@@ -1,8 +1,12 @@
 import React, { FunctionComponent } from "react"
+import { SchoolClass } from "./types"
+import { ListGroup } from "react-bootstrap"
 
-type SchoolClassItemProps = {}
+type SchoolClassItemProps = {
+  schoolClass: SchoolClass
+}
 
-const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({}) => {
+const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
@@ -21,7 +25,13 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({}) => {
    *
    *******************************************************************************************************************/
 
-  return <div>SchoolClassItem</div>
+  return (
+    <>
+      <ListGroup.Item action>
+        {schoolClass.name} : {schoolClass.description}
+      </ListGroup.Item>
+    </>
+  )
 }
 
 export default SchoolClassItem
