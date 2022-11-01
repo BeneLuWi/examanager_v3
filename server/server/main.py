@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 
@@ -5,6 +6,7 @@ import uvicorn
 from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
+from server.server.api.api_v1.routers.auth_api import init_admin_user
 from server.server.api.router import api_router
 from server.server.config import ExamManagerSettings
 
@@ -26,6 +28,9 @@ app = FastAPI()
 
 app.include_router(api_router)
 configure_static(app)
+
+if settings.INIT_ADMIN_USER:
+    asyncio.run(init_admin_user(password=settings.ADMIN_USER_PASSWORD))
 
 if __name__ == "__main__":
     uvicorn.run(app, port=5200)
