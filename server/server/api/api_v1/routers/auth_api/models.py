@@ -14,6 +14,19 @@ class Role(Enum):
     ADMIN = 3
 
 
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "username": "admin",
+                "password": "password - not yet hashed",
+            }
+        }
+
+
 class PyObjectId(ObjectId):
     """Used to translate between mongo db's specific ObjectId and python string id (used in the serialized json)"""
 
@@ -45,8 +58,79 @@ class User(BaseModel):
             "example": {
                 "id": "62ff8ec96bd2293b9061daae",
                 "username": "admin",
+                "role": Role.ADMIN,
+            }
+        }
+
+
+class UserModel(User):
+    password: bytes = Field(...)
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "id": "62ff8ec96bd2293b9061daae",
+                "username": "username",
+                "role": Role.USER,
+                "password": "hashedpasswordvalue",
+            }
+        }
+
+
+class CreateUserRequest(BaseModel):
+    username: str = Field(...)
+    password: str = Field(...)
+    role: str = Field(...)
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "username": "user",
                 "mail": "abauer@gmail.com",
-                "disabled": False,
+                "password": "password - not yet hashed",
+                "role": Role.USER,
+            }
+        }
+
+
+class UpdatePasswordRequest(BaseModel):
+    username: str
+    password: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "username": "abauer",
+                "password": "new passwd not hashed yet",
+            }
+        }
+
+
+class UpdateUserRequest(BaseModel):
+    username: str | None = Field(...)
+    password: str | None = Field(...)
+    role: str | None = Field(...)
+
+    class Config:
+        schema_extra = {"example": {"username": "abauer", "password": "passwd not hashed yet", "role": "VISITOR"}}
+
+
+class UpdateUserModel(UpdateUserRequest):
+    role: Role | None = Field(...)
+    password: bytes | None = Field(...)
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "firstname": "Adam",
+                "lastname": "Bauer",
+                "username": "abauer",
+                "mail": "abauer@gmail.com",
+                "disabled": "False",
+                "password": "hashedpasswordvalue",
                 "role": Role.USER,
             }
         }

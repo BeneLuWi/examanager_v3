@@ -1,19 +1,37 @@
 import logging
 from datetime import timedelta, datetime
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import HTTPException, Depends
+from fastapi.encoders import jsonable_encoder
 from fastapi.security import SecurityScopes, OAuth2PasswordBearer
 from passlib.context import CryptContext
 from pydantic import ValidationError
+import motor.motor_asyncio
+from starlette import status
+from starlette.responses import JSONResponse
+from jose import jwt
 
-from server.server.api.api_v1.routers.auth_api.models import Role, JwTokenData, MyCredentialException
+from server.server.api.api_v1.routers.auth_api.models import (
+    Role,
+    JwTokenData,
+    MyCredentialException,
+    User,
+    UpdateUserRequest,
+    CreateUserRequest,
+    UserModel,
+    UpdateUserModel,
+    UpdatePasswordRequest,
+)
 from server.server.config import ExamManagerSettings
 
 settings = ExamManagerSettings()
 
 logging.basicConfig(level=settings.LOGGING_LEVEL)
 logger = logging.getLogger(settings.APP_NAME)
+
+mongo_client = motor.motor_asyncio.AsyncIOMotorClient(settings.MONGO_HOST)
+mongo_db = mongo_client.boilerplate
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(
@@ -95,8 +113,6 @@ async def get_current_user_by_token(token_data: JwTokenData = Depends(get_token_
 
 
 async def get_current_active_user(current_user: User = Depends(get_current_user_by_token)):
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
 
@@ -165,10 +181,7 @@ async def get_current_user_with_scope(
 
 def parse_create_user_request_to_user_schema(create_user_request: CreateUserRequest) -> UserModel:
     return UserModel(
-        firstname=create_user_request.firstname,
-        lastname=create_user_request.lastname,
         username=create_user_request.username,
-        mail=create_user_request.mail,
         password=get_password_hash(create_user_request.password),
         role=Role[create_user_request.role],
     )
@@ -179,10 +192,7 @@ def parse_update_user_request_to_user_model(update_user_request: UpdateUserReque
     if update_user_request.password:
         password = get_password_hash(update_user_request.password)
     return UpdateUserModel(
-        firstname=update_user_request.firstname,
-        lastname=update_user_request.lastname,
         username=update_user_request.username,
-        mail=update_user_request.mail,
         password=password,
         role=Role[update_user_request.role],
     )
@@ -190,10 +200,7 @@ def parse_update_user_request_to_user_model(update_user_request: UpdateUserReque
 
 def parse_update_password_request_to_user_model(update_password_request: UpdatePasswordRequest) -> UpdateUserModel:
     return UpdateUserModel(
-        firstname=None,
-        lastname=None,
         username=update_password_request.username,
-        mail=None,
         password=get_password_hash(update_password_request.password),
         role=None,
     )
