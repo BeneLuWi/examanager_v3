@@ -1,6 +1,7 @@
-import React, { FunctionComponent } from "react"
+import React, { FunctionComponent, useState } from "react"
 import { SchoolClass } from "./types"
-import { ListGroup } from "react-bootstrap"
+import { Button, ListGroup } from "react-bootstrap"
+import ModalWrapper from "../../components/modal-wrapper/ModalWrapper"
 
 type SchoolClassItemProps = {
   schoolClass: SchoolClass
@@ -13,11 +14,15 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
    *
    *******************************************************************************************************************/
 
+  const [edit, setEdit] = useState(false)
+
   /*******************************************************************************************************************
    *
    *  Functions
    *
    *******************************************************************************************************************/
+  const close = () => setEdit(false)
+  const open = () => setEdit(true)
 
   /*******************************************************************************************************************
    *
@@ -27,9 +32,16 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
 
   return (
     <>
-      <ListGroup.Item action>
+      <ListGroup.Item action onClick={open}>
         {schoolClass.name} : {schoolClass.description}
       </ListGroup.Item>
+
+      <ModalWrapper
+        fullscreen={true}
+        show={edit}
+        close={close}
+        title={`Klasse ${schoolClass.name} bearbeiten`}
+      ></ModalWrapper>
     </>
   )
 }
