@@ -31,7 +31,7 @@ const UserList: FunctionComponent<UserListProps> = ({}) => {
   return (
     <ListGroup>
       {users.map((user) => (
-        <UserItem user={user} key={user.id} />
+        <UserItem user={user} key={user._id} />
       ))}
     </ListGroup>
   )
