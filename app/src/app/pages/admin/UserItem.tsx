@@ -6,6 +6,7 @@ import ModalWrapper from "../../components/modal-wrapper/ModalWrapper"
 import axios from "axios"
 import { useAdminContext } from "./Admin"
 import { toast } from "react-toastify"
+import { Roles } from "../../auth/types"
 
 type UserItemProps = {
   user: User
@@ -72,18 +73,21 @@ const UserItem: FunctionComponent<UserItemProps> = ({ user }) => {
       <ModalWrapper size="lg" title={`${user.username} bearbeiten`} show={edit} close={close}>
         <InputGroup className="mb-3">
           <Form.Control
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Neues Passwort"
             aria-label="Neues Passwort"
             aria-describedby="basic-addon2"
           />
-          <Button onClick={updatePassword} variant="outline-secondary">
+          <Button onClick={updatePassword} variant="primary">
             Speichern
           </Button>
         </InputGroup>
         <hr />
-        <Button onClick={deleteUser}>Löschen</Button>
+        <Button variant="danger" disabled={user.role === Roles.ADMIN} onClick={deleteUser}>
+          Nutzer:in löschen
+        </Button>
       </ModalWrapper>
     </>
   )
