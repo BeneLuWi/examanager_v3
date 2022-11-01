@@ -1,9 +1,8 @@
 import React, { FunctionComponent } from "react"
-import { AuthProvider } from "./auth"
-import Routing from "./routing/Routing"
-import { ToastContainer } from "react-toastify"
 
-const App: FunctionComponent = ({}) => {
+type LandingProps = {}
+
+const Landing: FunctionComponent<LandingProps> = ({}) => {
   /*******************************************************************************************************************
    *
    *  Hooks
@@ -22,12 +21,7 @@ const App: FunctionComponent = ({}) => {
    *
    *******************************************************************************************************************/
 
-  return (
-    <AuthProvider>
-      <Routing />
-      <ToastContainer />
-    </AuthProvider>
-  )
+  return <div>Whaddup</div>
 }
 
-export default App
+export default Landing

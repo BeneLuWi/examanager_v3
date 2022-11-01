@@ -11,8 +11,6 @@ export type AuthContextType = {
 }
 
 export enum Roles {
-  "VISITOR" = 0,
-  "USER" = 1,
-  "EDITOR" = 2,
-  "ADMIN" = 3,
+  "USER" = 0,
+  "ADMIN" = 1,
 }

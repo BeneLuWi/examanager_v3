@@ -1,15 +1,25 @@
 import React, { FunctionComponent } from "react"
-import { AuthProvider } from "./auth"
-import Routing from "./routing/Routing"
-import { ToastContainer } from "react-toastify"
+import { Nav } from "react-bootstrap"
+import { Link, useLocation } from "react-router-dom"
+import { default as c } from "classnames"
+import { useLayout } from "../layout/Layout"
 
-const App: FunctionComponent = ({}) => {
+type NavItemProps = {
+  title: string
+  icon: string
+  path: string
+  hasSubRoute?: boolean
+}
+
+const NavItem: FunctionComponent<NavItemProps> = ({ title, icon, path, hasSubRoute }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
    *
    *******************************************************************************************************************/
 
+  const { pathname } = useLocation()
+  const { sideBarCollapsed } = useLayout()
   /*******************************************************************************************************************
    *
    *  Functions
@@ -22,12 +32,17 @@ const App: FunctionComponent = ({}) => {
    *
    *******************************************************************************************************************/
 
+  const active = hasSubRoute ? pathname.includes(path) : pathname === path
+
   return (
-    <AuthProvider>
-      <Routing />
-      <ToastContainer />
-    </AuthProvider>
+    <Nav.Item>
+      <Link className={c("nav-link", { active: active })} to={path}>
+        <span>
+          <i className={icon} /> {title}
+        </span>
+      </Link>
+    </Nav.Item>
   )
 }
 
-export default App
+export default NavItem
