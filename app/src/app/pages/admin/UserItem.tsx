@@ -36,7 +36,7 @@ const UserItem: FunctionComponent<UserItemProps> = ({ user }) => {
   const deleteUser = () =>
     window.confirm(`${user.username} löschen?`) &&
     axios
-      .delete(`/api/delete_user?=${user.username}`)
+      .delete(`/api/delete_user?user_id=${user._id}`)
       .then(() => updateUsers())
       .catch(() => toast("Nutzer:in konnte nicht gelöscht werden", { type: "error" }))
 

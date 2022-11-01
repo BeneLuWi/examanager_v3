@@ -3,6 +3,7 @@ import { AdminContextType, User } from "./types"
 import axios from "axios"
 import { toast } from "react-toastify"
 import UserList from "./UserList"
+import NewUser from "./NewUser"
 
 type AdminProps = {}
 
@@ -45,6 +46,7 @@ const Admin: FunctionComponent<AdminProps> = ({}) => {
   return (
     <AdminContext.Provider value={{ users, updateUsers }}>
       <div className="display-4">Admin</div>
+      <NewUser />
       <UserList />
     </AdminContext.Provider>
   )
