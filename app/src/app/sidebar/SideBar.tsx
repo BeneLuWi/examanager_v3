@@ -46,8 +46,8 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
         <NavItem title="Klausuren" icon="bi bi-grid-3x3-gap" path="/exams" />
         <NavItem title="Ergebnisse" icon="bi bi-grid-3x3-gap" path="/results" />
         <NavItem title="Statistiken" icon="bi bi-grid-3x3-gap" path="/statistics" />
-        {auth.auth?.role === Roles.ADMIN ? <NavItem title="Admin Panel" icon="bi bi-person" path="/admin" /> : <></>}
-
+        {auth.auth?.role === Roles.ADMIN ? <NavItem title="Admin" icon="bi bi-person" path="/admin" /> : <></>}
+        <hr />
         <Nav.Link onClick={() => auth.signOut(() => navigate("/"))}>
           <span>
             <i className="bi bi-box-arrow-left" /> {!sideBarCollapsed && "Logout"}
