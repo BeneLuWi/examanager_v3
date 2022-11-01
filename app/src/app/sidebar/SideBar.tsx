@@ -36,7 +36,7 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
     <div className="d-flex flex-column p-3 vh-100 shadow text-nowrap overflow-hidden w-100">
       <div className="d-flex align-items-center">
         <img
-          src={process.env.PUBLIC_URL + "/logo192.png"}
+          src={process.env.PUBLIC_URL + "/logo.png"}
           className={c({ "d-block ms-auto me-auto": sideBarCollapsed, "me-1": !sideBarCollapsed })}
           alt="Project Logo"
           style={{ width: 40 }}
@@ -47,16 +47,13 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
       <hr />
       <Nav variant="pills" className="flex-column">
         <NavItem title="Home" icon="bi bi-house" path="/" />
-        <NavItem title="User Profile" icon="bi bi-person-square" path="/userprofile" />
-        <NavItem title="Dashboard" icon="bi bi-grid-3x3-gap" path="/dashboard" />
-        {auth.auth?.role === Roles.ADMIN ? (
-          <NavItem title="Admin Panel" icon="bi bi-person" path="/adminpanel" />
-        ) : (
-          <></>
-        )}
+        <NavItem title="Klassen" icon="bi bi-grid-3x3-gap" path="/classes" />
+        <NavItem title="Schüler:innen" icon="bi bi-grid-3x3-gap" path="/students" />
+        <NavItem title="Klausuren" icon="bi bi-grid-3x3-gap" path="/exams" />
+        <NavItem title="Ergebnisse" icon="bi bi-grid-3x3-gap" path="/resutls" />
+        <NavItem title="Statistiken" icon="bi bi-grid-3x3-gap" path="/statistics" />
+        {auth.auth?.role === Roles.ADMIN ? <NavItem title="Admin Panel" icon="bi bi-person" path="/admin" /> : <></>}
 
-        <NavItem title="Examples" icon="bi bi-info-circle" path="/examples" hasSubRoute={true} />
-        <hr />
         <Nav.Link onClick={() => auth.signOut(() => navigate("/"))}>
           <span>
             <i className="bi bi-box-arrow-left" /> {!sideBarCollapsed && "Logout"}
@@ -65,19 +62,13 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
       </Nav>
 
       <div className="d-flex align-items-start flex-column mt-auto">
-        {!sideBarCollapsed && (
-          <div className="m-2">
-            <img src={process.env.PUBLIC_URL + "/dfki_logo.svg"} alt="DFKI-Logo" style={{ maxWidth: 200 }} />
-          </div>
-        )}
-
         <Button className="m-2" onClick={toggleSideBar}>
           {sideBarCollapsed ? (
             <i className="bi bi-chevron-double-right" />
           ) : (
             <span className="d-flex justify-content-around" style={{ width: 180 }}>
               <i className="bi bi-chevron-double-left" />
-              <span>collapse sidebar</span>
+              <span>einklappen</span>
             </span>
           )}
         </Button>

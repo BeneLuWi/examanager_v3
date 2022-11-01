@@ -5,6 +5,12 @@ import Layout from "../layout/Layout"
 import RequireAuth from "./RequireAuth"
 import { Roles } from "../auth/types"
 import Landing from "../pages/landing/Landing"
+import SchoolClasses from "../pages/school_classes/SchoolClasses"
+import Students from "../pages/students/Students"
+import Exams from "../pages/exams/Exams"
+import Results from "../pages/results/Results"
+import Statistics from "../pages/statistics/Statistics"
+import Admin from "../pages/admin/Admin"
 
 type RoutingProps = {}
 
@@ -36,6 +42,54 @@ const Routing: FunctionComponent<RoutingProps> = ({}) => {
           element={
             <RequireAuth role={Roles.USER}>
               <Landing />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="classes"
+          element={
+            <RequireAuth role={Roles.USER}>
+              <SchoolClasses />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="students"
+          element={
+            <RequireAuth role={Roles.USER}>
+              <Students />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="exams"
+          element={
+            <RequireAuth role={Roles.USER}>
+              <Exams />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="results"
+          element={
+            <RequireAuth role={Roles.USER}>
+              <Results />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="statistics"
+          element={
+            <RequireAuth role={Roles.USER}>
+              <Statistics />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="admin"
+          element={
+            <RequireAuth role={Roles.ADMIN}>
+              <Admin />
             </RequireAuth>
           }
         />
