@@ -82,7 +82,7 @@ class CreateUserRequest(BaseModel):
 
 
 class UpdatePasswordRequest(BaseModel):
-    username: str
+    _id: str
     password: str
 
     class Config:
@@ -93,14 +93,23 @@ class UpdatePasswordRequest(BaseModel):
             }
         }
 
+    @property
+    def id(self):
+        return self._id
+
 
 class UpdateUserRequest(BaseModel):
+    _id: str
     username: str | None = Field(...)
     password: str | None = Field(...)
     role: str | None = Field(...)
 
     class Config:
         schema_extra = {"example": {"username": "abauer", "password": "passwd not hashed yet", "role": "VISITOR"}}
+
+    @property
+    def id(self):
+        return self._id
 
 
 class UpdateUserModel(UpdateUserRequest):
