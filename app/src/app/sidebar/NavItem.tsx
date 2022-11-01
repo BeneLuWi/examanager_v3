@@ -38,7 +38,7 @@ const NavItem: FunctionComponent<NavItemProps> = ({ title, icon, path, hasSubRou
     <Nav.Item>
       <Link className={c("nav-link", { active: active })} to={path}>
         <span>
-          <i className={icon} /> {title}
+          <i className={icon} /> {!sideBarCollapsed && title}
         </span>
       </Link>
     </Nav.Item>

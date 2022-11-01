@@ -20,7 +20,7 @@ const Layout: FunctionComponent<LayoutProps> = () => {
    *
    *******************************************************************************************************************/
 
-  const [sideBarCollapsed, setCollapsed] = useState<boolean>(true)
+  const [sideBarCollapsed, setCollapsed] = useState<boolean>(false)
 
   /*******************************************************************************************************************
    *
@@ -31,11 +31,13 @@ const Layout: FunctionComponent<LayoutProps> = () => {
 
   return (
     <LayoutContext.Provider value={{ sideBarCollapsed, toggleSideBar }}>
-      <div className="d-flex vh-100">
+      <div className="vh-100 d-flex">
+        <div>
+          <SideBar />
+        </div>
         <div className="w-100 container">
           <Outlet />
         </div>
-        <SideBar />
       </div>
     </LayoutContext.Provider>
   )

@@ -34,14 +34,8 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
 
   return (
     <div className="d-flex flex-column p-3 vh-100 shadow text-nowrap overflow-hidden w-100">
-      <div className="d-flex align-items-center">
-        <img
-          src={process.env.PUBLIC_URL + "/logo.png"}
-          className={c({ "d-block ms-auto me-auto": sideBarCollapsed, "me-1": !sideBarCollapsed })}
-          alt="Project Logo"
-          style={{ width: 40 }}
-        />
-        {!sideBarCollapsed && <span className="fs-3 text-nowrap">Boilerplate</span>}
+      <div className="d-flex align-items-center flex-column">
+        <img src={process.env.PUBLIC_URL + "/logo.png"} alt="Project Logo" style={{ width: 150 }} />
       </div>
 
       <hr />
@@ -50,7 +44,7 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
         <NavItem title="Klassen" icon="bi bi-grid-3x3-gap" path="/classes" />
         <NavItem title="Schüler:innen" icon="bi bi-grid-3x3-gap" path="/students" />
         <NavItem title="Klausuren" icon="bi bi-grid-3x3-gap" path="/exams" />
-        <NavItem title="Ergebnisse" icon="bi bi-grid-3x3-gap" path="/resutls" />
+        <NavItem title="Ergebnisse" icon="bi bi-grid-3x3-gap" path="/results" />
         <NavItem title="Statistiken" icon="bi bi-grid-3x3-gap" path="/statistics" />
         {auth.auth?.role === Roles.ADMIN ? <NavItem title="Admin Panel" icon="bi bi-person" path="/admin" /> : <></>}
 
@@ -60,19 +54,6 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
           </span>
         </Nav.Link>
       </Nav>
-
-      <div className="d-flex align-items-start flex-column mt-auto">
-        <Button className="m-2" onClick={toggleSideBar}>
-          {sideBarCollapsed ? (
-            <i className="bi bi-chevron-double-right" />
-          ) : (
-            <span className="d-flex justify-content-around" style={{ width: 180 }}>
-              <i className="bi bi-chevron-double-left" />
-              <span>einklappen</span>
-            </span>
-          )}
-        </Button>
-      </div>
     </div>
   )
 }
