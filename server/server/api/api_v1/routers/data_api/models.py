@@ -18,6 +18,11 @@ class MongoModel(BaseModel):
 class CreateSchoolClassRequest(BaseModel):
     name: str
     description: str | None
+
+
+class CreateSchoolClassModel(BaseModel):
+    name: str
+    description: str | None
     owner_id: str
 
 

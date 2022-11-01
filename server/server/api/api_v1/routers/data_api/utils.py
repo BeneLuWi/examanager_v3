@@ -7,7 +7,11 @@ from fastapi.encoders import jsonable_encoder
 from pymongo.results import InsertOneResult
 from starlette.responses import JSONResponse
 
-from server.server.api.api_v1.routers.data_api.models import SchoolClass, CreateSchoolClassRequest
+from server.server.api.api_v1.routers.data_api.models import (
+    SchoolClass,
+    CreateSchoolClassRequest,
+    CreateSchoolClassModel,
+)
 from server.server.config import ExamManagerSettings, PyObjectId, DatabaseNames
 
 settings = ExamManagerSettings()
@@ -29,8 +33,8 @@ mongo_db = mongo_client.examanager
 ##########################
 
 # Create
-async def insert_school_class_in_db(create_school_class_request: CreateSchoolClassRequest) -> SchoolClass:
-    school_class = jsonable_encoder(create_school_class_request)
+async def insert_school_class_in_db(create_school_class_model: CreateSchoolClassModel) -> SchoolClass:
+    school_class = jsonable_encoder(create_school_class_model)
     inserted: InsertOneResult = await mongo_db[DatabaseNames.school_classes.name].insert_one(school_class)
     return await find_school_class_by_id_in_db(school_class_id=inserted.inserted_id)
 
