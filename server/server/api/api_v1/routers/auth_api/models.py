@@ -21,14 +21,6 @@ class LoginRequest(BaseModel):
     username: str
     password: str
 
-    class Config:
-        schema_extra = {
-            "example": {
-                "username": "admin",
-                "password": "password - not yet hashed",
-            }
-        }
-
 
 class User(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
@@ -39,13 +31,6 @@ class User(BaseModel):
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
-        schema_extra = {
-            "example": {
-                "id": "62ff8ec96bd2293b9061daae",
-                "username": "admin",
-                "role": Role.ADMIN,
-            }
-        }
 
 
 class UserModel(User):
@@ -55,14 +40,6 @@ class UserModel(User):
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
-        schema_extra = {
-            "example": {
-                "id": "62ff8ec96bd2293b9061daae",
-                "username": "username",
-                "role": Role.USER,
-                "password": "hashedpasswordvalue",
-            }
-        }
 
 
 class CreateUserRequest(BaseModel):
@@ -70,32 +47,17 @@ class CreateUserRequest(BaseModel):
     password: str = Field(...)
     role: str = Field(...)
 
-    class Config:
-        schema_extra = {
-            "example": {
-                "username": "user",
-                "mail": "abauer@gmail.com",
-                "password": "password - not yet hashed",
-                "role": Role.USER,
-            }
-        }
-
 
 class UpdatePasswordRequest(BaseModel):
     _id: str
     password: str
 
-    class Config:
-        schema_extra = {
-            "example": {
-                "username": "abauer",
-                "password": "new passwd not hashed yet",
-            }
-        }
-
     @property
     def id(self):
         return self._id
+
+    class Config:
+        schema_extra = {"example": {"_id": "user_id_string", "password": "new_plain_password"}}
 
 
 class UpdateUserRequest(BaseModel):
@@ -104,30 +66,24 @@ class UpdateUserRequest(BaseModel):
     password: str | None = Field(...)
     role: str | None = Field(...)
 
-    class Config:
-        schema_extra = {"example": {"username": "abauer", "password": "passwd not hashed yet", "role": "VISITOR"}}
-
     @property
     def id(self):
         return self._id
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "_id": "user_id_string",
+                "username": "Bauer",
+                "password": "new_plain_password",
+                "role": "ADMIN",
+            }
+        }
 
 
 class UpdateUserModel(UpdateUserRequest):
     role: Role | None = Field(...)
     password: bytes | None = Field(...)
-
-    class Config:
-        schema_extra = {
-            "example": {
-                "firstname": "Adam",
-                "lastname": "Bauer",
-                "username": "abauer",
-                "mail": "abauer@gmail.com",
-                "disabled": "False",
-                "password": "hashedpasswordvalue",
-                "role": Role.USER,
-            }
-        }
 
 
 class JwToken(BaseModel):
