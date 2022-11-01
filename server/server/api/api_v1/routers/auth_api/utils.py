@@ -31,7 +31,7 @@ logging.basicConfig(level=settings.LOGGING_LEVEL)
 logger = logging.getLogger(settings.APP_NAME)
 
 mongo_client = motor.motor_asyncio.AsyncIOMotorClient(settings.MONGO_HOST)
-mongo_db = mongo_client.boilerplate
+mongo_db = mongo_client.examanager
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(
