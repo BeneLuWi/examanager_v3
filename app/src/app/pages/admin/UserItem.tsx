@@ -46,7 +46,7 @@ const UserItem: FunctionComponent<UserItemProps> = ({ user }) => {
     } else {
       axios
         .put("api/update_password", {
-          username: user.username,
+          _id: user._id,
           password: password,
         })
         .then(() => {
