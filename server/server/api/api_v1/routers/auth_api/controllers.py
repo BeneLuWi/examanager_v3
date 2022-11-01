@@ -26,6 +26,8 @@ from server.server.api.api_v1.routers.auth_api.utils import (
     get_current_user_with_scope,
     update_user_password_by_request,
     add_user,
+    delete_user_in_db,
+    find_user_by_id,
 )
 from server.server.config import ExamManagerSettings
 
@@ -79,14 +81,14 @@ async def get_current_user(current_user: JwTokenData = Depends(get_token_from_he
     return current_user
 
 
-@router.delete("/deleteUser", dependencies=[Security(validate_token_with_scope, scopes=[Role.ADMIN.name])])
-async def delete(username):
+@router.delete("/delete_user", dependencies=[Security(validate_token_with_scope, scopes=[Role.ADMIN.name])])
+async def delete(user_id: str):
     """
     The delete method deletes a user from the mongodb instance. Only users with the admin role can call this function.
-    :param username: username of the user which should be deleted
+    :param user_id: id of the user which should be deleted
     :return: 200 with success message if successful, else 500 and error message
     """
-    return await delete_user_in_db_by_username(username=username)
+    return await delete_user_in_db(user_id=user_id)
 
 
 @router.get(
@@ -138,9 +140,9 @@ async def update_user(update_user_request: UpdateUserRequest):
     :return: the raw db response from mongodb if successful, else 500 and an error message (e.g. if username already
     taken)
     """
-
+    user_in_db: User = await find_user_by_id(user_id=update_user_request.id)
     # if we want to change a username to an already taken username
-    if update_user_request.username and update_user_request.username != update_user_request.username:
+    if update_user_request.username and update_user_request.username != user_in_db.username:
         if await find_user_by_username(update_user_request.username):
             raise HTTPException(500, detail="Username already taken")
             # jsonify(msg="username already taken"), 500
@@ -158,7 +160,7 @@ async def update_password(
     method a JWT is required but with no role requirements.
     :return: database response if successful, else error message and 500
     """
-    if not update_password_request.username == user.username:
+    if not update_password_request.id == user.id:
         raise HTTPException(
             status_code=401,
             detail="Can not access user data from other users",
