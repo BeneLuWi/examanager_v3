@@ -104,7 +104,7 @@ async def all_users():
     return await list_users()
 
 
-@router.get("/get_user/{username}")
+@router.get("/get_user")
 async def get_user(username, user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name])):
     """
     The get_user method reads the data from a single user from the mongodb instance and adds them to a dictionary.
@@ -129,6 +129,19 @@ async def get_user(username):
     :return: dictionary with all user information from the specified username from the mongodb instance
     """
     return await find_user_by_username(username=username)
+
+
+@router.get(
+    "/admin/get_user/by_id",
+    dependencies=[Security(validate_token_with_scope, scopes=[Role.ADMIN.name])],
+    response_model=User,
+)
+async def get_user(user_id):
+    """
+    The get_user method reads the data from a single user from the mongodb instance and adds them to a dictionary.
+    :return: dictionary with all user information from the specified username from the mongodb instance
+    """
+    return await find_user_by_id(user_id=user_id)
 
 
 @router.put("/update_user", dependencies=[Security(validate_token_with_scope, scopes=[Role.ADMIN.name])])
