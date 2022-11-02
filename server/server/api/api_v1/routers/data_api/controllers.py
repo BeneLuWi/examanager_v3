@@ -53,7 +53,7 @@ async def get_all_school_classes(user: User = Security(get_current_user_with_sco
 
 
 @router.get("/school_class", response_model=List[SchoolClass])
-async def get_all_school_classes_for_user(user: User = Security(get_current_user_with_scope, scopes=[Role.ADMIN.name])):
+async def get_all_school_classes_for_user(user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name])):
     """
     Todo docs
     """
