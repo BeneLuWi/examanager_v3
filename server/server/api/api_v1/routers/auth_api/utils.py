@@ -12,6 +12,7 @@ from starlette import status
 from starlette.responses import JSONResponse
 from jose import jwt
 
+from server.server.database import user_collection
 from server.server.api.api_v1.routers.auth_api.models import (
     Role,
     JwTokenData,
@@ -29,9 +30,6 @@ settings = ExamManagerSettings()
 
 logging.basicConfig(level=settings.LOGGING_LEVEL)
 logger = logging.getLogger(settings.APP_NAME)
-
-mongo_client = motor.motor_asyncio.AsyncIOMotorClient(settings.MONGO_HOST)
-mongo_db = mongo_client.examanager
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(
@@ -214,25 +212,25 @@ async def add_user(create_user_request: CreateUserRequest) -> JSONResponse:
 async def insert_new_user(user: UserModel):
     if not await find_user_by_username(username=user.username):
         user = jsonable_encoder(user)
-        new_user = await mongo_db["users"].insert_one(user)
-        created_user = await mongo_db["users"].find_one({"_id": new_user.inserted_id})
+        new_user = await user_collection.insert_one(user)
+        created_user = await user_collection.find_one({"_id": new_user.inserted_id})
         return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_user)
 
     raise HTTPException(status_code=400, detail=f"User {user.username} already exists")
 
 
 async def list_users() -> List[UserModel]:
-    users = await mongo_db["users"].find().to_list(1000)
+    users = await user_collection.find().to_list(1000)
     return list(map(lambda usr: UserModel.parse_obj(usr), users))
 
 
 async def find_user_by_id(user_id: str) -> UserModel:
-    if (user := await mongo_db["users"].find_one({"_id": user_id})) is not None:
+    if (user := await user_collection.find_one({"_id": user_id})) is not None:
         return UserModel.parse_obj(user)
 
 
 async def find_user_by_username(username: str) -> Optional[UserModel]:
-    if (user := await mongo_db["users"].find_one({"username": username})) is not None:
+    if (user := await user_collection.find_one({"username": username})) is not None:
         return UserModel.parse_obj(user)
 
 
@@ -249,25 +247,25 @@ async def update_user_in_db(user_model: UpdateUserModel) -> User:
     user = jsonable_encoder(user)
 
     if len(user) >= 1:
-        update_result = await mongo_db["users"].update_one({"username": user_model.username}, {"$set": user})
+        update_result = await user_collection.update_one({"username": user_model.username}, {"$set": user})
 
         if update_result.modified_count == 1:
-            if (updated_user := await mongo_db["users"].find_one({"username": user_model.username})) is not None:
+            if (updated_user := await user_collection.find_one({"username": user_model.username})) is not None:
                 return updated_user
 
-    if (existing_user := await mongo_db["users"].find_one({"username": user_model.username})) is not None:
+    if (existing_user := await user_collection.find_one({"username": user_model.username})) is not None:
         return existing_user
 
     raise HTTPException(status_code=404, detail=f"User{user_model.username} not found")
 
 
 async def delete_user_in_db(user_id: str) -> bool:
-    delete_result = await mongo_db["users"].delete_one({"_id": user_id})
+    delete_result = await user_collection.delete_one({"_id": user_id})
     return delete_result.deleted_count == 1
 
 
 async def delete_user_in_db_by_username(username: str) -> bool:
-    delete_result = await mongo_db["users"].delete_one({"username": username})
+    delete_result = await user_collection.delete_one({"username": username})
     return delete_result.deleted_count == 1
 
 
