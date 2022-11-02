@@ -54,19 +54,16 @@ async def find_school_class_by_id_in_db(school_class_id: ObjectId) -> Optional[S
 
 
 async def update_school_class_in_db(school_class: SchoolClass) -> SchoolClass:
-    # todo not working
-    # user = {k: v for k, v in school_class.dict().items() if v is not None}
-    # user = jsonable_encoder(user)
+    school_class_dict = jsonable_encoder(school_class)
+    del school_class_dict["_id"]
 
-    update_result = await school_class_collection.update_one({"_id": school_class.id}, {"$set": school_class})
-
-    if len(update_result) >= 1:
-
+    if len(school_class_dict) >= 1:
+        update_result = await school_class_collection.update_one({"_id": school_class.id}, {"$set": school_class_dict})
         if update_result.modified_count == 1:
-            if (updated_user := await school_class_collection.find_one({"name": school_class.name})) is not None:
+            if (updated_user := await school_class_collection.find_one({"_id": school_class.id})) is not None:
                 return updated_user
 
-    if (existing_user := await school_class_collection.find_one({"name": school_class.name})) is not None:
+    if (existing_user := await school_class_collection.find_one({"_id": school_class.id})) is not None:
         return existing_user
 
     raise RuntimeError(f"school_class {school_class.name} not found")
