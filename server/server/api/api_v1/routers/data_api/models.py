@@ -18,18 +18,18 @@ class MongoModel(BaseModel):
 class CreateSchoolClassRequest(BaseModel):
     name: str
     description: str | None
+    owner_id: str | None
 
 
-class CreateSchoolClassModel(BaseModel):
+class SchoolClass(MongoModel):
     name: str
     description: str | None
     owner_id: str
 
-
-class SchoolClass(MongoModel, CreateSchoolClassRequest):
     class Config:
         schema_extra = {
             "example": {
+                "_id": "randomObjectId",
                 "name": "admin",
                 "description": "Optional description of the class",
                 "owner_id": "id of the owner of the school class",
@@ -37,11 +37,23 @@ class SchoolClass(MongoModel, CreateSchoolClassRequest):
         }
 
 
+class CreateStudentRequest(BaseModel):
+    lastname: str
+    firstname: str
+    school_class_id: str
+    owner_id: str | None
+
+
 class Student(MongoModel):
     lastname: str
     firstname: str
-    owner_id: str
     school_class_id: str
+    owner_id: str
+
+
+class CreateTaskRequest(BaseModel):
+    name: str
+    max_points: float
 
 
 class Task(MongoModel):
@@ -49,10 +61,24 @@ class Task(MongoModel):
     max_points: float
 
 
+class CreateExamRequest(BaseModel):
+    name: str
+    description: Optional[str]
+    tasks: List[Task]
+    owner_id: str | None
+
+
 class Exam(MongoModel):
     name: str
     description: Optional[str]
     tasks: List[Task]
+    owner_id: str
+
+
+class CreateResultRequest(BaseModel):
+    exam_id: str
+    points_per_task: Dict[str, float]
+    owner_id: str | None
 
 
 class Result(MongoModel):
