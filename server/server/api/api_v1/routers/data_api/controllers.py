@@ -1,10 +1,10 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, Security
+from bson import ObjectId
+from fastapi import APIRouter, Security
 
 from server.server.api.api_v1.routers.auth_api.models import JwTokenData, User, Role
 from server.server.api.api_v1.routers.auth_api.utils import (
-    get_token_from_header,
     get_current_user_with_scope,
     validate_token_with_scope,
 )
@@ -67,7 +67,8 @@ async def get_school_class_by_id(school_class_id):
     """
 
     # todo only return if correct owner
-    return await find_school_class_by_id_in_db(school_class_id=school_class_id)
+
+    return await find_school_class_by_id_in_db(school_class_id=ObjectId(school_class_id))
 
 
 @router.put("/school_class", response_model=SchoolClass)

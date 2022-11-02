@@ -2,6 +2,7 @@ import logging
 from typing import List, Optional
 
 import motor.motor_asyncio
+from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 from pymongo.results import InsertOneResult
 
@@ -42,15 +43,18 @@ async def list_school_classes_from_db() -> List[SchoolClass]:
     return list(map(lambda usr: SchoolClass.parse_obj(usr), school_classes))
 
 
-async def list_school_classes_from_db_by_owner_id(owner_id) -> List[SchoolClass]:
+async def list_school_classes_from_db_by_owner_id(owner_id: str) -> List[SchoolClass]:
     # todo does not return any results
     school_classes = await mongo_db[DatabaseNames.school_classes.name].find({"owner_id:": owner_id}).to_list(1000)
+    print("collected school_classes...")
     return list(map(lambda usr: SchoolClass.parse_obj(usr), school_classes))
 
 
-async def find_school_class_by_id_in_db(school_class_id: PyObjectId) -> Optional[SchoolClass]:
-    if (user := await mongo_db[DatabaseNames.school_classes.name].find_one({"_id": school_class_id})) is not None:
-        return SchoolClass.parse_obj(user)
+async def find_school_class_by_id_in_db(school_class_id: ObjectId) -> Optional[SchoolClass]:
+    if (
+        school_class := await mongo_db[DatabaseNames.school_classes.name].find_one({"_id": school_class_id})
+    ) is not None:
+        return SchoolClass.parse_obj(school_class)
 
 
 # Update
