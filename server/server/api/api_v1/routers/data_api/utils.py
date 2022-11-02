@@ -41,9 +41,7 @@ async def list_school_classes_from_db() -> List[SchoolClass]:
 
 
 async def list_school_classes_from_db_by_owner_id(owner_id: str) -> List[SchoolClass]:
-    # todo does not return any results
     school_classes = await school_class_collection.find({"owner_id": owner_id}).to_list(1000)
-    print("collected school_classes...")
     return list(map(lambda usr: SchoolClass.parse_obj(usr), school_classes))
 
 
