@@ -1,13 +1,18 @@
 import React, { FunctionComponent } from "react"
+import { useSchoolClassContext } from "./SchoolClasses"
+import { ListGroup } from "react-bootstrap"
+import SchoolClassItem from "./SchoolClassItem"
 
-type StudentsProps = {}
+type SchoolClassListProps = {}
 
-const Students: FunctionComponent<StudentsProps> = ({}) => {
+const SchoolClassList: FunctionComponent<SchoolClassListProps> = ({}) => {
   /*******************************************************************************************************************
    *
    *  Hooks
    *
    *******************************************************************************************************************/
+
+  const { schoolClasses } = useSchoolClassContext()
 
   /*******************************************************************************************************************
    *
@@ -21,7 +26,15 @@ const Students: FunctionComponent<StudentsProps> = ({}) => {
    *
    *******************************************************************************************************************/
 
-  return <div>Students</div>
+  if (!schoolClasses) return <div />
+
+  return (
+    <ListGroup>
+      {schoolClasses.map((schoolClass) => (
+        <SchoolClassItem key={schoolClass._id} schoolClass={schoolClass} />
+      ))}
+    </ListGroup>
+  )
 }
 
-export default Students
+export default SchoolClassList

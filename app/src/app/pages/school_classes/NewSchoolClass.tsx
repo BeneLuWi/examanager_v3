@@ -1,14 +1,14 @@
 import React, { FunctionComponent, useState } from "react"
-import ModalWrapper from "../../components/modal-wrapper/ModalWrapper"
-import { Button } from "react-bootstrap"
-import Form from "react-bootstrap/Form"
 import axios from "axios"
-import { useAdminContext } from "./Admin"
 import { toast } from "react-toastify"
+import { useSchoolClassContext } from "./SchoolClasses"
+import { Button } from "react-bootstrap"
+import ModalWrapper from "../../components/modal-wrapper/ModalWrapper"
+import Form from "react-bootstrap/Form"
 
-type NewUserProps = {}
+type NewSchoolClassProps = {}
 
-const NewUser: FunctionComponent<NewUserProps> = ({}) => {
+const NewSchoolClass: FunctionComponent<NewSchoolClassProps> = ({}) => {
   /*******************************************************************************************************************
    *
    *  Hooks
@@ -16,14 +16,13 @@ const NewUser: FunctionComponent<NewUserProps> = ({}) => {
    *******************************************************************************************************************/
 
   const [show, setShow] = useState(false)
-  const { updateUsers } = useAdminContext()
+  const { updateSchoolClasses } = useSchoolClassContext()
 
   /*******************************************************************************************************************
    *
    *  Functions
    *
    *******************************************************************************************************************/
-
   const open = () => setShow(true)
   const close = () => setShow(false)
 
@@ -31,21 +30,23 @@ const NewUser: FunctionComponent<NewUserProps> = ({}) => {
     event.preventDefault()
 
     let formData = new FormData(event.currentTarget)
-    let username = formData.get("username") as string
-    let password = formData.get("password") as string
-    let isAdmin = !!(formData.get("isAdmin") as string)
+    let name = formData.get("name") as string
+    let description = formData.get("description") as string
+
+    if (!name.length) {
+      toast("Bitte Namen eingeben", { type: "error" })
+      return
+    }
 
     axios
-      .post("api/register", {
-        username,
-        mail: "",
-        password,
-        role: isAdmin ? "ADMIN" : "USER",
+      .post("api/school_class", {
+        name,
+        description,
       })
       .then(() => {
-        toast("Nutzer:in erstellt")
+        toast("Klasse erstellt")
         close()
-        updateUsers()
+        updateSchoolClasses()
       })
       .catch(() => toast("Fehler beim erstellen", { type: "error" }))
   }
@@ -59,21 +60,18 @@ const NewUser: FunctionComponent<NewUserProps> = ({}) => {
   return (
     <>
       <Button className="mb-3" onClick={open}>
-        Nutzer:in erstellen
+        Klasse erstellen
       </Button>
 
-      <ModalWrapper size="lg" show={show} close={close} title="Nutzer:in erstellen">
+      <ModalWrapper size="lg" show={show} close={close} title="Klasse erstellen">
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
-            <Form.Label>Username</Form.Label>
-            <Form.Control name="username" type="text" placeholder="Username" />
+            <Form.Label>Name</Form.Label>
+            <Form.Control name="name" type="text" placeholder="Name" />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Passwort</Form.Label>
-            <Form.Control name="password" type="text" placeholder="Password" />
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Check name="isAdmin" type="checkbox" id="admin-check" label="Admin" />
+            <Form.Label>Beschreibung</Form.Label>
+            <Form.Control name="description" type="text" placeholder="Beschreibung (optional)" />
           </Form.Group>
           <Button variant="success" type="submit">
             Erstellen
@@ -84,4 +82,4 @@ const NewUser: FunctionComponent<NewUserProps> = ({}) => {
   )
 }
 
-export default NewUser
+export default NewSchoolClass

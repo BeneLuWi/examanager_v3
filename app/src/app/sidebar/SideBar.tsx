@@ -1,8 +1,6 @@
 import React, { FunctionComponent } from "react"
 import { Nav } from "react-bootstrap"
 import NavItem from "./NavItem"
-import { Button } from "react-bootstrap"
-import { default as c } from "classnames"
 import { useAuth } from "../auth"
 import { useNavigate } from "react-router-dom"
 import { Roles } from "../auth/types"
@@ -42,7 +40,6 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
       <Nav variant="pills" className="flex-column">
         <NavItem title="Home" icon="bi bi-house" path="/" />
         <NavItem title="Klassen" icon="bi bi-grid-3x3-gap" path="/classes" />
-        <NavItem title="Schüler:innen" icon="bi bi-grid-3x3-gap" path="/students" />
         <NavItem title="Klausuren" icon="bi bi-grid-3x3-gap" path="/exams" />
         <NavItem title="Ergebnisse" icon="bi bi-grid-3x3-gap" path="/results" />
         <NavItem title="Statistiken" icon="bi bi-grid-3x3-gap" path="/statistics" />
