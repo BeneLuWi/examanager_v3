@@ -7,9 +7,9 @@ from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 from starlette.staticfiles import StaticFiles
 
-from server.server.api.api_v1.routers.auth_api.utils import init_admin_user
-from server.server.api.router import api_router
-from server.server.config import ExamManagerSettings
+from server.api.api_v1.routers.auth_api.utils import init_admin_user
+from server.api.router import api_router
+from server.config import ExamManagerSettings
 
 settings = ExamManagerSettings()
 logging.basicConfig(level=settings.LOGGING_LEVEL)

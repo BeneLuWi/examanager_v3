@@ -4,7 +4,7 @@ from bson import ObjectId
 from fastapi import HTTPException
 from pydantic import BaseModel, Field
 
-from server.server.config import PyObjectId
+from server.config import PyObjectId
 
 
 class Role(Enum):

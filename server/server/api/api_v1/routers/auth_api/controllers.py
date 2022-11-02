@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Security
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 
-from server.server.api.api_v1.routers.auth_api.models import (
+from server.api.api_v1.routers.auth_api.models import (
     JwToken,
     User,
     CreateUserRequest,
@@ -14,7 +14,7 @@ from server.server.api.api_v1.routers.auth_api.models import (
     UpdateUserRequest,
     UpdatePasswordRequest,
 )
-from server.server.api.api_v1.routers.auth_api.utils import (
+from server.api.api_v1.routers.auth_api.utils import (
     authenticate_user,
     create_access_token_for_user,
     validate_token_with_scope,
@@ -28,7 +28,7 @@ from server.server.api.api_v1.routers.auth_api.utils import (
     delete_user_in_db,
     find_user_by_id,
 )
-from server.server.config import ExamManagerSettings
+from server.config import ExamManagerSettings
 
 router = APIRouter()
 settings = ExamManagerSettings()

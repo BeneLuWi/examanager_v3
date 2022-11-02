@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Security
 
-from server.server.api.api_v1.routers.auth_api.controllers import router as auth_router, validate_token_with_scope, Role
+from server.api.api_v1.routers.auth_api.controllers import router as auth_router, validate_token_with_scope, Role
 
-from server.server.api.api_v1.routers.statistics_api import router as statistics_router
-from server.server.api.api_v1.routers.data_api.controllers import router as data_router
+from server.api.api_v1.routers.statistics_api import router as statistics_router
+from server.api.api_v1.routers.data_api.controllers import router as data_router
 
 api_router = APIRouter()
 

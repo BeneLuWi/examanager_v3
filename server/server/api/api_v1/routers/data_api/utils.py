@@ -5,12 +5,12 @@ from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 from pymongo.results import InsertOneResult
 
-from server.server.database import school_class_collection
-from server.server.api.api_v1.routers.data_api.models import (
+from server.database import school_class_collection
+from server.api.api_v1.routers.data_api.models import (
     SchoolClass,
     CreateSchoolClassModel,
 )
-from server.server.config import ExamManagerSettings
+from server.config import ExamManagerSettings
 
 settings = ExamManagerSettings()
 

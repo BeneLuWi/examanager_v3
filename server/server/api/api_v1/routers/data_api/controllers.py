@@ -3,17 +3,17 @@ from typing import List
 from bson import ObjectId
 from fastapi import APIRouter, Security
 
-from server.server.api.api_v1.routers.auth_api.models import JwTokenData, User, Role
-from server.server.api.api_v1.routers.auth_api.utils import (
+from server.api.api_v1.routers.auth_api.models import JwTokenData, User, Role
+from server.api.api_v1.routers.auth_api.utils import (
     get_current_user_with_scope,
     validate_token_with_scope,
 )
-from server.server.api.api_v1.routers.data_api.models import (
+from server.api.api_v1.routers.data_api.models import (
     CreateSchoolClassRequest,
     SchoolClass,
     CreateSchoolClassModel,
 )
-from server.server.api.api_v1.routers.data_api.utils import (
+from server.api.api_v1.routers.data_api.utils import (
     insert_school_class_in_db,
     list_school_classes_from_db,
     find_school_class_by_id_in_db,

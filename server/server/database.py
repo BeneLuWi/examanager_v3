@@ -1,6 +1,6 @@
 import motor.motor_asyncio
 
-from server.server.config import ExamManagerSettings
+from server.config import ExamManagerSettings
 
 settings = ExamManagerSettings()
 

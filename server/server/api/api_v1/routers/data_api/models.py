@@ -3,7 +3,7 @@ from typing import Optional, List, Dict
 from bson import ObjectId
 from pydantic import BaseModel, Field
 
-from server.server.config import PyObjectId
+from server.config import PyObjectId
 
 
 class MongoModel(BaseModel):

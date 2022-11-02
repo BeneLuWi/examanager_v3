@@ -9,6 +9,7 @@ version = "0.1.0"
 description = ""
 authors = ["Benedikt Lüken-Winkels <b.lueken.winkels@gmail.com>", "David Kaub <kaubdav@posteo.de>"]
 readme = "README.md"
+include = [{ package = "server" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"

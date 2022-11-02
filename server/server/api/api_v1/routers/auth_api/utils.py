@@ -12,8 +12,8 @@ from starlette import status
 from starlette.responses import JSONResponse
 from jose import jwt
 
-from server.server.database import user_collection
-from server.server.api.api_v1.routers.auth_api.models import (
+from server.database import user_collection
+from server.api.api_v1.routers.auth_api.models import (
     Role,
     JwTokenData,
     MyCredentialException,
@@ -24,7 +24,7 @@ from server.server.api.api_v1.routers.auth_api.models import (
     UpdateUserModel,
     UpdatePasswordRequest,
 )
-from server.server.config import ExamManagerSettings
+from server.config import ExamManagerSettings
 
 settings = ExamManagerSettings()
 
