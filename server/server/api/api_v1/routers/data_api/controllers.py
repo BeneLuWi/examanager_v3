@@ -30,7 +30,8 @@ router = APIRouter()
     response_model=CreateSchoolClassRequest,
 )
 async def create_school_class(
-    create_school_class_request: CreateSchoolClassRequest, current_user: JwTokenData = Depends(get_token_from_header)
+    create_school_class_request: CreateSchoolClassRequest,
+    user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name]),
 ):
     """
     TODO docs
@@ -38,7 +39,7 @@ async def create_school_class(
     create_school_class_model: CreateSchoolClassModel = CreateSchoolClassModel(
         name=create_school_class_request.name,
         description=create_school_class_request.description,
-        owner_id=str(current_user.user_id),
+        owner_id=str(user.id),
     )
     return await insert_school_class_in_db(create_school_class_model=create_school_class_model)
 
