@@ -1,9 +1,13 @@
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Security
 
-from server.server.api.api_v1.routers.auth_api.models import JwTokenData
-from server.server.api.api_v1.routers.auth_api.utils import get_token_from_header
+from server.server.api.api_v1.routers.auth_api.models import JwTokenData, User, Role
+from server.server.api.api_v1.routers.auth_api.utils import (
+    get_token_from_header,
+    get_current_user_with_scope,
+    validate_token_with_scope,
+)
 from server.server.api.api_v1.routers.data_api.models import (
     CreateSchoolClassRequest,
     SchoolClass,
@@ -14,12 +18,17 @@ from server.server.api.api_v1.routers.data_api.utils import (
     list_school_classes_from_db,
     find_school_class_by_id_in_db,
     update_school_class_in_db,
+    list_school_classes_from_db_by_owner_id,
 )
 
 router = APIRouter()
 
 
-@router.post("/school_class", response_model=CreateSchoolClassRequest)
+@router.post(
+    "/school_class",
+    dependencies=[Security(validate_token_with_scope, scopes=[Role.USER.name])],
+    response_model=CreateSchoolClassRequest,
+)
 async def create_school_class(
     create_school_class_request: CreateSchoolClassRequest, current_user: JwTokenData = Depends(get_token_from_header)
 ):
@@ -34,8 +43,8 @@ async def create_school_class(
     return await insert_school_class_in_db(create_school_class_model=create_school_class_model)
 
 
-@router.get("/school_class", response_model=List[SchoolClass])
-async def get_all_school_classes():
+@router.get("/admin/school_class", response_model=List[SchoolClass])
+async def get_all_school_classes(user: User = Security(get_current_user_with_scope, scopes=[Role.ADMIN.name])):
     """
     Todo docs
     """
@@ -43,11 +52,11 @@ async def get_all_school_classes():
 
 
 @router.get("/school_class", response_model=List[SchoolClass])
-async def get_all_school_classes():
+async def get_all_school_classes_for_user(user: User = Security(get_current_user_with_scope, scopes=[Role.ADMIN.name])):
     """
     Todo docs
     """
-    return await list_school_classes_from_db()
+    return await list_school_classes_from_db_by_owner_id(owner_id=str(user.id))
 
 
 @router.get("/school_class/{school_class_id}", response_model=SchoolClass)
@@ -55,6 +64,8 @@ async def get_school_class_by_id(school_class_id):
     """
     Todo docs
     """
+
+    # todo only return if correct owner
     return await find_school_class_by_id_in_db(school_class_id=school_class_id)
 
 

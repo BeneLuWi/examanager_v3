@@ -42,7 +42,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     """
     The token method is used to verify a login attempt. The posted data gets checked with the mongodb instance. If the
     login credentials are correct a token is created. Gets data from login form and checks with db entries
-    :return: JWT if succesful, else failure message
+    :return: JWT if successful, else failure message
     """
     user: User = await authenticate_user(form_data.username, form_data.password)
     if not user:
