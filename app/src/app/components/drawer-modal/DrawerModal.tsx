@@ -1,6 +1,6 @@
 import React, { CSSProperties, FunctionComponent, PropsWithChildren, useRef } from "react"
 import { useTransition, a, config } from "@react-spring/web"
-import { Container } from "react-bootstrap"
+import { Button, Container } from "react-bootstrap"
 
 type DrawerModalProps = {
   show: boolean
@@ -58,7 +58,9 @@ const DrawerModal: FunctionComponent<PropsWithChildren<DrawerModalProps>> = ({ c
           style={{ left: 0, top: 0, opacity: styles.opacity, zIndex: 99 }}
         >
           <a.aside style={{ ...drawerStyle, ...styles }} className="bg-white">
-            <i onClick={close} className="display-6 bi bi-x-lg position-absolute m-2" style={{ cursor: "pointer" }} />
+            <Button onClick={close} variant="outline-secondary" className="m-2">
+              <i className="display-6 bi bi-x-lg" />
+            </Button>
             <Container>{children}</Container>
           </a.aside>
         </a.div>
