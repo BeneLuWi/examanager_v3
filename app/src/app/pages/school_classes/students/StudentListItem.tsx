@@ -24,7 +24,13 @@ const StudentListItem: FunctionComponent<StudentListItemProps> = ({ student }) =
    *
    *******************************************************************************************************************/
 
-  return <div>StudentListItem</div>
+  return (
+    <tr>
+      <td>{student.firstname}</td>
+      <td>{student.lastname}</td>
+      <td>{student.gender}</td>
+    </tr>
+  )
 }
 
 export default StudentListItem
