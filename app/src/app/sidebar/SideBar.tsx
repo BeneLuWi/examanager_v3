@@ -16,7 +16,6 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
    *******************************************************************************************************************/
   const auth = useAuth()
   const navigate = useNavigate()
-  const { sideBarCollapsed, toggleSideBar } = useLayout()
 
   /*******************************************************************************************************************
    *
@@ -47,7 +46,7 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
         <hr />
         <Nav.Link onClick={() => auth.signOut(() => navigate("/"))}>
           <span>
-            <i className="bi bi-box-arrow-left" /> {!sideBarCollapsed && "Logout"}
+            <i className="bi bi-box-arrow-left" /> Logout
           </span>
         </Nav.Link>
       </Nav>
