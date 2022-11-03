@@ -38,9 +38,7 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
       </ListGroup.Item>
 
       <DrawerModal show={edit} close={close}>
-        <div className="display-5">
-          {schoolClass.name} <i className="bi bi-people" />
-        </div>
+        <div className="display-5">{schoolClass.name}</div>
         <StudentList schoolClass={schoolClass} />
       </DrawerModal>
     </>

@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from "react"
 import { SchoolClass, Student } from "../types"
 import Table from "react-bootstrap/Table"
-import { Button, Col, Row } from "react-bootstrap"
+import { Button, Card, Col, Row } from "react-bootstrap"
 import StudentListItem from "./StudentListItem"
 import NewStudent from "./NewStudent"
 import axios from "axios"
@@ -45,20 +45,27 @@ const StudentList: FunctionComponent<StudentListProps> = ({ schoolClass }) => {
   return (
     <Row>
       <Col xs={8}>
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Vorname</th>
-              <th>Nachname</th>
-              <th>Geschlecht</th>
-            </tr>
-          </thead>
-          <tbody>
-            {students?.map((student) => (
-              <StudentListItem key={student._id} student={student} />
-            ))}
-          </tbody>
-        </Table>
+        <Card>
+          <Card.Body>
+            <Card.Title>
+              <i className="bi bi-people" /> Liste der Schüler:innen
+            </Card.Title>
+            <Table striped hover>
+              <thead>
+                <tr>
+                  <th>Vorname</th>
+                  <th>Nachname</th>
+                  <th>Geschlecht</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students?.map((student) => (
+                  <StudentListItem key={student._id} student={student} />
+                ))}
+              </tbody>
+            </Table>
+          </Card.Body>
+        </Card>
       </Col>
       <Col xs={4}>
         <NewStudent updateStudents={updateStudents} schoolClass={schoolClass} />
