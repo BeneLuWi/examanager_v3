@@ -69,6 +69,6 @@ async def update_exam_in_db(exam: Exam) -> Exam:
 ################
 # Delete
 ###############
-async def delete_exam_in_db(exam_id: str) -> bool:
+async def delete_exam_in_db(exam_id: ObjectId) -> bool:
     deleted_exam = await exam_collection.delete_one({"_id": exam_id})
     return deleted_exam.deleted_count == 1

@@ -63,4 +63,4 @@ async def update_school_class(update_school_class_request: SchoolClass):
 
 @school_class_router.delete("/school_class")
 async def update_school_class(school_class_id):
-    return await delete_school_class_in_db(school_class_id=school_class_id)
+    return await delete_school_class_in_db(school_class_id=ObjectId(school_class_id))

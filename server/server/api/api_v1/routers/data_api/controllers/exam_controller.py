@@ -61,4 +61,4 @@ async def update_exam(update_exam_request: Exam):
 
 @exam_router.delete("/exam")
 async def update_exam(exam_id):
-    return await delete_exam_in_db(exam_id=exam_id)
+    return await delete_exam_in_db(exam_id=ObjectId(exam_id))

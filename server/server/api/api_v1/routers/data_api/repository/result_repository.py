@@ -72,6 +72,6 @@ async def update_result_in_db(result: Result) -> Result:
 ################
 # Delete
 ###############
-async def delete_result_in_db(result_id: str) -> bool:
+async def delete_result_in_db(result_id: ObjectId) -> bool:
     deleted_result = await result_collection.delete_one({"_id": result_id})
     return deleted_result.deleted_count == 1
