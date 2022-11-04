@@ -77,6 +77,7 @@ class Exam(MongoModel):
 
 class CreateResultRequest(BaseModel):
     exam_id: str
+    student_id: str
     points_per_task: Dict[str, float]
     owner_id: str | None
 
@@ -84,4 +85,5 @@ class CreateResultRequest(BaseModel):
 class Result(MongoModel):
     owner_id: str
     exam_id: str
+    student_id: str
     points_per_task: Dict[str, float]
