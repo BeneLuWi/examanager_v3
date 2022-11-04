@@ -53,7 +53,7 @@ const NewStudent: FunctionComponent<NewStudentProps> = ({ updateStudents, school
     <Card>
       <Card.Body>
         <Card.Title>
-          <i className="bi bi-person-plus" /> Schüler:in hinzufügen{" "}
+          <i className="bi bi-person-plus" /> Schüler:in hinzufügen
         </Card.Title>
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">

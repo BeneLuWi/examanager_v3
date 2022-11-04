@@ -26,5 +26,9 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 $nav-pills-link-active-bg : #4F64A4;
 $nav-link-color: #4F64A4;
 
+.cursor-pointer:hover{
+  cursor: pointer;
+}
+
 /* import bootstrap to set changes */
 @import "~bootstrap/scss/bootstrap";

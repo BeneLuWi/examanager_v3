@@ -60,7 +60,7 @@ const StudentList: FunctionComponent<StudentListProps> = ({ schoolClass }) => {
               </thead>
               <tbody>
                 {students?.map((student) => (
-                  <StudentListItem key={student._id} student={student} />
+                  <StudentListItem key={student._id} student={student} updateStudents={updateStudents} />
                 ))}
               </tbody>
             </Table>
