@@ -1,5 +1,5 @@
 import React, { CSSProperties, FunctionComponent, PropsWithChildren, useRef } from "react"
-import { useTransition, a, config } from "@react-spring/web"
+import { useTransition, a, config, easings } from "@react-spring/web"
 import { Button, Container } from "react-bootstrap"
 
 type DrawerModalProps = {
@@ -30,7 +30,7 @@ const DrawerModal: FunctionComponent<PropsWithChildren<DrawerModalProps>> = ({ c
     from: { transform: "translateX(100px)", opacity: 0 },
     enter: { transform: "translateX(0px)", opacity: 1 },
     leave: { transform: "translateX(100px)", opacity: 0 },
-    config: config.gentle,
+    config: { duration: 300, easing: easings.easeInOutSine },
   })
 
   /*******************************************************************************************************************
