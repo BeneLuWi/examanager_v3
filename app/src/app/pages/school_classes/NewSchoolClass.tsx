@@ -2,7 +2,7 @@ import React, { FunctionComponent, useState } from "react"
 import axios from "axios"
 import { toast } from "react-toastify"
 import { useSchoolClassContext } from "./SchoolClasses"
-import { Button } from "react-bootstrap"
+import { Button, Card } from "react-bootstrap"
 import ModalWrapper from "../../components/modal-wrapper/ModalWrapper"
 import Form from "react-bootstrap/Form"
 
@@ -15,7 +15,6 @@ const NewSchoolClass: FunctionComponent<NewSchoolClassProps> = ({}) => {
    *
    *******************************************************************************************************************/
 
-  const [show, setShow] = useState(false)
   const { updateSchoolClasses } = useSchoolClassContext()
 
   /*******************************************************************************************************************
@@ -23,8 +22,6 @@ const NewSchoolClass: FunctionComponent<NewSchoolClassProps> = ({}) => {
    *  Functions
    *
    *******************************************************************************************************************/
-  const open = () => setShow(true)
-  const close = () => setShow(false)
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -44,8 +41,6 @@ const NewSchoolClass: FunctionComponent<NewSchoolClassProps> = ({}) => {
         description,
       })
       .then(() => {
-        toast("Klasse erstellt")
-        close()
         updateSchoolClasses()
       })
       .catch(() => toast("Fehler beim erstellen", { type: "error" }))
@@ -58,12 +53,9 @@ const NewSchoolClass: FunctionComponent<NewSchoolClassProps> = ({}) => {
    *******************************************************************************************************************/
 
   return (
-    <>
-      <Button className="mb-3" onClick={open}>
-        Klasse erstellen
-      </Button>
-
-      <ModalWrapper size="lg" show={show} close={close} title="Klasse erstellen">
+    <Card>
+      <Card.Body>
+        <Card.Title>Klasse erstellen</Card.Title>
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
@@ -77,8 +69,8 @@ const NewSchoolClass: FunctionComponent<NewSchoolClassProps> = ({}) => {
             Erstellen
           </Button>
         </Form>
-      </ModalWrapper>
-    </>
+      </Card.Body>
+    </Card>
   )
 }
 

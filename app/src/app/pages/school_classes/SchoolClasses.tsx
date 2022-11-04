@@ -4,6 +4,7 @@ import NewSchoolClass from "./NewSchoolClass"
 import SchoolClassList from "./SchoolClassList"
 import axios from "axios"
 import { toast } from "react-toastify"
+import { Col, Row } from "react-bootstrap"
 
 type SchoolClassesProps = {}
 
@@ -45,8 +46,14 @@ const SchoolClasses: FunctionComponent<SchoolClassesProps> = ({}) => {
   return (
     <SchoolClassContext.Provider value={{ schoolClasses, updateSchoolClasses }}>
       <div className="display-4">Klassen</div>
-      <NewSchoolClass />
-      <SchoolClassList />
+      <Row>
+        <Col xs={8}>
+          <SchoolClassList />
+        </Col>
+        <Col>
+          <NewSchoolClass />
+        </Col>
+      </Row>
     </SchoolClassContext.Provider>
   )
 }

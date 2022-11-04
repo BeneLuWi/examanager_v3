@@ -48,7 +48,7 @@ const Exams: FunctionComponent<ExamsProps> = ({}) => {
     <ExamContext.Provider value={{ exams, updateExams }}>
       <div className="display-4">Klausuren</div>
       <Row>
-        <Col>
+        <Col xs={8}>
           <ExamsList />
         </Col>
         <Col>

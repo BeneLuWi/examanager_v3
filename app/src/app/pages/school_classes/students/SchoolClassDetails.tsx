@@ -70,9 +70,9 @@ const SchoolClassDetails: FunctionComponent<SchoolClassDetailsProps> = ({ school
           <Card.Title>
             <i className="bi bi-info-circle" /> Infos
           </Card.Title>
+          <p>Name: {schoolClass.name}</p>
           <p>Beschreibung: {schoolClass.description}</p>
           <p>Anzahl der Schüler:innen: {students?.length}</p>
-          <hr />
           <Button onClick={open}>Bearbeiten</Button>
         </Card.Body>
       </Card>
