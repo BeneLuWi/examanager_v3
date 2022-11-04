@@ -5,7 +5,7 @@ import ModalWrapper from "../modal-wrapper/ModalWrapper"
 
 type ConfirmButtonProps = {
   onSuccess: VoidFunction
-  variant: ButtonVariant
+  variant?: ButtonVariant
   question: string
 }
 

@@ -6,6 +6,7 @@ import StudentListItem from "./StudentListItem"
 import NewStudent from "./NewStudent"
 import axios from "axios"
 import { toast } from "react-toastify"
+import SchoolClassDetails from "./SchoolClassDetails"
 
 type StudentListProps = {
   schoolClass: SchoolClass
@@ -43,7 +44,7 @@ const StudentList: FunctionComponent<StudentListProps> = ({ schoolClass }) => {
    *******************************************************************************************************************/
 
   return (
-    <Row className="h-100" style={{ overflowY: "scroll" }}>
+    <Row className="h-100 " style={{ overflowY: "scroll" }}>
       <Col xs={8}>
         <Card>
           <Card.Body>
@@ -69,6 +70,8 @@ const StudentList: FunctionComponent<StudentListProps> = ({ schoolClass }) => {
       </Col>
       <Col xs={4}>
         <NewStudent updateStudents={updateStudents} schoolClass={schoolClass} />
+        <div className="mb-4" />
+        <SchoolClassDetails students={students} schoolClass={schoolClass} />
       </Col>
     </Row>
   )
