@@ -27,16 +27,11 @@ const SchoolClassList: FunctionComponent<SchoolClassListProps> = ({}) => {
    *******************************************************************************************************************/
 
   return (
-    <Card>
-      <Card.Body>
-        <Card.Title>Liste der Schulklassen</Card.Title>
-        <ListGroup>
-          {schoolClasses?.map((schoolClass) => (
-            <SchoolClassItem key={schoolClass._id} schoolClass={schoolClass} />
-          ))}
-        </ListGroup>
-      </Card.Body>
-    </Card>
+    <ListGroup>
+      {schoolClasses?.map((schoolClass) => (
+        <SchoolClassItem key={schoolClass._id} schoolClass={schoolClass} />
+      ))}
+    </ListGroup>
   )
 }
 
