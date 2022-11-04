@@ -7,7 +7,6 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.security import SecurityScopes, OAuth2PasswordBearer
 from passlib.context import CryptContext
 from pydantic import ValidationError
-import motor.motor_asyncio
 from starlette import status
 from starlette.responses import JSONResponse
 from jose import jwt
@@ -117,8 +116,10 @@ async def get_current_active_user(current_user: User = Depends(get_current_user_
 def validate_scope(security_scopes: SecurityScopes, user_role: str):
     for scope in security_scopes.scopes:
         logger.info(f"found scope {scope} - token has {user_role}")
+        scope_role_value = Role.resolve_role_value(Role[scope])
+        user_role_value = Role.resolve_role_value(Role[user_role])
 
-        if Role[scope].value > Role[user_role].value:
+        if scope_role_value > user_role_value:
             return False
     return True
 
@@ -135,6 +136,7 @@ async def validate_token_with_scope(
 
     token_data = decode_token(token=token)
 
+    # if there are scope requirements but not role for the token
     if security_scopes.scopes and not token_data.role:
         raise HTTPException(
             status_code=401,
