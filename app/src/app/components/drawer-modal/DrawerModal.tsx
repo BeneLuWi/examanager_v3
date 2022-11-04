@@ -8,10 +8,10 @@ type DrawerModalProps = {
 }
 
 const drawerStyle: CSSProperties = {
-  position: "fixed",
   zIndex: 100,
   width: "85vw",
-  height: "100vh",
+  contain: "content",
+  position: "absolute",
   top: 0,
   bottom: 0,
   right: 0,
@@ -58,10 +58,12 @@ const DrawerModal: FunctionComponent<PropsWithChildren<DrawerModalProps>> = ({ c
           style={{ left: 0, top: 0, opacity: styles.opacity, zIndex: 99 }}
         >
           <a.aside style={{ ...drawerStyle, ...styles }} className="bg-white">
-            <Button onClick={close} variant="outline-secondary" className="m-2">
+            <Button onClick={close} variant="outline-secondary" className="m-3 position-absolute">
               <i className="display-6 bi bi-x-lg" />
             </Button>
-            <Container>{children}</Container>
+            <Container className="p-3" style={{ height: "95%" }}>
+              {children}
+            </Container>
           </a.aside>
         </a.div>
       )

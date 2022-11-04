@@ -43,7 +43,7 @@ const StudentList: FunctionComponent<StudentListProps> = ({ schoolClass }) => {
    *******************************************************************************************************************/
 
   return (
-    <Row>
+    <Row className="h-100" style={{ overflowY: "scroll" }}>
       <Col xs={8}>
         <Card>
           <Card.Body>

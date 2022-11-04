@@ -26,11 +26,9 @@ const SchoolClassList: FunctionComponent<SchoolClassListProps> = ({}) => {
    *
    *******************************************************************************************************************/
 
-  if (!schoolClasses) return <div />
-
   return (
     <ListGroup>
-      {schoolClasses.map((schoolClass) => (
+      {schoolClasses?.map((schoolClass) => (
         <SchoolClassItem key={schoolClass._id} schoolClass={schoolClass} />
       ))}
     </ListGroup>

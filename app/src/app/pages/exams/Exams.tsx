@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from "react"
+import React, { FunctionComponent, useCallback, useEffect, useState } from "react"
 import { Exam, ExamContextType } from "./types"
 import axios from "axios"
 import { toast } from "react-toastify"
@@ -21,17 +21,22 @@ const Exams: FunctionComponent<ExamsProps> = ({}) => {
 
   const [exams, setExams] = useState<Exam[]>()
 
+  const updateExams = useCallback(() => {
+    axios
+      .get("api/exam")
+      .then((res) => setExams(res.data))
+      .catch(() => toast("Fehler beim Laden Klausuren", { type: "error" }))
+  }, [])
+
+  useEffect(() => {
+    updateExams()
+  }, [updateExams])
+
   /*******************************************************************************************************************
    *
    *  Functions
    *
    *******************************************************************************************************************/
-
-  const updateExams = () =>
-    axios
-      .get("api/exam")
-      .then((res) => setExams(res.data))
-      .catch(() => toast("Fehler beim Laden Klausuren", { type: "error" }))
 
   /*******************************************************************************************************************
    *
