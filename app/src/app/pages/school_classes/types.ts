@@ -6,11 +6,18 @@ export interface SchoolClass {
 }
 
 export type Student = {
-  id: string
+  _id: string
   firstname: string
   lastname: string
   user_id: string
-  schoolclass_id: string
+  school_class_id: string
+  gender: Gender
+}
+
+export enum Gender {
+  m = "m",
+  w = "w",
+  d = "d",
 }
 
 export interface SchoolClassContextType {

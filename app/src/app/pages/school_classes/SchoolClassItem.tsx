@@ -1,7 +1,8 @@
 import React, { FunctionComponent, useState } from "react"
 import { SchoolClass } from "./types"
 import { Button, ListGroup } from "react-bootstrap"
-import ModalWrapper from "../../components/modal-wrapper/ModalWrapper"
+import DrawerModal from "../../components/drawer-modal/DrawerModal"
+import StudentList from "./students/StudentList"
 
 type SchoolClassItemProps = {
   schoolClass: SchoolClass
@@ -36,12 +37,10 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
         {schoolClass.name} : {schoolClass.description}
       </ListGroup.Item>
 
-      <ModalWrapper
-        fullscreen={true}
-        show={edit}
-        close={close}
-        title={`Klasse ${schoolClass.name} bearbeiten`}
-      ></ModalWrapper>
+      <DrawerModal show={edit} close={close}>
+        <div className="display-5">{schoolClass.name}</div>
+        <StudentList schoolClass={schoolClass} />
+      </DrawerModal>
     </>
   )
 }

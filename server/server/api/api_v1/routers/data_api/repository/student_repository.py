@@ -43,7 +43,9 @@ async def list_students_from_db_by_owner_id(owner_id: str) -> List[Student]:
 
 
 async def list_students_from_db_by_school_class_id(school_class_id: str, owner_id: str) -> List[Student]:
-    students = await student_collection.find({"owner_id": owner_id}, {"school_class_id": school_class_id}).to_list(1000)
+    students = await student_collection.find(
+        {"$and": [{"owner_id": owner_id}, {"school_class_id": school_class_id}]}
+    ).to_list(1000)
     return list(map(lambda student: Student.parse_obj(student), students))
 
 

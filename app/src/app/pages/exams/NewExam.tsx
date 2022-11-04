@@ -1,21 +1,21 @@
-import React, { FunctionComponent, useRef } from "react"
-import Form from "react-bootstrap/Form"
+import React, { FunctionComponent } from "react"
 import { Button, Card } from "react-bootstrap"
-import { toast } from "react-toastify"
+import Form from "react-bootstrap/Form"
 import axios from "axios"
-import { SchoolClass, Student } from "../types"
+import { toast } from "react-toastify"
+import { Exam } from "./types"
+import { useExamContext } from "./Exams"
 
-type NewStudentProps = {
-  updateStudents: VoidFunction
-  schoolClass: SchoolClass
-}
+type NewExamProps = {}
 
-const NewStudent: FunctionComponent<NewStudentProps> = ({ updateStudents, schoolClass }) => {
+const NewExam: FunctionComponent<NewExamProps> = ({}) => {
   /*******************************************************************************************************************
    *
    *  Hooks
    *
    *******************************************************************************************************************/
+
+  const { updateExams } = useExamContext()
 
   /*******************************************************************************************************************
    *
@@ -27,15 +27,16 @@ const NewStudent: FunctionComponent<NewStudentProps> = ({ updateStudents, school
     event.preventDefault()
 
     let formData = new FormData(event.currentTarget)
-    const studentData: Student = Object.fromEntries(formData) as Student
+    const [name, description] = [formData.get("name"), formData.get("description")]
 
     axios
-      .post("api/student", {
-        ...studentData,
-        school_class_id: schoolClass._id,
+      .post("api/exam", {
+        name,
+        description,
+        tasks: [],
       })
       .then(() => {
-        updateStudents()
+        updateExams()
 
         // @ts-ignore
         event.target.reset()
@@ -53,24 +54,16 @@ const NewStudent: FunctionComponent<NewStudentProps> = ({ updateStudents, school
     <Card>
       <Card.Body>
         <Card.Title>
-          <i className="bi bi-person-plus" /> Schüler:in hinzufügen{" "}
+          <i className="bi bi-file-earmark-plus" /> Klausur hinzufügen
         </Card.Title>
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
-            <Form.Label>Vorname</Form.Label>
-            <Form.Control name="firstname" type="text" placeholder="" />
+            <Form.Label>Name</Form.Label>
+            <Form.Control name="name" type="text" placeholder="" />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Nachname</Form.Label>
-            <Form.Control name="lastname" type="text" placeholder="(optional)" />
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Geschlecht</Form.Label>
-            <Form.Select name="gender">
-              <option value="w">weiblich</option>
-              <option value="m">männlich</option>
-              <option value="d">divers</option>
-            </Form.Select>
+            <Form.Label>Description</Form.Label>
+            <Form.Control name="description" type="text" placeholder="(optional)" />
           </Form.Group>
           <Button variant="success" type="submit">
             Erstellen
@@ -81,4 +74,4 @@ const NewStudent: FunctionComponent<NewStudentProps> = ({ updateStudents, school
   )
 }
 
-export default NewStudent
+export default NewExam

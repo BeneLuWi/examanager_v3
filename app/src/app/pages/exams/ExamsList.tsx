@@ -1,16 +1,18 @@
 import React, { FunctionComponent } from "react"
-import { Student } from "../types"
+import { ListGroup } from "react-bootstrap"
+import ExamsListItem from "./ExamsListItem"
+import { useExamContext } from "./Exams"
 
-type StudentListItemProps = {
-  student: Student
-}
+type ExamsListProps = {}
 
-const StudentListItem: FunctionComponent<StudentListItemProps> = ({ student }) => {
+const ExamsList: FunctionComponent<ExamsListProps> = ({}) => {
   /*******************************************************************************************************************
    *
    *  Hooks
    *
    *******************************************************************************************************************/
+
+  const { exams } = useExamContext()
 
   /*******************************************************************************************************************
    *
@@ -25,12 +27,12 @@ const StudentListItem: FunctionComponent<StudentListItemProps> = ({ student }) =
    *******************************************************************************************************************/
 
   return (
-    <tr>
-      <td>{student.firstname}</td>
-      <td>{student.lastname}</td>
-      <td>{student.gender}</td>
-    </tr>
+    <ListGroup>
+      {exams?.map((exam) => (
+        <ExamsListItem key={exam._id} exam={exam} />
+      ))}
+    </ListGroup>
   )
 }
 
-export default StudentListItem
+export default ExamsList

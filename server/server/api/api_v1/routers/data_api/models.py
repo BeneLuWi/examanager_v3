@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Literal
 
 from bson import ObjectId
 from pydantic import BaseModel, Field
@@ -42,6 +42,7 @@ class CreateStudentRequest(BaseModel):
     firstname: str
     school_class_id: str
     owner_id: str | None
+    gender: Literal["m", "w", "d"]
 
 
 class Student(MongoModel):
@@ -49,6 +50,7 @@ class Student(MongoModel):
     firstname: str
     school_class_id: str
     owner_id: str
+    gender: Literal["m", "w", "d"]
 
 
 class CreateTaskRequest(BaseModel):

@@ -16,7 +16,6 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
    *******************************************************************************************************************/
   const auth = useAuth()
   const navigate = useNavigate()
-  const { sideBarCollapsed, toggleSideBar } = useLayout()
 
   /*******************************************************************************************************************
    *
@@ -39,15 +38,15 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
       <hr />
       <Nav variant="pills" className="flex-column">
         <NavItem title="Home" icon="bi bi-house" path="/" />
-        <NavItem title="Klassen" icon="bi bi-grid-3x3-gap" path="/classes" />
-        <NavItem title="Klausuren" icon="bi bi-grid-3x3-gap" path="/exams" />
-        <NavItem title="Ergebnisse" icon="bi bi-grid-3x3-gap" path="/results" />
-        <NavItem title="Statistiken" icon="bi bi-grid-3x3-gap" path="/statistics" />
-        {auth.auth?.role === Roles.ADMIN ? <NavItem title="Admin" icon="bi bi-person" path="/admin" /> : <></>}
+        <NavItem title="Klassen" icon="bi bi-people" path="/classes" />
+        <NavItem title="Klausuren" icon="bi bi-list" path="/exams" />
+        <NavItem title="Ergebnisse" icon="bi bi-list-check" path="/results" />
+        <NavItem title="Statistiken" icon="bi bi-bar-chart" path="/statistics" />
+        {auth.auth?.role === Roles.ADMIN ? <NavItem title="Admin" icon="bi bi-clipboard-check" path="/admin" /> : <></>}
         <hr />
         <Nav.Link onClick={() => auth.signOut(() => navigate("/"))}>
           <span>
-            <i className="bi bi-box-arrow-left" /> {!sideBarCollapsed && "Logout"}
+            <i className="bi bi-box-arrow-left" /> Logout
           </span>
         </Nav.Link>
       </Nav>

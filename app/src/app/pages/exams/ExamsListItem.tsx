@@ -1,11 +1,12 @@
 import React, { FunctionComponent } from "react"
-import { Student } from "../types"
+import { Exam } from "./types"
+import { ListGroup } from "react-bootstrap"
 
-type StudentListItemProps = {
-  student: Student
+type ExamsListItemProps = {
+  exam: Exam
 }
 
-const StudentListItem: FunctionComponent<StudentListItemProps> = ({ student }) => {
+const ExamsListItem: FunctionComponent<ExamsListItemProps> = ({ exam }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
@@ -25,12 +26,10 @@ const StudentListItem: FunctionComponent<StudentListItemProps> = ({ student }) =
    *******************************************************************************************************************/
 
   return (
-    <tr>
-      <td>{student.firstname}</td>
-      <td>{student.lastname}</td>
-      <td>{student.gender}</td>
-    </tr>
+    <ListGroup.Item action>
+      {exam.name} : {exam.description}
+    </ListGroup.Item>
   )
 }
 
-export default StudentListItem
+export default ExamsListItem
