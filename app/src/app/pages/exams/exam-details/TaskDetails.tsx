@@ -1,8 +1,11 @@
 import React, { FunctionComponent } from "react"
+import { Exam } from "../types"
 
-type TaskDetailsProps = {}
+type TaskDetailsProps = {
+  exam: Exam
+}
 
-const TaskDetails: FunctionComponent<TaskDetailsProps> = ({}) => {
+const TaskDetails: FunctionComponent<TaskDetailsProps> = ({ exam }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
