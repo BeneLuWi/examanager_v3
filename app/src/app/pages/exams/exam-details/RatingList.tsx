@@ -1,27 +1,23 @@
-import React, { FunctionComponent, useState } from "react"
-import { Exam } from "./types"
-import { ListGroup } from "react-bootstrap"
-import DrawerModal from "../../components/drawer-modal/DrawerModal"
-import ExamDetails from "./exam-details/ExamDetails"
+import React, { FunctionComponent } from "react"
+import { Exam } from "../types"
+import { Card } from "react-bootstrap"
 
-type ExamsListItemProps = {
+type RatingListProps = {
   exam: Exam
 }
 
-const ExamsListItem: FunctionComponent<ExamsListItemProps> = ({ exam }) => {
+const RatingList: FunctionComponent<RatingListProps> = ({ exam }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
    *
    *******************************************************************************************************************/
-  const [edit, setEdit] = useState(false)
+
   /*******************************************************************************************************************
    *
    *  Functions
    *
    *******************************************************************************************************************/
-  const close = () => setEdit(false)
-  const open = () => setEdit(true)
 
   /*******************************************************************************************************************
    *
@@ -30,17 +26,12 @@ const ExamsListItem: FunctionComponent<ExamsListItemProps> = ({ exam }) => {
    *******************************************************************************************************************/
 
   return (
-    <>
-      <ListGroup.Item action onClick={open}>
-        {exam.name} : {exam.description}
-      </ListGroup.Item>
-
-      <DrawerModal show={edit} close={close}>
-        <div className="display-5">{exam.name}</div>
-        <ExamDetails exam={exam} />
-      </DrawerModal>
-    </>
+    <Card>
+      <Card.Body>
+        <Card.Title>Bewertung</Card.Title>
+      </Card.Body>
+    </Card>
   )
 }
 
-export default ExamsListItem
+export default RatingList

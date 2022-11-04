@@ -1,27 +1,26 @@
-import React, { FunctionComponent, useState } from "react"
-import { Exam } from "./types"
-import { ListGroup } from "react-bootstrap"
-import DrawerModal from "../../components/drawer-modal/DrawerModal"
-import ExamDetails from "./exam-details/ExamDetails"
+import React, { FunctionComponent } from "react"
+import { Col, Row } from "react-bootstrap"
+import { Exam } from "../types"
+import RatingList from "./RatingList"
+import TaskList from "./TaskList"
+import NewTask from "./NewTask"
 
-type ExamsListItemProps = {
+type ExamDetailsProps = {
   exam: Exam
 }
 
-const ExamsListItem: FunctionComponent<ExamsListItemProps> = ({ exam }) => {
+const ExamDetails: FunctionComponent<ExamDetailsProps> = ({ exam }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
    *
    *******************************************************************************************************************/
-  const [edit, setEdit] = useState(false)
+
   /*******************************************************************************************************************
    *
    *  Functions
    *
    *******************************************************************************************************************/
-  const close = () => setEdit(false)
-  const open = () => setEdit(true)
 
   /*******************************************************************************************************************
    *
@@ -30,17 +29,18 @@ const ExamsListItem: FunctionComponent<ExamsListItemProps> = ({ exam }) => {
    *******************************************************************************************************************/
 
   return (
-    <>
-      <ListGroup.Item action onClick={open}>
-        {exam.name} : {exam.description}
-      </ListGroup.Item>
-
-      <DrawerModal show={edit} close={close}>
-        <div className="display-5">{exam.name}</div>
-        <ExamDetails exam={exam} />
-      </DrawerModal>
-    </>
+    <Row>
+      <Col xs={6}>
+        <RatingList exam={exam} />
+      </Col>
+      <Col xs={3}>
+        <TaskList exam={exam} />
+      </Col>
+      <Col>
+        <NewTask exam={exam} />
+      </Col>
+    </Row>
   )
 }
 
-export default ExamsListItem
+export default ExamDetails
