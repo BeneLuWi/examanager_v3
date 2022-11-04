@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import Enum
 
 from bson import ObjectId
@@ -13,8 +15,13 @@ class Role(Enum):
     roles get monotonically more rights. It is possible to add roles between existing roles.
     """
 
-    USER = 0
-    ADMIN = 1
+    USER = "user"
+    ADMIN = "admin"
+
+    @classmethod
+    def resolve_role_value(cls, role: Role):
+        role_map: dict = {Role.ADMIN: 100, Role.USER: 50}
+        return role_map[role]
 
 
 class LoginRequest(BaseModel):
@@ -49,15 +56,14 @@ class CreateUserRequest(BaseModel):
 
 
 class UpdatePasswordRequest(BaseModel):
-    _id: str
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     password: str
-
-    @property
-    def id(self):
-        return self._id
 
     class Config:
         schema_extra = {"example": {"_id": "user_id_string", "password": "new_plain_password"}}
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
 
 
 class UpdateUserRequest(BaseModel):
