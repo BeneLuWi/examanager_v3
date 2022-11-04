@@ -69,4 +69,6 @@ async def update_student(update_student_request: Student):
 
 @student_router.delete("/student")
 async def update_student(student_id):
-    return await delete_student_in_db(student_id=student_id)
+    success = await delete_student_in_db(student_id=ObjectId(student_id))
+    if not success:
+        raise HTTPException(status_code=500, detail="Failure while deleting Student")

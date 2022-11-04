@@ -76,6 +76,6 @@ async def update_student_in_db(student: Student) -> Student:
 ################
 # Delete
 ###############
-async def delete_student_in_db(student_id: str) -> bool:
+async def delete_student_in_db(student_id: ObjectId) -> bool:
     deleted_student = await student_collection.delete_one({"_id": student_id})
     return deleted_student.deleted_count == 1
