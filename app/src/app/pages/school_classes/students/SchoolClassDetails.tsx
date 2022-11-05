@@ -35,7 +35,7 @@ const SchoolClassDetails: FunctionComponent<SchoolClassDetailsProps> = ({ school
     axios
       .delete(`/api/school_class?school_class_id=${schoolClass._id}`)
       .then(() => updateSchoolClasses())
-      .catch(() => toast("Fehler beim bearbeiten", { type: "error" }))
+      .catch(() => toast("Fehler beim Löschen", { type: "error" }))
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
