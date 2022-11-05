@@ -69,6 +69,8 @@ const TaskDetails: FunctionComponent<TaskDetailsProps> = ({ exam }) => {
           <Card.Title>
             <i className="bi bi-info-circle" /> Infos
           </Card.Title>
+          <p>Name: {exam.name}</p>
+          <p>Beschreibung: {exam.description}</p>
           <p>Insgesamt {exam.tasks.reduce((a, b) => a + b.max_points, 0)} Punkte</p>
           <Button onClick={open}>Bearbeiten</Button>
         </Card.Body>

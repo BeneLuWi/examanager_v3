@@ -99,8 +99,8 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
             <Form.Label>Beschreibung</Form.Label>
             <Form.Control name="max_points" type="number" defaultValue={task.max_points} />
           </Form.Group>
-          <Button variant="success" type="submit" className="me-2">
-            Erstellen
+          <Button variant="primary" type="submit" className="me-2">
+            Speichern
           </Button>
           <ConfirmButton onSuccess={deleteTask} question={`${task.name} löschen?`}>
             Aufgabe Löschen

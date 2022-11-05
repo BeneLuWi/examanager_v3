@@ -92,11 +92,8 @@ const StudentListItem: FunctionComponent<StudentListItemProps> = ({ student, upd
               <option value="d">divers</option>
             </Form.Select>
           </Form.Group>
-          <Button variant="success" type="submit" className="me-2">
+          <Button variant="primary" type="submit" className="me-2">
             Speichern
-          </Button>
-          <Button variant="warning" onClick={close} className="me-2">
-            Abbrechen
           </Button>
           <ConfirmButton
             onSuccess={deleteStudent}

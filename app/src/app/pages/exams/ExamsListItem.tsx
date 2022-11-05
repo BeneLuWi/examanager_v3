@@ -32,7 +32,10 @@ const ExamsListItem: FunctionComponent<ExamsListItemProps> = ({ exam }) => {
   return (
     <>
       <ListGroup.Item action onClick={open}>
-        {exam.name} : {exam.description}
+        <div>
+          <div className="fw-bold">{exam.name}</div>
+          {exam.description}
+        </div>
       </ListGroup.Item>
 
       <DrawerModal show={edit} close={close}>
