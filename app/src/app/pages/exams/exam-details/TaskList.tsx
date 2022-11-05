@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from "react"
 import { Card } from "react-bootstrap"
 import { Exam } from "../types"
+import TaskItem from "./TaskItem"
 
 type TaskListProps = {
   exam: Exam
@@ -29,6 +30,10 @@ const TaskList: FunctionComponent<TaskListProps> = ({ exam }) => {
     <Card>
       <Card.Body>
         <Card.Title>Aufgaben</Card.Title>
+
+        {exam.tasks?.map((task) => (
+          <TaskItem key={task._id} exam={exam} task={task} />
+        ))}
       </Card.Body>
     </Card>
   )

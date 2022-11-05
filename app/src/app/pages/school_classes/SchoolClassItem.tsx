@@ -34,7 +34,10 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
   return (
     <>
       <ListGroup.Item action onClick={open}>
-        {schoolClass.name} : {schoolClass.description}
+        <div className="me-auto">
+          <div className="fw-bold">{schoolClass.name}</div>
+          {schoolClass.description}
+        </div>
       </ListGroup.Item>
 
       <DrawerModal show={edit} close={close}>
