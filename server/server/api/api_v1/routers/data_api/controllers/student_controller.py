@@ -56,7 +56,7 @@ async def get_all_students_for_school_class(
 @student_router.get("/student/{student_id}", response_model=Student)
 async def get_student_by_id(student_id, user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name])):
     #  only return if correct owner
-    student_in_db: Student = await find_student_by_id_in_db(student_id=ObjectId(student_id))
+    student_in_db: Student = await find_student_by_id_in_db(student_id=student_id)
     if student_in_db.owner_id == str(user.id):
         return student_in_db
     raise HTTPException(status_code=401, detail="Permission denied!")
@@ -69,6 +69,6 @@ async def update_student(update_student_request: Student):
 
 @student_router.delete("/student")
 async def delete_student(student_id):
-    success = await delete_student_in_db(student_id=ObjectId(student_id))
+    success = await delete_student_in_db(student_id=student_id)
     if not success:
         raise HTTPException(status_code=500, detail="Failure while deleting Student")

@@ -48,7 +48,7 @@ async def get_all_exams_for_user(user: User = Security(get_current_user_with_sco
 @exam_router.get("/exam/{exam_id}", response_model=Exam)
 async def get_exam_by_id(exam_id, user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name])):
     #  only return if correct owner
-    exam_in_db: Exam = await find_exam_by_id_in_db(exam_id=ObjectId(exam_id))
+    exam_in_db: Exam = await find_exam_by_id_in_db(exam_id=exam_id)
     if exam_in_db.owner_id == str(user.id):
         return exam_in_db
     raise HTTPException(status_code=401, detail="Permission denied!")
@@ -61,4 +61,4 @@ async def update_exam(update_exam_request: Exam):
 
 @exam_router.delete("/exam")
 async def delete_exam(exam_id):
-    return await delete_exam_in_db(exam_id=ObjectId(exam_id))
+    return await delete_exam_in_db(exam_id=exam_id)

@@ -49,7 +49,10 @@ async def list_students_from_db_by_school_class_id(school_class_id: str, owner_i
     return list(map(lambda student: Student.parse_obj(student), students))
 
 
-async def find_student_by_id_in_db(student_id: ObjectId) -> Optional[Student]:
+async def find_student_by_id_in_db(student_id: ObjectId | str) -> Optional[Student]:
+    if type(student_id) is str:
+        student_id = ObjectId(student_id)
+
     if (student := await student_collection.find_one({"_id": student_id})) is not None:
         return Student.parse_obj(student)
 
@@ -76,6 +79,9 @@ async def update_student_in_db(student: Student) -> Student:
 ################
 # Delete
 ###############
-async def delete_student_in_db(student_id: ObjectId) -> bool:
+async def delete_student_in_db(student_id: ObjectId | str) -> bool:
+    if type(student_id) is str:
+        student_id = ObjectId(student_id)
+
     deleted_student = await student_collection.delete_one({"_id": student_id})
     return deleted_student.deleted_count == 1

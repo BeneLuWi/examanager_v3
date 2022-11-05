@@ -7,7 +7,7 @@ from pymongo.results import InsertOneResult
 
 from server.database import result_collection
 from server.api.api_v1.routers.data_api.models import (
-    Result,
+    StudentResult,
     CreateResultRequest,
 )
 from server.config import ExamManagerSettings
@@ -26,7 +26,7 @@ logger = logging.getLogger(settings.APP_NAME)
 ################
 # Create
 ###############
-async def insert_result_in_db(create_result_request: CreateResultRequest) -> Result:
+async def insert_result_in_db(create_result_request: CreateResultRequest) -> StudentResult:
     result = jsonable_encoder(create_result_request)
     inserted: InsertOneResult = await result_collection.insert_one(result)
     return await find_result_by_id_in_db(result_id=inserted.inserted_id)
@@ -35,25 +35,52 @@ async def insert_result_in_db(create_result_request: CreateResultRequest) -> Res
 ################
 # Read
 ###############
-async def list_results_from_db() -> List[Result]:
+async def list_results_from_db() -> List[StudentResult]:
     results = await result_collection.find().to_list(1000)
-    return list(map(lambda result: Result.parse_obj(result), results))
+    return list(map(lambda result: StudentResult.parse_obj(result), results))
 
 
-async def list_results_from_db_by_owner_id(owner_id: str) -> List[Result]:
+async def list_results_from_db_by_owner_id(owner_id: str) -> List[StudentResult]:
     results = await result_collection.find({"owner_id": owner_id}).to_list(1000)
-    return list(map(lambda result: Result.parse_obj(result), results))
+    return list(map(lambda result: StudentResult.parse_obj(result), results))
 
 
-async def find_result_by_id_in_db(result_id: ObjectId) -> Optional[Result]:
+async def list_results_from_db_by_student_id(student_id: str) -> List[StudentResult]:
+    results = await result_collection.find({"student_id": student_id}).to_list(1000)
+    return list(map(lambda result: StudentResult.parse_obj(result), results))
+
+
+async def list_results_from_db_by_exam_id(exam_id: str) -> List[StudentResult]:
+    results = await result_collection.find({"exam_id": exam_id}).to_list(1000)
+    return list(map(lambda result: StudentResult.parse_obj(result), results))
+
+
+async def list_results_from_db_by_school_class_id(school_class_id: str) -> List[StudentResult]:
+    results = await result_collection.find({"school_class_id": school_class_id}).to_list(1000)
+    return list(map(lambda result: StudentResult.parse_obj(result), results))
+
+
+async def list_results_from_db_by_exam_id_and_school_class_id(
+    exam_id: str, school_class_id: str
+) -> List[StudentResult]:
+    results = await result_collection.find(
+        {"$and": [{"exam_id": exam_id}, {"school_class_id": school_class_id}]}
+    ).to_list(1000)
+    return list(map(lambda result: StudentResult.parse_obj(result), results))
+
+
+async def find_result_by_id_in_db(result_id: ObjectId | str) -> Optional[StudentResult]:
+    if type(result_id) is str:
+        result_id = ObjectId(result_id)
+
     if (result := await result_collection.find_one({"_id": result_id})) is not None:
-        return Result.parse_obj(result)
+        return StudentResult.parse_obj(result)
 
 
 ################
 # Update
 ###############
-async def update_result_in_db(result: Result) -> Result:
+async def update_result_in_db(result: StudentResult) -> StudentResult:
     result_dict = jsonable_encoder(result)
     del result_dict["_id"]
 
@@ -72,6 +99,9 @@ async def update_result_in_db(result: Result) -> Result:
 ################
 # Delete
 ###############
-async def delete_result_in_db(result_id: ObjectId) -> bool:
+async def delete_result_in_db(result_id: ObjectId | str) -> bool:
+    if type(result_id) is str:
+        result_id = ObjectId(result_id)
+
     deleted_result = await result_collection.delete_one({"_id": result_id})
     return deleted_result.deleted_count == 1

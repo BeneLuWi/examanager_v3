@@ -50,7 +50,7 @@ async def get_school_class_by_id(
     school_class_id, user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name])
 ):
     #  only return if correct owner
-    school_class_in_db: SchoolClass = await find_school_class_by_id_in_db(school_class_id=ObjectId(school_class_id))
+    school_class_in_db: SchoolClass = await find_school_class_by_id_in_db(school_class_id=school_class_id)
     if school_class_in_db.owner_id == str(user.id):
         return school_class_in_db
     raise HTTPException(status_code=401, detail="Permission denied!")
@@ -63,4 +63,4 @@ async def update_school_class(update_school_class_request: SchoolClass):
 
 @school_class_router.delete("/school_class")
 async def delete_school_class(school_class_id):
-    return await delete_school_class_in_db(school_class_id=ObjectId(school_class_id))
+    return await delete_school_class_in_db(school_class_id=school_class_id)

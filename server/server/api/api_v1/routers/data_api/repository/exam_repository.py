@@ -42,7 +42,10 @@ async def list_exams_from_db_by_owner_id(owner_id: str) -> List[Exam]:
     return list(map(lambda exam: Exam.parse_obj(exam), exams))
 
 
-async def find_exam_by_id_in_db(exam_id: ObjectId) -> Optional[Exam]:
+async def find_exam_by_id_in_db(exam_id: ObjectId | str) -> Optional[Exam]:
+    if type(exam_id) is str:
+        exam_id = ObjectId(exam_id)
+
     if (exam := await exam_collection.find_one({"_id": exam_id})) is not None:
         return Exam.parse_obj(exam)
 
@@ -69,6 +72,9 @@ async def update_exam_in_db(exam: Exam) -> Exam:
 ################
 # Delete
 ###############
-async def delete_exam_in_db(exam_id: ObjectId) -> bool:
+async def delete_exam_in_db(exam_id: ObjectId | str) -> bool:
+    if type(exam_id) is str:
+        exam_id = ObjectId(exam_id)
+
     deleted_exam = await exam_collection.delete_one({"_id": exam_id})
     return deleted_exam.deleted_count == 1

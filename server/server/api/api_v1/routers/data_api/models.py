@@ -63,10 +63,19 @@ class Task(MongoModel):
     max_points: float
 
 
+class Rating(BaseModel):
+    percentage: float
+    mss_points: int
+    decimal_rating: float
+    school_rating: str
+    text_rating: str
+
+
 class CreateExamRequest(BaseModel):
     name: str
     description: Optional[str]
     tasks: List[Task]
+    ratings: List[Rating]
     owner_id: str | None
 
 
@@ -74,6 +83,7 @@ class Exam(MongoModel):
     name: str
     description: Optional[str]
     tasks: List[Task]
+    ratings: List[Rating]
     owner_id: str
 
 
@@ -84,8 +94,26 @@ class CreateResultRequest(BaseModel):
     owner_id: str | None
 
 
-class Result(MongoModel):
+class ResultEntry(BaseModel):
+    task_id: str
+    points: float
+
+
+class StudentResult(MongoModel):
     owner_id: str
     exam_id: str
     student_id: str
-    points_per_task: Dict[str, float]
+    school_class_id: str
+    # maps the task_id to the number of points reached
+    points_per_task: List[ResultEntry]
+
+
+class StudentResultsWrapper(BaseModel):
+    student: Student
+    student_result: StudentResult
+
+
+class ExamResultsWrapper(BaseModel):
+    school_class_id: str
+    exam: Exam
+    results: List[StudentResultsWrapper]

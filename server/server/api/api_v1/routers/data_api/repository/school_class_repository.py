@@ -45,7 +45,10 @@ async def list_school_classes_from_db_by_owner_id(owner_id: str) -> List[SchoolC
     return list(map(lambda school_class: SchoolClass.parse_obj(school_class), school_classes))
 
 
-async def find_school_class_by_id_in_db(school_class_id: ObjectId) -> Optional[SchoolClass]:
+async def find_school_class_by_id_in_db(school_class_id: ObjectId | str) -> Optional[SchoolClass]:
+    if type(school_class_id) is str:
+        school_class_id = ObjectId(school_class_id)
+
     if (school_class := await school_class_collection.find_one({"_id": school_class_id})) is not None:
         return SchoolClass.parse_obj(school_class)
 
@@ -72,6 +75,8 @@ async def update_school_class_in_db(school_class: SchoolClass) -> SchoolClass:
 ################
 # Delete
 ###############
-async def delete_school_class_in_db(school_class_id: ObjectId) -> bool:
+async def delete_school_class_in_db(school_class_id: ObjectId | str) -> bool:
+    if type(school_class_id) is str:
+        school_class_id = ObjectId(school_class_id)
     deleted_school_class = await school_class_collection.delete_one({"_id": school_class_id})
     return deleted_school_class.deleted_count == 1
