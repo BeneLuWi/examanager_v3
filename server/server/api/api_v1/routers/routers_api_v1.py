@@ -17,4 +17,9 @@ api_router.include_router(
     tags=["statistics_router"],
     dependencies=[Security(validate_token_with_scope, scopes=[Role.USER.name])],
 )
-api_router.include_router(data_api_router, prefix="", tags=["data_router"])
+api_router.include_router(
+    data_api_router,
+    prefix="",
+    tags=["data_router"],
+    dependencies=[Security(validate_token_with_scope, scopes=[Role.USER.name])],
+)
