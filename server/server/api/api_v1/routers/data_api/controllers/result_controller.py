@@ -60,5 +60,5 @@ async def update_result(update_result_request: Result):
 
 
 @result_router.delete("/result")
-async def update_result(result_id):
+async def delete_result(result_id):
     return await delete_result_in_db(result_id=ObjectId(result_id))
