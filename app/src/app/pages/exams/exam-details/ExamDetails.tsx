@@ -39,6 +39,7 @@ const ExamDetails: FunctionComponent<ExamDetailsProps> = ({ exam }) => {
       </Col>
       <Col>
         <NewTask exam={exam} />
+        <div className="mb-4" />
         <TaskDetails exam={exam} />
       </Col>
     </Row>

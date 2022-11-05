@@ -66,7 +66,9 @@ const TaskDetails: FunctionComponent<TaskDetailsProps> = ({ exam }) => {
     <>
       <Card>
         <Card.Body>
-          <Card.Title>Infos</Card.Title>
+          <Card.Title>
+            <i className="bi bi-info-circle" /> Infos
+          </Card.Title>
           <p>Insgesamt {exam.tasks.reduce((a, b) => a + b.max_points, 0)} Punkte</p>
           <Button onClick={open}>Bearbeiten</Button>
         </Card.Body>
@@ -82,7 +84,7 @@ const TaskDetails: FunctionComponent<TaskDetailsProps> = ({ exam }) => {
             <Form.Label>Description</Form.Label>
             <Form.Control name="description" type="text" placeholder="(optional)" defaultValue={exam.description} />
           </Form.Group>
-          <Button variant="success" type="submit" className="me-2">
+          <Button variant="primary" type="submit" className="me-2">
             Speichern
           </Button>
           <ConfirmButton onSuccess={deleteExam} question={`${exam.name} löschen?`}>
