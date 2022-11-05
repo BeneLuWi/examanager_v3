@@ -8,7 +8,7 @@ from server.api.api_v1.routers.auth_api.utils import (
     get_current_user_with_scope,
     validate_token_with_scope,
 )
-from server.api.api_v1.routers.data_api.models import CreateExamRequest, Exam
+from server.api.api_v1.routers.data_api.models import CreateExamRequest, Exam, Rating
 from server.api.api_v1.routers.data_api.repository.exam_repository import (
     insert_exam_in_db,
     list_exams_from_db,
@@ -17,13 +17,13 @@ from server.api.api_v1.routers.data_api.repository.exam_repository import (
     list_exams_from_db_by_owner_id,
     delete_exam_in_db,
 )
+from server.api.api_v1.routers.data_api.utils import RatingsFactory
 
 exam_router = APIRouter()
 
 
 @exam_router.post(
     "/exam",
-    dependencies=[Security(validate_token_with_scope, scopes=[Role.USER.name])],
     response_model=CreateExamRequest,
 )
 async def create_exam(
@@ -52,6 +52,12 @@ async def get_exam_by_id(exam_id, user: User = Security(get_current_user_with_sc
     if exam_in_db.owner_id == str(user.id):
         return exam_in_db
     raise HTTPException(status_code=401, detail="Permission denied!")
+
+
+@exam_router.get("/exam_ratings", response_model=List[Rating])
+async def get_default_ratings() -> List[Rating]:
+    rf = RatingsFactory()
+    return rf.create_default_ratings()
 
 
 @exam_router.put("/exam", response_model=Exam)
