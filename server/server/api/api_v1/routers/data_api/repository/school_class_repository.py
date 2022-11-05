@@ -54,7 +54,8 @@ async def find_school_class_by_id_in_db(school_class_id: ObjectId) -> Optional[S
 # Update
 ###############
 async def update_school_class_in_db(school_class: SchoolClass) -> SchoolClass:
-    school_class_dict = jsonable_encoder(school_class)
+    school_class_dict = {k: v for k, v in school_class.dict().items() if v is not None}
+    school_class_dict = jsonable_encoder(school_class_dict)
     del school_class_dict["_id"]
 
     if len(school_class_dict) >= 1:
