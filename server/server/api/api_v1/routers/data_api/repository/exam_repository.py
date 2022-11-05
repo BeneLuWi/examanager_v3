@@ -51,8 +51,7 @@ async def find_exam_by_id_in_db(exam_id: ObjectId) -> Optional[Exam]:
 # Update
 ###############
 async def update_exam_in_db(exam: Exam) -> Exam:
-    exam_dict = {k: v for k, v in exam.dict().items() if v is not None}
-    exam_dict = jsonable_encoder(exam_dict)
+    exam_dict = jsonable_encoder(exam)
     del exam_dict["_id"]
 
     if len(exam_dict) >= 1:
