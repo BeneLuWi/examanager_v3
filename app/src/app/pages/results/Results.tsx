@@ -4,9 +4,14 @@ import { SchoolClass } from "../school_classes/types"
 import { Col, ListGroup, Row } from "react-bootstrap"
 import axios from "axios"
 import { toast } from "react-toastify"
-import DrawerModal from "../../components/drawer-modal/DrawerModal"
+import { ResultContextType } from "./types"
+import ResultEntry from "./ResultEntry"
 
 type ResultsProps = {}
+
+const ResultContext = React.createContext<ResultContextType>(null!)
+
+export const useResultContext = () => React.useContext(ResultContext)
 
 const Results: FunctionComponent<ResultsProps> = ({}) => {
   /*******************************************************************************************************************
@@ -16,10 +21,10 @@ const Results: FunctionComponent<ResultsProps> = ({}) => {
    *******************************************************************************************************************/
 
   const [exams, setExams] = useState<Exam[]>()
-  const [school_classes, setSchoolClasses] = useState<SchoolClass[]>()
+  const [schoolClasses, setSchoolClasses] = useState<SchoolClass[]>()
 
   const [exam, setExam] = useState<Exam>()
-  const [school_class, setSchoolClass] = useState<SchoolClass>()
+  const [schoolClass, setSchoolClass] = useState<SchoolClass>()
 
   useEffect(() => {
     axios
@@ -46,17 +51,17 @@ const Results: FunctionComponent<ResultsProps> = ({}) => {
    *******************************************************************************************************************/
 
   return (
-    <>
+    <ResultContext.Provider value={{ exam, schoolClass, setExam, setSchoolClass }}>
       <div className="display-4">Klausurergebnisse</div>
       <Row>
         <Col>
           <ListGroup>
-            {school_classes?.map((s) => (
+            {schoolClasses?.map((s) => (
               <ListGroup.Item
                 key={s._id}
                 action
                 onClick={() => setSchoolClass(s)}
-                className={`${s._id === school_class?._id && "border border-3 border-primary"}`}
+                className={`${s._id === schoolClass?._id && "border border-3 border-primary"}`}
               >
                 <div>
                   <div className="fw-bold">{s.name}</div>
@@ -85,7 +90,9 @@ const Results: FunctionComponent<ResultsProps> = ({}) => {
           </ListGroup>
         </Col>
       </Row>
-    </>
+
+      <ResultEntry />
+    </ResultContext.Provider>
   )
 }
 

@@ -1,13 +1,12 @@
 import React, { FunctionComponent } from "react"
-import { Card } from "react-bootstrap"
-import { Exam } from "../types"
-import TaskItem from "./TaskItem"
+import { Student } from "../school_classes/types"
+import { ListGroup } from "react-bootstrap"
 
-type TaskListProps = {
-  exam: Exam
+type StudentResultItemProps = {
+  student: Student
 }
 
-const TaskList: FunctionComponent<TaskListProps> = ({ exam }) => {
+const StudentResultItem: FunctionComponent<StudentResultItemProps> = ({ student }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
@@ -27,18 +26,14 @@ const TaskList: FunctionComponent<TaskListProps> = ({ exam }) => {
    *******************************************************************************************************************/
 
   return (
-    <Card>
-      <Card.Body>
-        <Card.Title>
-          <i className="bi bi-check2-square" /> Aufgaben
-        </Card.Title>
-
-        {exam.tasks?.map((task) => (
-          <TaskItem key={task._id} exam={exam} task={task} />
-        ))}
-      </Card.Body>
-    </Card>
+    <ListGroup.Item action>
+      <div>
+        <div>
+          {student.firstname} {student.lastname}
+        </div>
+      </div>
+    </ListGroup.Item>
   )
 }
 
-export default TaskList
+export default StudentResultItem
