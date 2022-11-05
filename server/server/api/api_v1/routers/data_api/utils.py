@@ -94,7 +94,7 @@ class RatingsFactory:
         15: 0.7,
     }
 
-    default_percentage_to_mss_points: dict[int, float] = {
+    default_mss_points_by_percentage: dict[int, float] = {
         0: 0,
         1: 0.20,
         2: 0.27,
@@ -113,10 +113,10 @@ class RatingsFactory:
         15: 0.95,
     }
 
-    def create_default_ratings(self) -> List[Rating]:
+    def create_ratings(self, mms_points_by_percentage: Dict[int, float]) -> List[Rating]:
         ratings: List[Rating] = [
             Rating(
-                percentage=self.default_percentage_to_mss_points[mss],
+                percentage=mms_points_by_percentage[mss],
                 mss_points=mss,
                 school_rating=self.mss_to_school_rating[mss],
                 text_rating=self.mss_to_text_rating[mss],
@@ -126,3 +126,6 @@ class RatingsFactory:
         ]
 
         return ratings
+
+    def create_default_ratings(self) -> List[Rating]:
+        return self.create_ratings(mms_points_by_percentage=self.default_mss_points_by_percentage)
