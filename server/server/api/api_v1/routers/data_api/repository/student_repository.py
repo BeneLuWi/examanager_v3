@@ -58,8 +58,7 @@ async def find_student_by_id_in_db(student_id: ObjectId) -> Optional[Student]:
 # Update
 ###############
 async def update_student_in_db(student: Student) -> Student:
-    student_dict = {k: v for k, v in student.dict().items() if v is not None}
-    student_dict = jsonable_encoder(student_dict)
+    student_dict = jsonable_encoder(student)
     del student_dict["_id"]
 
     if len(student_dict) >= 1:

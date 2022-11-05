@@ -54,8 +54,7 @@ async def find_result_by_id_in_db(result_id: ObjectId) -> Optional[Result]:
 # Update
 ###############
 async def update_result_in_db(result: Result) -> Result:
-    result_dict = {k: v for k, v in result.dict().items() if v is not None}
-    result_dict = jsonable_encoder(result_dict)
+    result_dict = jsonable_encoder(result)
     del result_dict["_id"]
 
     if len(result_dict) >= 1:
