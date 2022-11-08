@@ -32,6 +32,9 @@ async def create_exam(
 ):
     if create_exam_request.owner_id is None:
         create_exam_request.owner_id = str(user.id)
+    if create_exam_request.ratings is None:
+        rf = RatingsFactory()
+        create_exam_request.ratings = rf.create_default_ratings()
     return await insert_exam_in_db(create_exam_request=create_exam_request)
 
 
