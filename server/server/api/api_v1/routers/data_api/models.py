@@ -75,7 +75,7 @@ class CreateExamRequest(BaseModel):
     name: str
     description: Optional[str]
     tasks: List[Task]
-    ratings: List[Rating]
+    ratings: Optional[List[Rating]]
     owner_id: str | None
 
 
