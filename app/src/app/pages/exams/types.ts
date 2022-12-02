@@ -3,6 +3,7 @@ export interface Exam {
   name: string
   description: string
   tasks: Task[]
+  ratings: Rating[]
   owner_id: string
 }
 
@@ -15,4 +16,12 @@ export interface Task {
 export interface ExamContextType {
   exams?: Exam[]
   updateExams: VoidFunction
+}
+
+export interface Rating {
+  percentage: number
+  mss_points: number
+  decimal_rating: number
+  school_rating: string
+  text_rating: string
 }
