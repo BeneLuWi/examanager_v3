@@ -15,15 +15,15 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
    *
    *******************************************************************************************************************/
 
-  const [edit, setEdit] = useState(false)
+  const [editSchoolClass, setEditSchoolClass] = useState(false)
 
   /*******************************************************************************************************************
    *
    *  Functions
    *
    *******************************************************************************************************************/
-  const close = () => setEdit(false)
-  const open = () => setEdit(true)
+  const closeEditSchoolClass = () => setEditSchoolClass(false)
+  const openEditSchoolClass = () => setEditSchoolClass(true)
 
   /*******************************************************************************************************************
    *
@@ -33,14 +33,24 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
 
   return (
     <>
-      <ListGroup.Item action onClick={open}>
-        <div className="me-auto">
-          <div className="fw-bold">{schoolClass.name}</div>
-          {schoolClass.description}
+      <ListGroup.Item>
+        <div className="d-flex justify-content-between align-items-center">
+          <div>
+            <div className="fw-bold">{schoolClass.name}</div>
+            {schoolClass.description}
+          </div>
+          <div>
+            <Button size="sm" variant="info" className="me-2" onClick={openEditSchoolClass}>
+              <i className="bi bi-list-check" /> Klausurergebnisse
+            </Button>
+            <Button size="sm" variant="primary" onClick={openEditSchoolClass}>
+              <i className="bi bi-people" /> Klasse bearbeiten
+            </Button>
+          </div>
         </div>
       </ListGroup.Item>
 
-      <DrawerModal show={edit} close={close}>
+      <DrawerModal show={editSchoolClass} close={closeEditSchoolClass}>
         <div className="display-5">{schoolClass.name}</div>
         <StudentList schoolClass={schoolClass} />
       </DrawerModal>

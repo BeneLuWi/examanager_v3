@@ -19,6 +19,7 @@ code {
 /* make the customizations */
 $custom-colors: (
     "primary": #4F64A4,
+    "info": #6d44ea,
 );
 
 $theme-colors: map-merge($theme-colors, $custom-colors);
