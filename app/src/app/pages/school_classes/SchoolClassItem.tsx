@@ -3,6 +3,7 @@ import { SchoolClass } from "./types"
 import { Button, ListGroup } from "react-bootstrap"
 import DrawerModal from "../../components/drawer-modal/DrawerModal"
 import StudentList from "./students/StudentList"
+import Results from "../results/Results"
 
 type SchoolClassItemProps = {
   schoolClass: SchoolClass
@@ -16,6 +17,7 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
    *******************************************************************************************************************/
 
   const [editSchoolClass, setEditSchoolClass] = useState(false)
+  const [editResults, setEditResults] = useState(false)
 
   /*******************************************************************************************************************
    *
@@ -24,6 +26,8 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
    *******************************************************************************************************************/
   const closeEditSchoolClass = () => setEditSchoolClass(false)
   const openEditSchoolClass = () => setEditSchoolClass(true)
+  const openEditResults = () => setEditResults(true)
+  const closeEditResults = () => setEditResults(false)
 
   /*******************************************************************************************************************
    *
@@ -40,7 +44,7 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
             {schoolClass.description}
           </div>
           <div>
-            <Button size="sm" variant="info" className="me-2" onClick={openEditSchoolClass}>
+            <Button size="sm" variant="info" className="me-2" onClick={openEditResults}>
               <i className="bi bi-list-check" /> Klausurergebnisse
             </Button>
             <Button size="sm" variant="primary" onClick={openEditSchoolClass}>
@@ -53,6 +57,11 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
       <DrawerModal show={editSchoolClass} close={closeEditSchoolClass}>
         <div className="display-5">{schoolClass.name}</div>
         <StudentList schoolClass={schoolClass} />
+      </DrawerModal>
+
+      <DrawerModal show={editResults} close={closeEditResults}>
+        <div className="display-5">{schoolClass.name}</div>
+        <Results schoolClass={schoolClass} />
       </DrawerModal>
     </>
   )

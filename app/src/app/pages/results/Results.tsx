@@ -6,37 +6,24 @@ import axios from "axios"
 import { toast } from "react-toastify"
 import { ResultContextType } from "./types"
 import ResultEntry from "./ResultEntry"
+import ExamSelector from "./ExamSelector"
 
-type ResultsProps = {}
+type ResultsProps = {
+  schoolClass: SchoolClass
+}
 
 const ResultContext = React.createContext<ResultContextType>(null!)
 
 export const useResultContext = () => React.useContext(ResultContext)
 
-const Results: FunctionComponent<ResultsProps> = ({}) => {
+const Results: FunctionComponent<ResultsProps> = ({ schoolClass }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
    *
    *******************************************************************************************************************/
 
-  const [exams, setExams] = useState<Exam[]>()
-  const [schoolClasses, setSchoolClasses] = useState<SchoolClass[]>()
-
   const [exam, setExam] = useState<Exam>()
-  const [schoolClass, setSchoolClass] = useState<SchoolClass>()
-
-  useEffect(() => {
-    axios
-      .get("/api/school_class")
-      .then((res) => setSchoolClasses(res.data))
-      .catch(() => toast("Fehler beim Laden der Schulklassen", { type: "error" }))
-
-    axios
-      .get("/api/exam")
-      .then((res) => setExams(res.data))
-      .catch(() => toast("Fehler beim Laden der Klausuren", { type: "error" }))
-  }, [])
 
   /*******************************************************************************************************************
    *
@@ -51,46 +38,9 @@ const Results: FunctionComponent<ResultsProps> = ({}) => {
    *******************************************************************************************************************/
 
   return (
-    <ResultContext.Provider value={{ exam, schoolClass, setExam, setSchoolClass }}>
-      <div className="display-4">Klausurergebnisse</div>
-      <Row>
-        <Col>
-          <ListGroup>
-            {schoolClasses?.map((s) => (
-              <ListGroup.Item
-                key={s._id}
-                action
-                onClick={() => setSchoolClass(s)}
-                className={`${s._id === schoolClass?._id && "border border-3 border-primary"}`}
-              >
-                <div>
-                  <div className="fw-bold">{s.name}</div>
-                  {s.description}
-                </div>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Col>
-
-        <Col>
-          <ListGroup>
-            {exams?.map((e) => (
-              <ListGroup.Item
-                key={e._id}
-                action
-                onClick={() => setExam(e)}
-                className={`${e._id === exam?._id && "border border-3 border-primary"}`}
-              >
-                <div>
-                  <div className="fw-bold">{e.name}</div>
-                  {e.description}
-                </div>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Col>
-      </Row>
-
+    <ResultContext.Provider value={{ exam, schoolClass }}>
+      <div className="display-5">Klausuren</div>
+      <ExamSelector setExam={setExam} />
       <ResultEntry />
     </ResultContext.Provider>
   )

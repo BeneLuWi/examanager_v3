@@ -16,7 +16,7 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
    *
    *******************************************************************************************************************/
 
-  const { exam, schoolClass, setExam, setSchoolClass } = useResultContext()
+  const { exam, schoolClass } = useResultContext()
   const [show, setShow] = useState(false)
 
   const [students, setStudents] = useState<Student[]>()

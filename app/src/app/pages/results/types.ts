@@ -1,6 +1,5 @@
 import { Exam } from "../exams/types"
 import { SchoolClass } from "../school_classes/types"
-import React, { Dispatch, SetStateAction } from "react"
 
 export interface Result {
   owner_id: string
@@ -12,8 +11,6 @@ export interface Result {
 export interface ResultContextType {
   exam?: Exam
   schoolClass?: SchoolClass
-  setExam: Dispatch<SetStateAction<Exam | undefined>>
-  setSchoolClass: Dispatch<SetStateAction<SchoolClass | undefined>>
 }
 
 export interface TaskPoint {}

@@ -61,14 +61,6 @@ const Routing: FunctionComponent<RoutingProps> = ({}) => {
           }
         />
         <Route
-          path="results"
-          element={
-            <RequireAuth role={Roles.USER}>
-              <Results />
-            </RequireAuth>
-          }
-        />
-        <Route
           path="statistics"
           element={
             <RequireAuth role={Roles.USER}>
