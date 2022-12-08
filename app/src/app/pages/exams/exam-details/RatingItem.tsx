@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState } from "react"
 import { Rating } from "../types"
-import { Button, Form, ListGroup } from "react-bootstrap"
+import { Button, Col, Form, InputGroup, ListGroup, Row } from "react-bootstrap"
 import ModalWrapper from "../../../components/modal-wrapper/ModalWrapper"
 
 type RatingItemProps = {
@@ -18,26 +18,21 @@ const RatingItem: FunctionComponent<RatingItemProps> = ({ rating, totalPoints, u
    *
    *******************************************************************************************************************/
   const [edit, setEdit] = useState(false)
+  const [percentage, setPercentage] = useState<number>(round(rating.percentage))
 
   /*******************************************************************************************************************
    *
    *  Functions
    *
    *******************************************************************************************************************/
-
   const close = () => setEdit(false)
   const open = () => setEdit(true)
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    let formData = new FormData(event.currentTarget)
-    const percentage = formData.get("percentage") as unknown as number
-
+  const handleSubmit = () => {
     const ratingUpdate: Rating = {
       ...rating,
       percentage: percentage / 100,
     }
-
     updateRating(ratingUpdate)
     close()
   }
@@ -63,15 +58,30 @@ const RatingItem: FunctionComponent<RatingItemProps> = ({ rating, totalPoints, u
       </ListGroup.Item>
 
       <ModalWrapper title={`Voraussetzungen für ${rating.mss_points} MSS-Punkte`} size="sm" show={edit} close={close}>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>Prozent der erreichten Punkte</Form.Label>
-            <Form.Control name="percentage" type="number" placeholder="" defaultValue={round(rating.percentage)} />
-          </Form.Group>
-          <Button variant="primary" type="submit" className="me-2">
-            Speichern
-          </Button>
-        </Form>
+        <Row>
+          <Col xs={6}>
+            <label>Prozentgrenze</label>
+            <InputGroup>
+              <Form.Control
+                onChange={(e) => setPercentage(parseInt(e.target.value))}
+                name="percentage"
+                type="number"
+                min={0}
+                max={100}
+                value={percentage}
+              />
+              <Form.Label className="fw-bold pt-1">%</Form.Label>
+            </InputGroup>
+          </Col>
+          <Col>
+            <div>Punktegrenze</div>
+            <div className="fw-bold p-1">{Math.round((percentage / 100) * totalPoints)}</div>
+          </Col>
+        </Row>
+        <hr />
+        <Button onClick={handleSubmit} variant="primary" disabled={!percentage} className="me-2">
+          Speichern
+        </Button>
       </ModalWrapper>
     </>
   )
