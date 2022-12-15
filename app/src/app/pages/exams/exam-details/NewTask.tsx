@@ -33,9 +33,7 @@ const NewTask: FunctionComponent<NewTaskProps> = ({ exam }) => {
         tasks: [...exam.tasks, values as Task],
       },
       {
-        onSuccess: () => {
-          reset()
-        },
+        onSuccess: () => reset(),
       }
     )
   }
