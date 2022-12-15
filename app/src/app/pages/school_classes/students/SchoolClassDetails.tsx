@@ -1,12 +1,11 @@
 import React, { FunctionComponent, useState } from "react"
 import { SchoolClass, Student } from "../types"
 import { Button, Card } from "react-bootstrap"
-import { useSchoolClassContext } from "../SchoolClasses"
-import { toast } from "react-toastify"
-import axios from "axios"
 import ModalWrapper from "../../../components/modal-wrapper/ModalWrapper"
 import Form from "react-bootstrap/Form"
 import ConfirmButton from "../../../components/confirm-button/ConfirmButton"
+import { useDeleteSchoolClass, useUpdateSchoolClass } from "../api"
+import { FieldValues, useForm } from "react-hook-form"
 
 type SchoolClassDetailsProps = {
   schoolClass: SchoolClass
@@ -21,7 +20,10 @@ const SchoolClassDetails: FunctionComponent<SchoolClassDetailsProps> = ({ school
    *******************************************************************************************************************/
 
   const [show, setShow] = useState(false)
-  const { updateSchoolClasses } = useSchoolClassContext()
+  const { register, handleSubmit, reset } = useForm()
+
+  const { mutate: deleteSchoolClass } = useDeleteSchoolClass()
+  const { mutate: updateSchoolClass } = useUpdateSchoolClass()
 
   /*******************************************************************************************************************
    *
@@ -31,30 +33,19 @@ const SchoolClassDetails: FunctionComponent<SchoolClassDetailsProps> = ({ school
   const open = () => setShow(true)
   const close = () => setShow(false)
 
-  const deleteSchoolClass = () =>
-    axios
-      .delete(`/api/school_class?school_class_id=${schoolClass._id}`)
-      .then(() => updateSchoolClasses())
-      .catch(() => toast("Fehler beim Löschen", { type: "error" }))
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    let formData = new FormData(event.currentTarget)
-    let name = formData.get("name") as string
-    let description = formData.get("description") as string
-
-    axios
-      .put("api/school_class", {
+  const performUpdate = (values: FieldValues) => {
+    updateSchoolClass(
+      {
         ...schoolClass,
-        name,
-        description,
-      })
-      .then(() => {
-        close()
-        updateSchoolClasses()
-      })
-      .catch(() => toast("Fehler beim bearbeiten", { type: "error" }))
+        ...values,
+      },
+      {
+        onSuccess: () => {
+          close()
+          reset()
+        },
+      }
+    )
   }
 
   /*******************************************************************************************************************
@@ -78,15 +69,15 @@ const SchoolClassDetails: FunctionComponent<SchoolClassDetailsProps> = ({ school
       </Card>
 
       <ModalWrapper size="lg" show={show} close={close} title={`${schoolClass.name} bearbeiten`}>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
-            <Form.Control name="name" type="text" placeholder="Name" defaultValue={schoolClass.name} />
+            <Form.Control {...register("name")} type="text" placeholder="Name" defaultValue={schoolClass.name} />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Beschreibung</Form.Label>
             <Form.Control
-              name="description"
+              {...register("description")}
               type="text"
               placeholder="Beschreibung (optional)"
               defaultValue={schoolClass.description}
@@ -95,7 +86,7 @@ const SchoolClassDetails: FunctionComponent<SchoolClassDetailsProps> = ({ school
           <Button variant="primary" type="submit" className="me-3">
             Speichern
           </Button>
-          <ConfirmButton onSuccess={deleteSchoolClass} question={`${schoolClass.name} löschen?`}>
+          <ConfirmButton onSuccess={() => deleteSchoolClass(schoolClass)} question={`${schoolClass.name} löschen?`}>
             Klasse Löschen
           </ConfirmButton>
         </Form>

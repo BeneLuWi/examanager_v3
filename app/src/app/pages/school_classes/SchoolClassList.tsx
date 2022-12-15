@@ -2,6 +2,7 @@ import React, { FunctionComponent } from "react"
 import { useSchoolClassContext } from "./SchoolClasses"
 import { Card, ListGroup } from "react-bootstrap"
 import SchoolClassItem from "./SchoolClassItem"
+import { useFetchSchoolClasses } from "./api"
 
 type SchoolClassListProps = {}
 
@@ -12,7 +13,7 @@ const SchoolClassList: FunctionComponent<SchoolClassListProps> = ({}) => {
    *
    *******************************************************************************************************************/
 
-  const { schoolClasses } = useSchoolClassContext()
+  const { data: schoolClasses } = useFetchSchoolClasses()
 
   /*******************************************************************************************************************
    *

@@ -7,6 +7,7 @@ import NewStudent from "./NewStudent"
 import axios from "axios"
 import { toast } from "react-toastify"
 import SchoolClassDetails from "./SchoolClassDetails"
+import { useFetchStudents } from "../api"
 
 type StudentListProps = {
   schoolClass: SchoolClass
@@ -19,11 +20,13 @@ const StudentList: FunctionComponent<StudentListProps> = ({ schoolClass }) => {
    *
    *******************************************************************************************************************/
 
-  const [students, setStudents] = useState<Student[]>()
+  const [students1, setStudents] = useState<Student[]>()
 
   useEffect(() => {
     updateStudents()
   }, [])
+
+  const { data: students } = useFetchStudents(schoolClass)
 
   /*******************************************************************************************************************
    *
