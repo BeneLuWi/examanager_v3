@@ -5,6 +5,7 @@ import { toast } from "react-toastify"
 import ExamsList from "./ExamsList"
 import { Col, Row } from "react-bootstrap"
 import NewExam from "./NewExam"
+import { useFetchExams } from "./api"
 
 type ExamsProps = {}
 
@@ -20,6 +21,8 @@ const Exams: FunctionComponent<ExamsProps> = ({}) => {
    *******************************************************************************************************************/
 
   const [exams, setExams] = useState<Exam[]>()
+
+  const examsQuery = useFetchExams()
 
   const updateExams = useCallback(() => {
     axios
@@ -45,7 +48,7 @@ const Exams: FunctionComponent<ExamsProps> = ({}) => {
    *******************************************************************************************************************/
 
   return (
-    <ExamContext.Provider value={{ exams, updateExams }}>
+    <ExamContext.Provider value={{ exams: examsQuery.data, updateExams }}>
       <div className="display-4">Klausuren</div>
       <Row>
         <Col xs={8}>
