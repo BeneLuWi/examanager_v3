@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react"
 import { ListGroup } from "react-bootstrap"
 import ExamsListItem from "./ExamsListItem"
-import { useExamContext } from "./Exams"
+import { useFetchExams } from "./api"
 
 type ExamsListProps = {}
 
@@ -12,7 +12,7 @@ const ExamsList: FunctionComponent<ExamsListProps> = ({}) => {
    *
    *******************************************************************************************************************/
 
-  const { exams } = useExamContext()
+  const examsQuery = useFetchExams()
 
   /*******************************************************************************************************************
    *
@@ -28,7 +28,7 @@ const ExamsList: FunctionComponent<ExamsListProps> = ({}) => {
 
   return (
     <ListGroup>
-      {exams?.map((exam) => (
+      {examsQuery.data?.map((exam) => (
         <ExamsListItem key={exam._id} exam={exam} />
       ))}
     </ListGroup>

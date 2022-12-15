@@ -3,8 +3,6 @@ import { Button, Card } from "react-bootstrap"
 import Form from "react-bootstrap/Form"
 import axios from "axios"
 import { toast } from "react-toastify"
-import { Exam } from "./types"
-import { useExamContext } from "./Exams"
 import { useMutation, useQueryClient } from "react-query"
 import { FieldValues, useForm } from "react-hook-form"
 
@@ -20,7 +18,7 @@ const NewExam: FunctionComponent<NewExamProps> = ({}) => {
   const queryClient = useQueryClient()
   const { register, handleSubmit, reset } = useForm()
 
-  const mutation = useMutation(
+  const { mutate: createExam } = useMutation(
     (values: FieldValues) => {
       return axios.post("api/exam", {
         ...values,
@@ -32,6 +30,9 @@ const NewExam: FunctionComponent<NewExamProps> = ({}) => {
         reset()
         queryClient.invalidateQueries("exams")
         queryClient.invalidateQueries("results")
+      },
+      onError: () => {
+        toast("Fehler beim Erstellen", { type: "error" })
       },
     }
   )
@@ -54,7 +55,7 @@ const NewExam: FunctionComponent<NewExamProps> = ({}) => {
         <Card.Title>
           <i className="bi bi-file-earmark-plus" /> Klausur hinzufügen
         </Card.Title>
-        <Form onSubmit={handleSubmit((values) => mutation.mutate(values))}>
+        <Form onSubmit={handleSubmit((values) => createExam(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
             <Form.Control {...register("name")} type="text" placeholder="" />
