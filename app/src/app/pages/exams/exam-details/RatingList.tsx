@@ -55,7 +55,12 @@ const RatingList: FunctionComponent<RatingListProps> = ({ exam }) => {
       <Card.Body>
         <Card.Title>Bewertung</Card.Title>
         {exam.ratings.map((rating) => (
-          <RatingItem rating={rating} totalPoints={totalPoints()} updateRating={updateRating} />
+          <RatingItem
+            key={rating.school_rating}
+            rating={rating}
+            totalPoints={totalPoints()}
+            updateRating={updateRating}
+          />
         ))}
       </Card.Body>
     </Card>

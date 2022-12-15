@@ -8,6 +8,7 @@ import ModalWrapper from "../../../components/modal-wrapper/ModalWrapper"
 import Form from "react-bootstrap/Form"
 import { useMutation, useQueryClient } from "react-query"
 import { FieldValues, useForm } from "react-hook-form"
+import { useUpdateExam } from "../api"
 
 type TaskDetailsProps = {
   exam: Exam
@@ -24,25 +25,7 @@ const TaskDetails: FunctionComponent<TaskDetailsProps> = ({ exam }) => {
   const queryClient = useQueryClient()
   const { register, handleSubmit, reset } = useForm()
 
-  const { mutate: updateExam } = useMutation(
-    (values: FieldValues) => {
-      return axios.put("api/exam", {
-        ...exam,
-        ...values,
-      })
-    },
-    {
-      onSuccess: () => {
-        reset()
-        close()
-        queryClient.invalidateQueries("exams")
-        queryClient.invalidateQueries("results")
-      },
-      onError: () => {
-        toast("Fehler beim Bearbeiten", { type: "error" })
-      },
-    }
-  )
+  const { mutate: updateExam } = useUpdateExam()
 
   const { mutate: deleteExam } = useMutation(() => axios.delete(`/api/exam?exam_id=${exam._id}`), {
     onSuccess: () => {
@@ -60,6 +43,18 @@ const TaskDetails: FunctionComponent<TaskDetailsProps> = ({ exam }) => {
 
   const open = () => setShow(true)
   const close = () => setShow(false)
+
+  const performUpdate = (values: FieldValues) => {
+    updateExam(
+      { ...exam, ...values },
+      {
+        onSuccess: () => {
+          close()
+          reset()
+        },
+      }
+    )
+  }
 
   /*******************************************************************************************************************
    *
@@ -82,7 +77,7 @@ const TaskDetails: FunctionComponent<TaskDetailsProps> = ({ exam }) => {
       </Card>
 
       <ModalWrapper size="lg" show={show} close={close} title={`${exam.name} bearbeiten`}>
-        <Form onSubmit={handleSubmit((values) => updateExam(values))}>
+        <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
             <Form.Control {...register("name")} type="text" placeholder="" defaultValue={exam.name} />
