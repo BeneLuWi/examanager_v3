@@ -2,6 +2,15 @@ import React, { FunctionComponent } from "react"
 import { AuthProvider } from "./auth"
 import Routing from "./routing/Routing"
 import { ToastContainer } from "react-toastify"
+import { QueryClient, QueryClientProvider } from "react-query"
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 const App: FunctionComponent = ({}) => {
   /*******************************************************************************************************************
@@ -23,10 +32,12 @@ const App: FunctionComponent = ({}) => {
    *******************************************************************************************************************/
 
   return (
-    <AuthProvider>
-      <Routing />
-      <ToastContainer />
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Routing />
+        <ToastContainer />
+      </AuthProvider>
+    </QueryClientProvider>
   )
 }
 
