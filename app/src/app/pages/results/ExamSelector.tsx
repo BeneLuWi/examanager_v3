@@ -4,6 +4,7 @@ import axios from "axios"
 import { toast } from "react-toastify"
 import { ListGroup } from "react-bootstrap"
 import { useResultContext } from "./Results"
+import { useFetchExams } from "../exams/api"
 
 type ExamSelectorProps = {
   setExam: Dispatch<SetStateAction<Exam | undefined>>
@@ -15,14 +16,7 @@ const ExamSelector: FunctionComponent<ExamSelectorProps> = ({ setExam }) => {
    *  Hooks
    *
    *******************************************************************************************************************/
-  const [exams, setExams] = useState<Exam[]>()
-
-  useEffect(() => {
-    axios
-      .get("api/exam")
-      .then((res) => setExams(res.data))
-      .catch(() => toast("Fehler beim Laden Klausuren", { type: "error" }))
-  }, [])
+  const { data: exams } = useFetchExams()
 
   /*******************************************************************************************************************
    *

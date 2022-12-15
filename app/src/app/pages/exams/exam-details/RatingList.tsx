@@ -2,9 +2,7 @@ import React, { FunctionComponent, useCallback } from "react"
 import { Exam, Rating } from "../types"
 import { Card } from "react-bootstrap"
 import RatingItem from "./RatingItem"
-import { useExamContext } from "../Exams"
-import axios from "axios"
-import { toast } from "react-toastify"
+import { useUpdateExam } from "../api"
 
 type RatingListProps = {
   exam: Exam
@@ -17,7 +15,7 @@ const RatingList: FunctionComponent<RatingListProps> = ({ exam }) => {
    *
    *******************************************************************************************************************/
 
-  const { updateExams } = useExamContext()
+  const { mutate: updateExam } = useUpdateExam()
 
   /*******************************************************************************************************************
    *
@@ -33,11 +31,7 @@ const RatingList: FunctionComponent<RatingListProps> = ({ exam }) => {
         else return rating
       }),
     }
-
-    axios
-      .put("/api/exam", examUpdated)
-      .then(updateExams)
-      .catch(() => toast("Fehler beim Update der Bewertung", { type: "error" }))
+    updateExam(examUpdated)
   }
 
   const totalPoints = useCallback(() => {

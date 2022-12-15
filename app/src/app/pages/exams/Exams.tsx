@@ -1,7 +1,5 @@
-import React, { FunctionComponent, useCallback, useEffect, useState } from "react"
-import { Exam, ExamContextType } from "./types"
-import axios from "axios"
-import { toast } from "react-toastify"
+import React, { FunctionComponent } from "react"
+import { ExamContextType } from "./types"
 import ExamsList from "./ExamsList"
 import { Col, Row } from "react-bootstrap"
 import NewExam from "./NewExam"
@@ -20,21 +18,6 @@ const Exams: FunctionComponent<ExamsProps> = ({}) => {
    *
    *******************************************************************************************************************/
 
-  const [exams, setExams] = useState<Exam[]>()
-
-  const examsQuery = useFetchExams()
-
-  const updateExams = useCallback(() => {
-    axios
-      .get("api/exam")
-      .then((res) => setExams(res.data))
-      .catch(() => toast("Fehler beim Laden Klausuren", { type: "error" }))
-  }, [])
-
-  useEffect(() => {
-    updateExams()
-  }, [updateExams])
-
   /*******************************************************************************************************************
    *
    *  Functions
@@ -48,7 +31,7 @@ const Exams: FunctionComponent<ExamsProps> = ({}) => {
    *******************************************************************************************************************/
 
   return (
-    <ExamContext.Provider value={{ exams: examsQuery.data, updateExams }}>
+    <div>
       <div className="display-4">Klausuren</div>
       <Row>
         <Col xs={8}>
@@ -58,7 +41,7 @@ const Exams: FunctionComponent<ExamsProps> = ({}) => {
           <NewExam />
         </Col>
       </Row>
-    </ExamContext.Provider>
+    </div>
   )
 }
 

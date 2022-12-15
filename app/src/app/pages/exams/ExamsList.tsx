@@ -12,7 +12,7 @@ const ExamsList: FunctionComponent<ExamsListProps> = ({}) => {
    *
    *******************************************************************************************************************/
 
-  const examsQuery = useFetchExams()
+  const { data: examList } = useFetchExams()
 
   /*******************************************************************************************************************
    *
@@ -28,7 +28,7 @@ const ExamsList: FunctionComponent<ExamsListProps> = ({}) => {
 
   return (
     <ListGroup>
-      {examsQuery.data?.map((exam) => (
+      {examList?.map((exam) => (
         <ExamsListItem key={exam._id} exam={exam} />
       ))}
     </ListGroup>

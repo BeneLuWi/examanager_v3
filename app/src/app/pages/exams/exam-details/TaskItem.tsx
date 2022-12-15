@@ -3,10 +3,9 @@ import { Exam, Task } from "../types"
 import { Button, ListGroup } from "react-bootstrap"
 import ModalWrapper from "../../../components/modal-wrapper/ModalWrapper"
 import Form from "react-bootstrap/Form"
-import { toast } from "react-toastify"
-import axios from "axios"
-import { useExamContext } from "../Exams"
 import ConfirmButton from "../../../components/confirm-button/ConfirmButton"
+import { useUpdateExam } from "../api"
+import { FieldValues, useForm } from "react-hook-form"
 
 type TaskItemProps = {
   exam: Exam
@@ -22,7 +21,9 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
 
   const [edit, setEdit] = useState(false)
 
-  const { updateExams } = useExamContext()
+  const { register, handleSubmit, reset } = useForm()
+
+  const { mutate: updateExam } = useUpdateExam()
 
   /*******************************************************************************************************************
    *
@@ -34,45 +35,37 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
   const open = () => setEdit(true)
 
   const deleteTask = () => {
-    axios
-      .put("api/exam", {
+    updateExam(
+      {
         ...exam,
         tasks: exam.tasks.filter((t) => t._id !== task._id),
-      })
-      .then(() => {
-        updateExams()
-        close()
-      })
-      .catch(() => toast("Fehler beim Löschen", { type: "error" }))
+      },
+      {
+        onSuccess: () => close(),
+      }
+    )
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    let formData = new FormData(event.currentTarget)
-    let name = formData.get("name") as string
-    let max_points = formData.get("max_points") as unknown as number
-
-    axios
-      .put("api/exam", {
+  const performUpdate = (values: FieldValues) => {
+    updateExam(
+      {
         ...exam,
         tasks: exam.tasks.map((t) =>
           t._id === task._id
             ? {
                 ...task,
-                name,
-                max_points,
+                ...values,
               }
             : t
         ),
-      })
-      .then(() => {
-        updateExams()
-        // @ts-ignore
-        event.target.reset()
-        close()
-      })
-      .catch(() => toast("Fehler beim bearbeiten", { type: "error" }))
+      },
+      {
+        onSuccess: () => {
+          reset()
+          close()
+        },
+      }
+    )
   }
 
   /*******************************************************************************************************************
@@ -90,14 +83,14 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
         </div>
       </ListGroup.Item>
       <ModalWrapper size="lg" show={edit} close={close} title={`${task.name} bearbeiten`}>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
-            <Form.Control name="name" type="text" placeholder="Name" defaultValue={task.name} />
+            <Form.Control {...register("name")} type="text" placeholder="Name" defaultValue={task.name} />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Beschreibung</Form.Label>
-            <Form.Control name="max_points" type="number" defaultValue={task.max_points} />
+            <Form.Control {...register("max_points")} type="number" defaultValue={task.max_points} />
           </Form.Group>
           <Button variant="primary" type="submit" className="me-2">
             Speichern

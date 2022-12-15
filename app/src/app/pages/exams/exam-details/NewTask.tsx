@@ -1,10 +1,9 @@
 import React, { FunctionComponent } from "react"
 import { Button, Card } from "react-bootstrap"
-import { Exam } from "../types"
+import { Exam, Task } from "../types"
 import Form from "react-bootstrap/Form"
-import { toast } from "react-toastify"
-import axios from "axios"
-import { useExamContext } from "../Exams"
+import { FieldValues, useForm } from "react-hook-form"
+import { useUpdateExam } from "../api"
 
 type NewTaskProps = {
   exam: Exam
@@ -17,7 +16,9 @@ const NewTask: FunctionComponent<NewTaskProps> = ({ exam }) => {
    *
    *******************************************************************************************************************/
 
-  const { updateExams } = useExamContext()
+  const { register, handleSubmit, reset } = useForm()
+
+  const { mutate: updateExam } = useUpdateExam()
 
   /*******************************************************************************************************************
    *
@@ -25,36 +26,18 @@ const NewTask: FunctionComponent<NewTaskProps> = ({ exam }) => {
    *
    *******************************************************************************************************************/
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    let formData = new FormData(event.currentTarget)
-    let name = formData.get("name") as string
-    let max_points = formData.get("max_points") as unknown as number
-
-    if (!name.length) {
-      toast("Bitte Namen eingeben", { type: "error" })
-      return
-    }
-
-    axios
-      .put("api/exam", {
+  const performUpdate = (values: FieldValues) => {
+    updateExam(
+      {
         ...exam,
-        tasks: [
-          ...exam.tasks,
-          {
-            name,
-            max_points,
-          },
-        ],
-      })
-      .then(() => {
-        updateExams()
-
-        // @ts-ignore
-        event.target.reset()
-      })
-      .catch(() => toast("Fehler beim erstellen", { type: "error" }))
+        tasks: [...exam.tasks, values as Task],
+      },
+      {
+        onSuccess: () => {
+          reset()
+        },
+      }
+    )
   }
 
   /*******************************************************************************************************************
@@ -67,14 +50,14 @@ const NewTask: FunctionComponent<NewTaskProps> = ({ exam }) => {
     <Card>
       <Card.Body>
         <Card.Title>Aufgabe hinzufügen</Card.Title>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
-            <Form.Control name="name" type="text" placeholder="Name" defaultValue="Aufgabe" />
+            <Form.Control {...register("name")} type="text" placeholder="Name" defaultValue="Aufgabe" />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Beschreibung</Form.Label>
-            <Form.Control name="max_points" type="number" defaultValue={10} />
+            <Form.Control {...register("max_points")} type="number" defaultValue={10} />
           </Form.Group>
           <Button variant="success" type="submit">
             Erstellen
