@@ -7,7 +7,7 @@ import { SchoolClass } from "./types"
 
 type NewSchoolClassProps = {}
 
-const NewSchoolClass: FunctionComponent<NewSchoolClassProps> = ({}) => {
+const NewSchoolClass: FunctionComponent<NewSchoolClassProps> = () => {
   /*******************************************************************************************************************
    *
    *  Hooks

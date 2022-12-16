@@ -5,7 +5,7 @@ import { useFetchSchoolClasses } from "./api"
 
 type SchoolClassListProps = {}
 
-const SchoolClassList: FunctionComponent<SchoolClassListProps> = ({}) => {
+const SchoolClassList: FunctionComponent<SchoolClassListProps> = () => {
   /*******************************************************************************************************************
    *
    *  Hooks
