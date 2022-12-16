@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from "react"
-import { useSchoolClassContext } from "./SchoolClasses"
-import { Card, ListGroup } from "react-bootstrap"
+import { ListGroup } from "react-bootstrap"
 import SchoolClassItem from "./SchoolClassItem"
 import { useFetchSchoolClasses } from "./api"
 
