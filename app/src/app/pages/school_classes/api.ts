@@ -33,7 +33,7 @@ export const useDeleteSchoolClass = () => {
 
 export const useCreateSchoolClass = () => {
   const queryClient = useQueryClient()
-  return useMutation((schoolClass: SchoolClass) => axios.post("api/school_class"), {
+  return useMutation((schoolClass: SchoolClass) => axios.post("api/school_class", schoolClass), {
     onSuccess: () => {
       queryClient.invalidateQueries("schoolClasses")
       queryClient.invalidateQueries("results")
