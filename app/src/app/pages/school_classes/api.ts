@@ -69,3 +69,29 @@ export const useCreateStudent = (schoolClass: SchoolClass) => {
     }
   )
 }
+
+export const useDeleteStudent = (student: Student) => {
+  const queryClient = useQueryClient()
+  return useMutation(() => axios.delete("api/student", { params: { student_id: student._id } }), {
+    onSuccess: () => {
+      queryClient.invalidateQueries("students")
+      queryClient.invalidateQueries("results")
+    },
+    onError: () => {
+      toast("Schüler:in konnte nicht gelöscht werden", { type: "error" })
+    },
+  })
+}
+
+export const useUpdateStudent = () => {
+  const queryClient = useQueryClient()
+  return useMutation((student: Student) => axios.put("api/student", student), {
+    onSuccess: () => {
+      queryClient.invalidateQueries("students")
+      queryClient.invalidateQueries("results")
+    },
+    onError: () => {
+      toast("Fehler beim Bearbeiten", { type: "error" })
+    },
+  })
+}

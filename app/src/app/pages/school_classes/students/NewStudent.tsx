@@ -1,21 +1,23 @@
-import React, { FunctionComponent, useRef } from "react"
+import React, { FunctionComponent } from "react"
 import Form from "react-bootstrap/Form"
 import { Button, Card } from "react-bootstrap"
-import { toast } from "react-toastify"
-import axios from "axios"
 import { SchoolClass, Student } from "../types"
+import { FieldValues, useForm } from "react-hook-form"
+import { useCreateStudent } from "../api"
 
 type NewStudentProps = {
-  updateStudents: VoidFunction
   schoolClass: SchoolClass
 }
 
-const NewStudent: FunctionComponent<NewStudentProps> = ({ updateStudents, schoolClass }) => {
+const NewStudent: FunctionComponent<NewStudentProps> = ({ schoolClass }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
    *
    *******************************************************************************************************************/
+
+  const { register, handleSubmit, reset } = useForm()
+  const { mutate: createStudent } = useCreateStudent(schoolClass)
 
   /*******************************************************************************************************************
    *
@@ -23,24 +25,10 @@ const NewStudent: FunctionComponent<NewStudentProps> = ({ updateStudents, school
    *
    *******************************************************************************************************************/
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    let formData = new FormData(event.currentTarget)
-    const studentData: Student = Object.fromEntries(formData) as Student
-
-    axios
-      .post("api/student", {
-        ...studentData,
-        school_class_id: schoolClass._id,
-      })
-      .then(() => {
-        updateStudents()
-
-        // @ts-ignore
-        event.target.reset()
-      })
-      .catch(() => toast("Fehler beim erstellen", { type: "error" }))
+  const performCreate = (values: FieldValues) => {
+    createStudent(values as Student, {
+      onSuccess: () => reset(),
+    })
   }
 
   /*******************************************************************************************************************
@@ -55,18 +43,18 @@ const NewStudent: FunctionComponent<NewStudentProps> = ({ updateStudents, school
         <Card.Title>
           <i className="bi bi-person-plus" /> Schüler:in hinzufügen
         </Card.Title>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit((values) => performCreate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Vorname</Form.Label>
-            <Form.Control name="firstname" type="text" placeholder="" />
+            <Form.Control {...register("firstname")} type="text" placeholder="" />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Nachname</Form.Label>
-            <Form.Control name="lastname" type="text" placeholder="(optional)" />
+            <Form.Control {...register("lastname")} type="text" placeholder="(optional)" />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Geschlecht</Form.Label>
-            <Form.Select name="gender">
+            <Form.Select {...register("gender")}>
               <option value="w">weiblich</option>
               <option value="m">männlich</option>
               <option value="d">divers</option>

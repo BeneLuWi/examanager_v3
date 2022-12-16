@@ -20,12 +20,6 @@ const StudentList: FunctionComponent<StudentListProps> = ({ schoolClass }) => {
    *
    *******************************************************************************************************************/
 
-  const [students1, setStudents] = useState<Student[]>()
-
-  useEffect(() => {
-    updateStudents()
-  }, [])
-
   const { data: students } = useFetchStudents(schoolClass)
 
   /*******************************************************************************************************************
@@ -33,12 +27,6 @@ const StudentList: FunctionComponent<StudentListProps> = ({ schoolClass }) => {
    *  Functions
    *
    *******************************************************************************************************************/
-
-  const updateStudents = () =>
-    axios
-      .get(`/api/student/${schoolClass._id}`)
-      .then((res) => setStudents(res.data))
-      .catch(() => toast("Fehler beim Laden Schüler:innen", { type: "error" }))
 
   /*******************************************************************************************************************
    *
@@ -64,7 +52,7 @@ const StudentList: FunctionComponent<StudentListProps> = ({ schoolClass }) => {
               </thead>
               <tbody>
                 {students?.map((student) => (
-                  <StudentListItem key={student._id} student={student} updateStudents={updateStudents} />
+                  <StudentListItem key={student._id} student={student} />
                 ))}
               </tbody>
             </Table>
@@ -72,7 +60,7 @@ const StudentList: FunctionComponent<StudentListProps> = ({ schoolClass }) => {
         </Card>
       </Col>
       <Col xs={4}>
-        <NewStudent updateStudents={updateStudents} schoolClass={schoolClass} />
+        <NewStudent schoolClass={schoolClass} />
         <div className="mb-4" />
         <SchoolClassDetails students={students} schoolClass={schoolClass} />
       </Col>

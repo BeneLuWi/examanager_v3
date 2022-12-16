@@ -1,18 +1,17 @@
 import React, { FunctionComponent, useState } from "react"
 import { Student } from "../types"
-import { Button, InputGroup } from "react-bootstrap"
+import { Button } from "react-bootstrap"
 import Form from "react-bootstrap/Form"
 import ModalWrapper from "../../../components/modal-wrapper/ModalWrapper"
-import axios from "axios"
-import { toast } from "react-toastify"
 import ConfirmButton from "../../../components/confirm-button/ConfirmButton"
+import { useDeleteStudent, useUpdateStudent } from "../api"
+import { FieldValues, useForm } from "react-hook-form"
 
 type StudentListItemProps = {
   student: Student
-  updateStudents: VoidFunction
 }
 
-const StudentListItem: FunctionComponent<StudentListItemProps> = ({ student, updateStudents }) => {
+const StudentListItem: FunctionComponent<StudentListItemProps> = ({ student }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
@@ -20,6 +19,10 @@ const StudentListItem: FunctionComponent<StudentListItemProps> = ({ student, upd
    *******************************************************************************************************************/
 
   const [edit, setEdit] = useState(false)
+
+  const { register, handleSubmit, reset } = useForm()
+  const { mutate: updateStudent } = useUpdateStudent()
+  const { mutate: deleteStudent } = useDeleteStudent(student)
 
   /*******************************************************************************************************************
    *
@@ -30,35 +33,19 @@ const StudentListItem: FunctionComponent<StudentListItemProps> = ({ student, upd
   const close = () => setEdit(false)
   const open = () => setEdit(true)
 
-  const deleteStudent = () =>
-    axios
-      .delete(`/api/student?student_id=${student._id}`)
-      .then(() => {
-        close()
-        updateStudents()
-      })
-      .catch(() => toast("Schüler:in konnte nicht gelöscht werden", { type: "error" }))
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    let formData = new FormData(event.currentTarget)
-    const studentData: Student = Object.fromEntries(formData) as Student
-
-    axios
-      .put("api/student", {
+  const performUpdate = (values: FieldValues) => {
+    updateStudent(
+      {
         ...student,
-        firstname: studentData.firstname,
-        lastname: studentData.lastname,
-        gender: studentData.gender,
-      })
-      .then(() => {
-        updateStudents()
-        close()
-        // @ts-ignore
-        event.target.reset()
-      })
-      .catch(() => toast("Fehler beim erstellen", { type: "error" }))
+        ...values,
+      },
+      {
+        onSuccess: () => {
+          reset()
+          close()
+        },
+      }
+    )
   }
 
   /*******************************************************************************************************************
@@ -75,18 +62,23 @@ const StudentListItem: FunctionComponent<StudentListItemProps> = ({ student, upd
         <td>{student.gender}</td>
       </tr>
       <ModalWrapper size="lg" title={`${student.firstname} ${student.lastname} bearbeiten`} show={edit} close={close}>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Vorname</Form.Label>
-            <Form.Control name="firstname" type="text" placeholder="" defaultValue={student.firstname} />
+            <Form.Control {...register("firstname")} type="text" placeholder="" defaultValue={student.firstname} />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Nachname</Form.Label>
-            <Form.Control name="lastname" type="text" placeholder="(optional)" defaultValue={student.lastname} />
+            <Form.Control
+              {...register("lastname")}
+              type="text"
+              placeholder="(optional)"
+              defaultValue={student.lastname}
+            />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Geschlecht</Form.Label>
-            <Form.Select name="gender" defaultValue={student.gender}>
+            <Form.Select {...register("gender")} defaultValue={student.gender}>
               <option value="w">weiblich</option>
               <option value="m">männlich</option>
               <option value="d">divers</option>
