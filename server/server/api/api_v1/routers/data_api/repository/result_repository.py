@@ -5,10 +5,11 @@ from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 from pymongo.results import InsertOneResult
 
-from server.database import result_collection
+from server.database import result_collection, student_collection
 from server.api.api_v1.routers.data_api.models import (
     StudentResult,
     CreateResultRequest,
+    StudentResultResponse,
 )
 from server.config import ExamManagerSettings
 
@@ -67,6 +68,24 @@ async def list_results_from_db_by_exam_id_and_school_class_id(
         {"$and": [{"exam_id": exam_id}, {"school_class_id": school_class_id}]}
     ).to_list(1000)
     return list(map(lambda result: StudentResult.parse_obj(result), results))
+
+
+async def list_student_result_responses(exam_id: str, school_class_id: str) -> List[StudentResultResponse]:
+    pipeline = [
+        {"$match": {"school_class_id": school_class_id}},
+        {
+            "$lookup": {
+                "from": "results",
+                "localField": "_id",
+                "foreignField": "student_id",
+                "as": "result",
+                "pipeline": [{"$match": {"$expr": {"$eq": [exam_id, "exam_id"]}}}],
+            }
+        },
+    ]
+
+    results = await student_collection.aggregate(pipeline).to_list(1000)
+    return list(map(lambda result: StudentResultResponse.parse_obj(result), results))
 
 
 async def find_result_by_id_in_db(result_id: ObjectId | str) -> Optional[StudentResult]:

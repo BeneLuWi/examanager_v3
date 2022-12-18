@@ -35,9 +35,9 @@ const Results: FunctionComponent<ResultsProps> = ({ schoolClass }) => {
    *******************************************************************************************************************/
 
   return (
-    <ResultContext.Provider value={{ exam, schoolClass }}>
+    <ResultContext.Provider value={{ exam, schoolClass, setExam }}>
       <div className="display-5">Klausuren</div>
-      <ExamSelector setExam={setExam} />
+      <ExamSelector />
       <ResultEntry />
     </ResultContext.Provider>
   )

@@ -1,11 +1,9 @@
-import React, { FunctionComponent, useEffect, useState } from "react"
+import React, { FunctionComponent, useState } from "react"
 import { useResultContext } from "./Results"
 import DrawerModal from "../../components/drawer-modal/DrawerModal"
-import { Student } from "../school_classes/types"
-import axios from "axios"
-import { toast } from "react-toastify"
 import { Card, Col, ListGroup, Row } from "react-bootstrap"
 import StudentResultItem from "./StudentResultItem"
+import { useFetchResults } from "./api"
 
 type ResultEntryProps = {}
 
@@ -16,20 +14,10 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
    *
    *******************************************************************************************************************/
 
-  const { exam, schoolClass } = useResultContext()
-  const [show, setShow] = useState(false)
+  const { exam, schoolClass, setExam } = useResultContext()
+  const [show, setShow] = useState(true)
 
-  const [students, setStudents] = useState<Student[]>()
-
-  useEffect(() => {
-    if (exam && schoolClass) {
-      setShow(true)
-      axios
-        .get(`api/student/${schoolClass._id}`)
-        .then((res) => setStudents(res.data))
-        .catch((err) => toast("Fehler beim Laden", { type: "error" }))
-    }
-  }, [exam, schoolClass])
+  const { isIdle, data: examResults } = useFetchResults(schoolClass?._id, exam?._id)
 
   /*******************************************************************************************************************
    *
@@ -37,14 +25,17 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
    *
    *******************************************************************************************************************/
 
-  const close = () => setShow(false)
+  const close = () => {
+    setShow(false)
+    setExam(undefined)
+  }
 
   /*******************************************************************************************************************
    *
    *  Rendering
    *
    *******************************************************************************************************************/
-  if (!exam || !schoolClass) return <div />
+  if (isIdle || !examResults) return <div>Loading</div>
   return (
     <DrawerModal show={show} close={close}>
       <div className="display-5">
@@ -53,7 +44,7 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
       <Row>
         <Col xs={8}>
           <ListGroup>
-            {students?.map((student) => (
+            {examResults.studentResults.map((student) => (
               <StudentResultItem key={student._id} student={student} />
             ))}
           </ListGroup>
@@ -66,15 +57,16 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
               </Card.Title>
               <p>
                 <div>
-                  <div className="fw-bold">{exam.name}</div>
-                  {exam.description}
+                  <div className="fw-bold">{examResults.exam.name}</div>
+                  {examResults.exam.description}
                 </div>
               </p>
               <p>
-                <i className="bi bi-patch-check" /> {exam.tasks.reduce((a, b) => a + b.max_points, 0)} Punkte
+                <i className="bi bi-patch-check" /> {examResults.exam.tasks.reduce((a, b) => a + b.max_points, 0)}{" "}
+                Punkte
               </p>
               <p>
-                <i className="bi bi-check2-square" /> {exam.tasks.length} Aufgaben
+                <i className="bi bi-check2-square" /> {examResults.exam.tasks.length} Aufgaben
               </p>
             </Card.Body>
           </Card>

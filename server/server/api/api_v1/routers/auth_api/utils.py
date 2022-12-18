@@ -82,10 +82,10 @@ def create_access_token_for_user(user: User, expires_delta: timedelta | None = N
 def decode_token(token: str) -> JwTokenData:
     try:
         payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
-        logging.info(f"payload={payload}")
+        logging.debug(f"payload={payload}")
         username: str = payload.get("username")
         if username is None:
-            logging.info("username is none")
+            logging.debug("username is none")
             raise MyCredentialException
         token_data = JwTokenData(**payload)
         return token_data
@@ -128,7 +128,7 @@ async def validate_token_with_scope(
     security_scopes: SecurityScopes,
     token: str = Depends(oauth2_scheme),
 ):
-    logging.info("validate_token_with_scope")
+    logging.debug("validate_token_with_scope")
     if security_scopes.scopes:
         authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
     else:
@@ -155,7 +155,7 @@ async def get_current_user_with_scope(
     security_scopes: SecurityScopes,
     token: str = Depends(oauth2_scheme),
 ) -> User:
-    logging.info("get_current_user_with_scope")
+    logging.debug("get_current_user_with_scope")
     if security_scopes.scopes:
         authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
     else:

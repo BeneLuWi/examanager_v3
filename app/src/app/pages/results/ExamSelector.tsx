@@ -6,18 +6,16 @@ import { ListGroup } from "react-bootstrap"
 import { useResultContext } from "./Results"
 import { useFetchExams } from "../exams/api"
 
-type ExamSelectorProps = {
-  setExam: Dispatch<SetStateAction<Exam | undefined>>
-}
+type ExamSelectorProps = {}
 
-const ExamSelector: FunctionComponent<ExamSelectorProps> = ({ setExam }) => {
+const ExamSelector: FunctionComponent<ExamSelectorProps> = () => {
   /*******************************************************************************************************************
    *
    *  Hooks
    *
    *******************************************************************************************************************/
   const { data: exams } = useFetchExams()
-
+  const { setExam } = useResultContext()
   /*******************************************************************************************************************
    *
    *  Functions

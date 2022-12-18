@@ -87,13 +87,6 @@ class Exam(MongoModel):
     owner_id: str
 
 
-class CreateResultRequest(BaseModel):
-    exam_id: str
-    student_id: str
-    points_per_task: Dict[str, float]
-    owner_id: str | None
-
-
 class ResultEntry(BaseModel):
     task_id: str
     points: float
@@ -103,8 +96,6 @@ class StudentResult(MongoModel):
     owner_id: str
     exam_id: str
     student_id: str
-    school_class_id: str
-    # maps the task_id to the number of points reached
     points_per_task: List[ResultEntry]
 
 
@@ -117,3 +108,35 @@ class ExamResultsWrapper(BaseModel):
     school_class_id: str
     exam: Exam
     results: List[StudentResultsWrapper]
+
+
+###
+###
+###
+###
+
+
+class CreateResultRequest(BaseModel):
+    exam_id: str
+    student_id: str
+    points_per_task: List[ResultEntry]
+    owner_id: str | None
+
+
+class ResultEntryResponse(ResultEntry):
+    """
+    Extends the Result entry by Information about the Task
+    """
+
+    name: str
+    max_points: float
+
+
+class StudentResultResponse(Student):
+    result: List[ResultEntry]
+
+
+class ExamResultsResponse(MongoModel):
+    school_class_id: str
+    exam: Exam
+    studentResults: List[StudentResultResponse]

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 from bson import ObjectId
 from fastapi import APIRouter, Security, HTTPException
@@ -15,6 +15,9 @@ from server.api.api_v1.routers.data_api.models import (
     Student,
     ExamResultsWrapper,
     StudentResultsWrapper,
+    Task,
+    ExamResultsResponse,
+    Exam,
 )
 from server.api.api_v1.routers.data_api.repository.exam_repository import find_exam_by_id_in_db
 from server.api.api_v1.routers.data_api.repository.result_repository import (
@@ -26,6 +29,7 @@ from server.api.api_v1.routers.data_api.repository.result_repository import (
     delete_result_in_db,
     list_results_from_db_by_exam_id,
     list_results_from_db_by_exam_id_and_school_class_id,
+    list_student_result_responses,
 )
 from server.api.api_v1.routers.data_api.repository.student_repository import (
     list_students_from_db_by_school_class_id,
@@ -88,7 +92,24 @@ async def get_results_for_school_class(school_class_id: str):
     raise NotImplementedError
 
 
-@result_router.get("/result/{exam_id}/{class_id}")
+@result_router.get("/result/{exam_id}/{school_class_id}", response_model=ExamResultsResponse)
+async def get_exam_results_for_class(
+    school_class_id: str, exam_id: str, user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name])
+) -> ExamResultsResponse:
+    # get_school_class_by_id call ensures that the user making this request is allowed to access the class
+    # (and its data) since an Exception is raised otherwise
+    await get_school_class_by_id(school_class_id=school_class_id, user=user)
+
+    exam = await find_exam_by_id_in_db(exam_id)
+    if not exam:
+        raise ValueError("No such exam")
+
+    results = await list_student_result_responses(exam_id, school_class_id)
+
+    return ExamResultsResponse(school_class_id=school_class_id, exam=exam, studentResults=results)
+
+
+@result_router.get("/result_old/{exam_id}/{class_id}")
 async def get_exam_results_for_class(school_class_id: str, exam_id: str) -> ExamResultsWrapper:
     # get_school_class_by_id call ensures that the user making this request is allowed to access the class
     # (and its data) since an Exception is raised otherwise
