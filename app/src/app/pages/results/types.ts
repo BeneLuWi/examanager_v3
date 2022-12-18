@@ -1,4 +1,4 @@
-import { Exam } from "../exams/types"
+import { Exam, Task } from "../exams/types"
 import { SchoolClass, Student } from "../school_classes/types"
 import React, { SetStateAction } from "react"
 
@@ -26,7 +26,13 @@ export interface StudentResultsResponse extends Student {
   result: ResultEntry[]
 }
 
-export interface ResultEntry {
+export interface ResultEntry extends Task {
   task_id: string
   points: number
+}
+
+export interface CreateResultRequest {
+  exam_id: string
+  student_id: string
+  points_per_task: ResultEntry[]
 }

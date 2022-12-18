@@ -30,6 +30,7 @@ from server.api.api_v1.routers.data_api.repository.result_repository import (
     list_results_from_db_by_exam_id,
     list_results_from_db_by_exam_id_and_school_class_id,
     list_student_result_responses,
+    find_result_by_ids,
 )
 from server.api.api_v1.routers.data_api.repository.student_repository import (
     list_students_from_db_by_school_class_id,
@@ -41,9 +42,7 @@ result_router = APIRouter()
 
 # CRUD - Create
 @result_router.post(
-    "/result",
-    dependencies=[Security(validate_token_with_scope, scopes=[Role.USER.name])],
-    response_model=CreateResultRequest,
+    "/result", dependencies=[Security(validate_token_with_scope, scopes=[Role.USER.name])], response_model=StudentResult
 )
 async def create_result(
     create_result_request: CreateResultRequest,
@@ -51,7 +50,21 @@ async def create_result(
 ):
     if create_result_request.owner_id is None:
         create_result_request.owner_id = str(user.id)
-    return await insert_result_in_db(create_result_request=create_result_request)
+
+    result = await find_result_by_ids(create_result_request)
+
+    if result is not None:
+        return await update_result_in_db(
+            StudentResult(
+                id=result.id,
+                exam_id=create_result_request.exam_id,
+                student_id=create_result_request.student_id,
+                points_per_task=create_result_request.points_per_task,
+                owner_id=result.owner_id,
+            )
+        )
+    else:
+        return await insert_result_in_db(create_result_request=create_result_request)
 
 
 # CRUD - READ

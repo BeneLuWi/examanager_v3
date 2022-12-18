@@ -61,6 +61,15 @@ async def list_results_from_db_by_school_class_id(school_class_id: str) -> List[
     return list(map(lambda result: StudentResult.parse_obj(result), results))
 
 
+async def find_result_by_ids(request: CreateResultRequest) -> Optional[StudentResult]:
+    if (
+        result := await result_collection.find_one(
+            {"$and": [{"exam_id": request.exam_id}, {"student_id": request.student_id}]}
+        )
+    ) is not None:
+        return StudentResult.parse_obj(result)
+
+
 async def list_results_from_db_by_exam_id_and_school_class_id(
     exam_id: str, school_class_id: str
 ) -> List[StudentResult]:

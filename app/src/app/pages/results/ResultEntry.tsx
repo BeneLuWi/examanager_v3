@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from "react"
+import React, { FunctionComponent } from "react"
 import { useResultContext } from "./Results"
 import DrawerModal from "../../components/drawer-modal/DrawerModal"
 import { Card, Col, ListGroup, Row } from "react-bootstrap"
@@ -15,10 +15,8 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
    *******************************************************************************************************************/
 
   const { exam, schoolClass, setExam } = useResultContext()
-  const [show, setShow] = useState(true)
 
-  const { isIdle, data: examResults } = useFetchResults(schoolClass?._id, exam?._id)
-
+  const { isSuccess, isIdle, data: examResults } = useFetchResults(schoolClass?._id, exam?._id)
   /*******************************************************************************************************************
    *
    *  Functions
@@ -26,7 +24,6 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
    *******************************************************************************************************************/
 
   const close = () => {
-    setShow(false)
     setExam(undefined)
   }
 
@@ -37,15 +34,19 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
    *******************************************************************************************************************/
   if (isIdle || !examResults) return <div>Loading</div>
   return (
-    <DrawerModal show={show} close={close}>
+    <DrawerModal show={isSuccess} close={close}>
       <div className="display-5">
         {schoolClass?.name} - {exam?.name}
       </div>
       <Row>
         <Col xs={8}>
           <ListGroup>
-            {examResults.studentResults.map((student) => (
-              <StudentResultItem key={student._id} student={student} />
+            {examResults.studentResults.map((studentResultsResponse) => (
+              <StudentResultItem
+                key={studentResultsResponse._id}
+                studentResultsResponse={studentResultsResponse}
+                exam={examResults.exam}
+              />
             ))}
           </ListGroup>
         </Col>
