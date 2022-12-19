@@ -1,6 +1,5 @@
-from typing import List, Dict
+from typing import List
 
-from bson import ObjectId
 from fastapi import APIRouter, Security, HTTPException
 
 from server.api.api_v1.routers.auth_api.models import User, Role
@@ -15,9 +14,7 @@ from server.api.api_v1.routers.data_api.models import (
     Student,
     ExamResultsWrapper,
     StudentResultsWrapper,
-    Task,
     ExamResultsResponse,
-    Exam,
 )
 from server.api.api_v1.routers.data_api.repository.exam_repository import find_exam_by_id_in_db
 from server.api.api_v1.routers.data_api.repository.result_repository import (
@@ -27,13 +24,11 @@ from server.api.api_v1.routers.data_api.repository.result_repository import (
     update_result_in_db,
     list_results_from_db_by_owner_id,
     delete_result_in_db,
-    list_results_from_db_by_exam_id,
     list_results_from_db_by_exam_id_and_school_class_id,
     list_student_result_responses,
     find_result_by_ids,
 )
 from server.api.api_v1.routers.data_api.repository.student_repository import (
-    list_students_from_db_by_school_class_id,
     find_student_by_id_in_db,
 )
 
@@ -117,7 +112,7 @@ async def get_exam_results_for_class(
     if not exam:
         raise ValueError("No such exam")
 
-    results = await list_student_result_responses(exam_id, school_class_id)
+    results = await list_student_result_responses(exam, school_class_id)
 
     return ExamResultsResponse(school_class_id=school_class_id, exam=exam, studentResults=results)
 

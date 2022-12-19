@@ -26,6 +26,13 @@ export interface StudentResultsResponse extends Student {
   result: ResultEntry[]
 }
 
+export interface StudentResult {
+  owner_id: string
+  exam_id: string
+  student_id: string
+  points_per_task: ResultEntry[]
+}
+
 export interface ResultEntry extends Task {
   task_id: string
   points: number

@@ -25,7 +25,7 @@ const StudentResultItem: FunctionComponent<StudentResultItemProps> = ({ studentR
   const [edit, toggleEdit] = useReducer((state) => !state, false)
 
   const [pointsPerTask, setPointsPerTask] = useState<ResultEntry[]>(
-    studentResultsResponse.result.length ? studentResultsResponse.result : defaultResultEntries(exam)
+    studentResultsResponse.result?.length ? studentResultsResponse.result : defaultResultEntries(exam)
   )
   const { mutate: createResult } = useCreateResult()
 

@@ -133,7 +133,7 @@ class ResultEntryResponse(ResultEntry):
 
 
 class StudentResultResponse(Student):
-    result: List[ResultEntry]
+    result: Optional[List[ResultEntryResponse]]
 
 
 class ExamResultsResponse(MongoModel):
