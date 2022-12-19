@@ -47,7 +47,9 @@ const RatingList: FunctionComponent<RatingListProps> = ({ exam }) => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>Bewertung</Card.Title>
+        <Card.Title>
+          <i className="bi bi-mortarboard" /> Bewertung
+        </Card.Title>
         {exam.ratings.map((rating) => (
           <RatingItem
             key={rating.school_rating}
