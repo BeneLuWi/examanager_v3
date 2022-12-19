@@ -1,10 +1,11 @@
 import React, { FunctionComponent, useReducer, useState } from "react"
-import { Button, InputGroup, ListGroup } from "react-bootstrap"
+import { Badge, Button, InputGroup, ListGroup } from "react-bootstrap"
 import { Exam } from "../exams/types"
 import { ResultEntry, StudentResultsResponse } from "./types"
 import ModalWrapper from "../../components/modal-wrapper/ModalWrapper"
 import Form from "react-bootstrap/Form"
 import { useCreateResult } from "./api"
+import { calcGrade } from "../exams/utils"
 
 type StudentResultItemProps = {
   studentResultsResponse: StudentResultsResponse
@@ -58,7 +59,6 @@ const StudentResultItem: FunctionComponent<StudentResultItemProps> = ({ studentR
         if (entry.task_id !== task.task_id) {
           return entry
         }
-
         return {
           ...entry,
           points: numValue,
@@ -66,6 +66,11 @@ const StudentResultItem: FunctionComponent<StudentResultItemProps> = ({ studentR
       })
     )
   }
+
+  const sumOfPoints = (): number => pointsPerTask.reduce((sum, entry) => sum + entry.points, 0)
+
+  const rating = calcGrade(exam, sumOfPoints())
+
   /*******************************************************************************************************************
    *
    *  Rendering
@@ -75,10 +80,16 @@ const StudentResultItem: FunctionComponent<StudentResultItemProps> = ({ studentR
   return (
     <>
       <ListGroup.Item action onClick={toggleEdit}>
-        <div>
-          <div>
-            {studentResultsResponse.firstname} {studentResultsResponse.lastname}
-          </div>
+        <div className="fw-bold">
+          {studentResultsResponse.firstname} {studentResultsResponse.lastname}
+        </div>
+        <div className="d-flex">
+          <Badge bg="primary" pill className="me-1">
+            <i className="bi bi-patch-check-fill" /> {sumOfPoints()} Punkte gesamt
+          </Badge>
+          <Badge bg="primary" pill>
+            <i className="bi bi-mortarboard-fill" /> Note {rating.text_rating}
+          </Badge>
         </div>
       </ListGroup.Item>
 

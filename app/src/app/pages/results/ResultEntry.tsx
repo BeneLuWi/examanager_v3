@@ -32,7 +32,7 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
    *  Rendering
    *
    *******************************************************************************************************************/
-  if (isIdle || !examResults) return <div>Loading</div>
+  if (isIdle || !examResults) return <div />
   return (
     <DrawerModal show={isSuccess} close={close}>
       <div className="display-5">
