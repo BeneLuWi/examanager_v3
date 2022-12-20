@@ -1,7 +1,23 @@
 from typing import List
-import functools
+import pandas as pd
 
 from server.api.api_v1.routers.data_api.models import ExamResultsResponse, Rating, Exam, Task
+
+
+def create_student_results_dataframe(exam_results_response: ExamResultsResponse):
+    """
+    für jeden schüler:
+    vor und nachname, geschlecht, note (text), note dezimal, mss, punkte, aufgabe 1-n
+    :return:
+    """
+    # 0. Get list of tasks
+    tasks: List[Task] = exam_results_response.exam.tasks
+
+    # 1. Create empty dataframe
+    student_results_df = pd.DataFrame(columns=["Nachname", "Vorname", "Geschlecht", "Note", "MSS", "Gesamtpunkte"])
+
+    # 2.
+    pass
 
 
 def calc_max_points_for_exam(exam: Exam):
@@ -37,4 +53,5 @@ async def calculate_statistics(exam_results_response: ExamResultsResponse):
     """
     ratings: List[Rating] = exam_results_response.exam.ratings
     max_points_for_task = calc_max_points_for_exam(exam=exam_results_response.exam)
+    create_student_results_dataframe(exam_results_response=exam_results_response)
     print(exam_results_response)
