@@ -1,4 +1,4 @@
-from server.api.api_v1.routers.statistics_api import get_sample_result_response
+from server.api.api_v1.routers.statistics_api.controllers import get_sample_result_response
 
 
 class TestClassStatisticModuleTests:
