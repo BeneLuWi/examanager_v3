@@ -123,13 +123,10 @@ class CreateResultRequest(BaseModel):
     owner_id: str | None
 
 
-class ResultEntryResponse(ResultEntry):
+class ResultEntryResponse(ResultEntry, Task):
     """
     Extends the Result entry by Information about the Task
     """
-
-    name: str
-    max_points: float
 
 
 class StudentResultResponse(Student):
