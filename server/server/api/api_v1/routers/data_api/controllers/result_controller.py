@@ -118,7 +118,7 @@ async def get_exam_results_for_class(
 
 
 @result_router.get("/result_old/{exam_id}/{class_id}")
-async def get_exam_results_for_class(school_class_id: str, exam_id: str) -> ExamResultsWrapper:
+async def get_exam_results_for_class_old(school_class_id: str, exam_id: str) -> ExamResultsWrapper:
     # get_school_class_by_id call ensures that the user making this request is allowed to access the class
     # (and its data) since an Exception is raised otherwise
     await get_school_class_by_id(school_class_id=school_class_id)
