@@ -36,7 +36,7 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
   if (isIdle || !examResults) return <div />
   return (
     <DrawerModal show={isSuccess} close={close}>
-      <div className="display-5">
+      <div className="page-header">
         {schoolClass?.name} - {exam?.name}
       </div>
       <Row>

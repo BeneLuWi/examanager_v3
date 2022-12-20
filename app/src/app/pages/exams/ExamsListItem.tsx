@@ -39,7 +39,7 @@ const ExamsListItem: FunctionComponent<ExamsListItemProps> = ({ exam }) => {
       </ListGroup.Item>
 
       <DrawerModal show={edit} close={close}>
-        <div className="display-5">{exam.name}</div>
+        <div className="page-header">{exam.name}</div>
         <ExamDetails exam={exam} />
       </DrawerModal>
     </>

@@ -32,7 +32,7 @@ const Exams: FunctionComponent<ExamsProps> = ({}) => {
 
   return (
     <div>
-      <div className="display-4">Klausuren</div>
+      <div className="page-header">Klausuren</div>
       <Row>
         <Col xs={8}>
           <ExamsList />

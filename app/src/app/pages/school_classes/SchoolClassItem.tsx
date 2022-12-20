@@ -55,12 +55,12 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
       </ListGroup.Item>
 
       <DrawerModal show={editSchoolClass} close={closeEditSchoolClass}>
-        <div className="display-5">{schoolClass.name}</div>
+        <div className="page-header">{schoolClass.name}</div>
         <StudentList schoolClass={schoolClass} />
       </DrawerModal>
 
       <DrawerModal show={editResults} close={closeEditResults}>
-        <div className="display-5">{schoolClass.name}</div>
+        <div className="page-header">{schoolClass.name}</div>
         <StudentResultList schoolClass={schoolClass} />
       </DrawerModal>
     </>
