@@ -11,7 +11,9 @@ router = APIRouter()
 
 @router.get("/calculate_statistics")
 async def get_sample_result_response(
-    exam_id: str, school_class_id: str, user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name])
+    exam_id: str = "63a18a09c3b9c4046a567311",
+    school_class_id: str = "63a18a01c3b9c4046a567310",
+    user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name]),
 ):
     exam_results_response: ExamResultsResponse = await get_exam_results_for_class(
         exam_id=exam_id, school_class_id=school_class_id, user=user
