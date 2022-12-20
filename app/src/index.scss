@@ -1,35 +1,65 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  monospace;
 }
 
 @import "../node_modules/bootstrap/scss/functions";
 @import "../node_modules/bootstrap/scss/variables";
 @import "../node_modules/bootstrap/scss/mixins";
 
-/* make the customizations */
+/***********************************************************************************************************************
+*
+* Theming
+*
+***********************************************************************************************************************/
+
 $custom-colors: (
-    "primary": #4F64A4,
-    "info": #6d44ea,
+        "primary": #4F64A4,
+        "info": #6d44ea,
 );
 
 $theme-colors: map-merge($theme-colors, $custom-colors);
+$body-bg: #f3f3f3;
 
-$nav-pills-link-active-bg : #4F64A4;
+/***********************************************************************************************************************
+*
+* Navigation
+*
+***********************************************************************************************************************/
+
+$nav-pills-link-active-bg: #4F64A4;
 $nav-link-color: #4F64A4;
 
-.cursor-pointer:hover{
-  cursor: pointer;
-}
+
+/***********************************************************************************************************************
+*
+* Cards and Lists
+*
+***********************************************************************************************************************/
+
+$card-border-width: 0;
+$card-box-shadow: $box-shadow-sm;
+
+$enable-shadows: true;
 
 /* import bootstrap to set changes */
 @import "~bootstrap/scss/bootstrap";
+
+/***********************************************************************************************************************
+*
+* Helpers
+*
+***********************************************************************************************************************/
+
+.cursor-pointer:hover {
+  cursor: pointer;
+}

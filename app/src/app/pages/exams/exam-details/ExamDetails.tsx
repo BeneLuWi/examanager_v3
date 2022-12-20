@@ -30,7 +30,7 @@ const ExamDetails: FunctionComponent<ExamDetailsProps> = ({ exam }) => {
    *******************************************************************************************************************/
 
   return (
-    <Row className="h-100 " style={{ overflowY: "scroll" }}>
+    <Row className="h-100 pt-3 pb-3" style={{ overflowY: "scroll" }}>
       <Col xs={6}>
         <RatingList exam={exam} />
       </Col>

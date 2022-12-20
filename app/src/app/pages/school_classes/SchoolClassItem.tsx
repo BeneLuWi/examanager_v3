@@ -3,7 +3,7 @@ import { SchoolClass } from "./types"
 import { Button, ListGroup } from "react-bootstrap"
 import DrawerModal from "../../components/drawer-modal/DrawerModal"
 import StudentList from "./students/StudentList"
-import Results from "../results/Results"
+import StudentResultList from "../results/StudentResultList"
 
 type SchoolClassItemProps = {
   schoolClass: SchoolClass
@@ -61,7 +61,7 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
 
       <DrawerModal show={editResults} close={closeEditResults}>
         <div className="display-5">{schoolClass.name}</div>
-        <Results schoolClass={schoolClass} />
+        <StudentResultList schoolClass={schoolClass} />
       </DrawerModal>
     </>
   )

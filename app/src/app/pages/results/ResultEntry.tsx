@@ -1,9 +1,10 @@
 import React, { FunctionComponent } from "react"
-import { useResultContext } from "./Results"
+import { useResultContext } from "./StudentResultList"
 import DrawerModal from "../../components/drawer-modal/DrawerModal"
 import { Card, Col, ListGroup, Row } from "react-bootstrap"
 import StudentResultItem from "./StudentResultItem"
 import { useFetchResults } from "./api"
+import ListGroupCard from "../../components/list-group-card/ListGroupCard"
 
 type ResultEntryProps = {}
 
@@ -40,7 +41,10 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
       </div>
       <Row>
         <Col xs={8}>
-          <ListGroup>
+          <ListGroupCard>
+            <Card.Title>
+              <i className="bi bi-people" /> Schüler:innen in {schoolClass?.name}
+            </Card.Title>
             {examResults.studentResults.map((studentResultsResponse) => (
               <StudentResultItem
                 key={studentResultsResponse._id}
@@ -48,7 +52,7 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
                 exam={examResults.exam}
               />
             ))}
-          </ListGroup>
+          </ListGroupCard>
         </Col>
         <Col>
           <Card>
