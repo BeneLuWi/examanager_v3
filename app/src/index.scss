@@ -71,6 +71,14 @@ $nav-link-color: #4F64A4;
 $card-border-width: 0;
 $card-box-shadow: $box-shadow-sm;
 
+.card {
+  transition: all 300ms ease-in-out;
+}
+.card:hover {
+  box-shadow: 0 .25rem .5rem rgba($black, .1);
+}
+
+
 $enable-shadows: true;
 
 /* import bootstrap to set changes */
@@ -82,7 +90,7 @@ $enable-shadows: true;
 *
 ***********************************************************************************************************************/
 
-.page-header{
+.page-header {
   font-size: 3rem;
 }
 
