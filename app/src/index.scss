@@ -22,12 +22,34 @@ code {
 *
 ***********************************************************************************************************************/
 
+$exa-blue: #4F64A4;
+
 $custom-colors: (
-        "primary": #4F64A4,
+        "primary": $exa-blue,
         "info": #6d44ea,
 );
 
+$primary: #4F64A4;
+
 $theme-colors: map-merge($theme-colors, $custom-colors);
+
+
+$exa-blue-100: tint-color($exa-blue, 80%) !default;
+$exa-blue-200: tint-color($exa-blue, 60%) !default;
+$exa-blue-300: tint-color($exa-blue, 40%) !default;
+$exa-blue-400: tint-color($exa-blue, 20%) !default;
+$exa-blue-500: $exa-blue !default;
+$exa-blue-600: shade-color($exa-blue, 20%) !default;
+$exa-blue-700: shade-color($exa-blue, 40%) !default;
+$exa-blue-800: shade-color($exa-blue, 60%) !default;
+$exa-blue-900: shade-color($exa-blue, 80%) !default;
+
+$exa-font-color: $exa-blue-800;
+
+$headings-color: $exa-font-color !important;
+$body-color: $exa-font-color;
+$list-group-color: $exa-font-color !important;
+
 $body-bg: #f3f3f3;
 
 /***********************************************************************************************************************
@@ -59,6 +81,10 @@ $enable-shadows: true;
 * Helpers
 *
 ***********************************************************************************************************************/
+
+.page-header{
+  font-size: 3rem;
+}
 
 .cursor-pointer:hover {
   cursor: pointer;

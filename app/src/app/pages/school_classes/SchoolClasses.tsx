@@ -45,7 +45,7 @@ const SchoolClasses: FunctionComponent<SchoolClassesProps> = ({}) => {
 
   return (
     <SchoolClassContext.Provider value={{ schoolClasses, updateSchoolClasses }}>
-      <div className="display-4">Klassen</div>
+      <div className="page-header">Klassen</div>
       <Row>
         <Col xs={8}>
           <SchoolClassList />
