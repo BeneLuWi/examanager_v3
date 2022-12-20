@@ -38,7 +38,9 @@ const NewSchoolClass: FunctionComponent<NewSchoolClassProps> = () => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>Klasse erstellen</Card.Title>
+        <Card.Title>
+          <i className="bi bi-plus" /> Klasse erstellen
+        </Card.Title>
         <Form onSubmit={handleSubmit((values) => performCreate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>

@@ -53,7 +53,7 @@ const NewExam: FunctionComponent<NewExamProps> = ({}) => {
     <Card>
       <Card.Body>
         <Card.Title>
-          <i className="bi bi-file-earmark-plus" /> Klausur hinzufügen
+          <i className="bi bi-plus" /> Klausur hinzufügen
         </Card.Title>
         <Form onSubmit={handleSubmit((values) => createExam(values))}>
           <Form.Group className="mb-3">

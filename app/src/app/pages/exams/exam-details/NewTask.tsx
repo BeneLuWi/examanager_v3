@@ -47,7 +47,9 @@ const NewTask: FunctionComponent<NewTaskProps> = ({ exam }) => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>Aufgabe hinzufügen</Card.Title>
+        <Card.Title>
+          <i className="bi bi-plus" /> Aufgabe hinzufügen
+        </Card.Title>
         <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
