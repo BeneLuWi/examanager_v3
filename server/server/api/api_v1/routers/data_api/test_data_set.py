@@ -61,11 +61,11 @@ async def create_test_dataset(user: User, school_class_name: str):
     students = await list_students_from_db_by_school_class_id(school_class_id=school_class_id, owner_id=owner_id)
 
     tasks_mathe = [
-        {"name": "Aufgabe 1", "max_points": 20},
-        {"name": "Aufgabe 2", "max_points": 10},
-        {"name": "Aufgabe 3", "max_points": 20},
-        {"name": "Aufgabe 4", "max_points": 10},
-        {"name": "Aufgabe 5", "max_points": 40},
+        Task(name="Aufgabe 1", max_points=10),
+        Task(name="Aufgabe 2", max_points=20),
+        Task(name="Aufgabe 3", max_points=30),
+        Task(name="Aufgabe 4", max_points=40),
+        Task(name="Aufgabe 5", max_points=10),
     ]
 
     exam_mathe = await create_exam(
@@ -76,11 +76,11 @@ async def create_test_dataset(user: User, school_class_name: str):
     exam_mathe: Exam = await update_exam(exam_mathe)
 
     tasks_eng = [
-        {"name": "Aufgabe 1", "max_points": 10},
-        {"name": "Aufgabe 2", "max_points": 10},
-        {"name": "Aufgabe 3", "max_points": 10},
-        {"name": "Aufgabe 4", "max_points": 10},
-        {"name": "Aufgabe 5", "max_points": 10},
+        Task(name="Aufgabe 1", max_points=10),
+        Task(name="Aufgabe 2", max_points=10),
+        Task(name="Aufgabe 3", max_points=10),
+        Task(name="Aufgabe 4", max_points=10),
+        Task(name="Aufgabe 5", max_points=10),
     ]
 
     exam_eng = await create_exam(
