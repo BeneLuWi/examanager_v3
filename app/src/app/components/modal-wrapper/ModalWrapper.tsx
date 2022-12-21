@@ -1,22 +1,21 @@
 import React, { FunctionComponent, PropsWithChildren } from "react"
 import { Modal } from "react-bootstrap"
+import { ModalProps } from "react-bootstrap/Modal"
 
 type ModalWrapperProps = {
   children?: React.ReactNode
   show: boolean
   close: VoidFunction
   title: string
-  fullscreen?: boolean
-  size?: "xl" | "sm" | "lg" | undefined
+  options?: ModalProps
 }
 
 const ModalWrapper: FunctionComponent<PropsWithChildren<ModalWrapperProps>> = ({
   show,
   close,
   title,
-  fullscreen,
   children,
-  size = "xl",
+  options,
 }) => {
   /*******************************************************************************************************************
    *
@@ -37,7 +36,7 @@ const ModalWrapper: FunctionComponent<PropsWithChildren<ModalWrapperProps>> = ({
    *******************************************************************************************************************/
 
   return (
-    <Modal fullscreen={fullscreen ? true : undefined} show={show} size={size} onHide={close} centered>
+    <Modal show={show} {...options} onHide={close} centered>
       <Modal.Header className={"justify-content-between"}>
         <Modal.Title>{title}</Modal.Title>
         <div className="btn btn-icon btn-xl ms-2" aria-label="Close" onClick={close}>

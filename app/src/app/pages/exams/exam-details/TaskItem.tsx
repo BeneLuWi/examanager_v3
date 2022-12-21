@@ -82,7 +82,7 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
           <i className="bi bi-patch-check" /> {task.max_points} Punkte erreichbar
         </div>
       </ListGroup.Item>
-      <ModalWrapper size="lg" show={edit} close={close} title={`${task.name} bearbeiten`}>
+      <ModalWrapper options={{ size: "lg" }} show={edit} close={close} title={`${task.name} bearbeiten`}>
         <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>

@@ -93,7 +93,7 @@ const StudentResultItem: FunctionComponent<StudentResultItemProps> = ({ studentR
         </div>
       </ListGroup.Item>
 
-      <ModalWrapper show={edit} size={"sm"} close={toggleEdit} title="Klausurergebnis">
+      <ModalWrapper show={edit} options={{ backdrop: "static" }} close={toggleEdit} title="Klausurergebnis">
         <div>
           <h4>
             {studentResultsResponse.firstname} {studentResultsResponse.lastname}

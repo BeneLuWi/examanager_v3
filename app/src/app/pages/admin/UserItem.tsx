@@ -70,7 +70,7 @@ const UserItem: FunctionComponent<UserItemProps> = ({ user }) => {
       <ListGroup.Item action onClick={open}>
         {user.username} - Role: {user.role === 0 ? "User" : "Admin"}
       </ListGroup.Item>
-      <ModalWrapper size="lg" title={`${user.username} bearbeiten`} show={edit} close={close}>
+      <ModalWrapper options={{ size: "lg" }} title={`${user.username} bearbeiten`} show={edit} close={close}>
         <InputGroup className="mb-3">
           <Form.Control
             type="password"

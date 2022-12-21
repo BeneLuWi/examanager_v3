@@ -76,7 +76,7 @@ const TaskDetails: FunctionComponent<TaskDetailsProps> = ({ exam }) => {
         </Card.Body>
       </Card>
 
-      <ModalWrapper size="lg" show={show} close={close} title={`${exam.name} bearbeiten`}>
+      <ModalWrapper options={{ size: "lg" }} show={show} close={close} title={`${exam.name} bearbeiten`}>
         <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>

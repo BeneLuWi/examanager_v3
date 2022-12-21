@@ -48,7 +48,7 @@ const ConfirmButton: FunctionComponent<PropsWithChildren<ConfirmButtonProps>> = 
       <Button variant={variant} onClick={open}>
         {children}
       </Button>
-      <ModalWrapper size="sm" show={show} close={close} title={question}>
+      <ModalWrapper options={{ size: "sm" }} show={show} close={close} title={question}>
         <div className="d-flex justify-content-around">
           <Button onClick={handleSubmit} variant="primary">
             OK

@@ -57,7 +57,12 @@ const RatingItem: FunctionComponent<RatingItemProps> = ({ rating, totalPoints, u
         </div>
       </ListGroup.Item>
 
-      <ModalWrapper title={`Voraussetzungen für ${rating.mss_points} MSS-Punkte`} size="sm" show={edit} close={close}>
+      <ModalWrapper
+        title={`Voraussetzungen für ${rating.mss_points} MSS-Punkte`}
+        options={{ size: "sm" }}
+        show={edit}
+        close={close}
+      >
         <Row>
           <Col xs={6}>
             <label>Prozentgrenze</label>

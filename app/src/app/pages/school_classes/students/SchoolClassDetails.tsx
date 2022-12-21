@@ -68,7 +68,7 @@ const SchoolClassDetails: FunctionComponent<SchoolClassDetailsProps> = ({ school
         </Card.Body>
       </Card>
 
-      <ModalWrapper size="lg" show={show} close={close} title={`${schoolClass.name} bearbeiten`}>
+      <ModalWrapper options={{ size: "lg" }} show={show} close={close} title={`${schoolClass.name} bearbeiten`}>
         <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
