@@ -37,7 +37,7 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
       <div className="page-header">
         {schoolClass?.name} - {exam?.name}
       </div>
-      <Row>
+      <Row className="h-100 pt-3 pb-3" style={{ overflowY: "scroll" }}>
         <Col xs={8}>
           <ListGroupCard>
             <Card.Title>
