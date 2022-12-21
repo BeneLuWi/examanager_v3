@@ -33,7 +33,7 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
    *
    *******************************************************************************************************************/
   return (
-    <DrawerModal show={!!exam} close={close} closeCallback={() => setExam(undefined)}>
+    <DrawerModal show={!!exam} close={close}>
       <div className="page-header">
         {schoolClass?.name} - {exam?.name}
       </div>
