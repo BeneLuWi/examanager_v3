@@ -19,8 +19,3 @@ export enum Gender {
   w = "w",
   d = "d",
 }
-
-export interface SchoolClassContextType {
-  schoolClasses?: SchoolClass[]
-  updateSchoolClasses: VoidFunction
-}
