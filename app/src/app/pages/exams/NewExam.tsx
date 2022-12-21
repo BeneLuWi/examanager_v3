@@ -58,7 +58,7 @@ const NewExam: FunctionComponent<NewExamProps> = ({}) => {
         <Form onSubmit={handleSubmit((values) => createExam(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
-            <Form.Control {...register("name")} type="text" placeholder="" />
+            <Form.Control {...register("name")} type="text" placeholder="Name" />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Beschreibung</Form.Label>
