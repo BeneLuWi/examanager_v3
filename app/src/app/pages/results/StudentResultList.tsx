@@ -36,7 +36,6 @@ const StudentResultList: FunctionComponent<ResultsProps> = ({ schoolClass }) => 
 
   return (
     <ResultContext.Provider value={{ exam, schoolClass, setExam }}>
-      <div className="page-header">Klausuren</div>
       <ExamSelector />
       <ResultEntry />
     </ResultContext.Provider>

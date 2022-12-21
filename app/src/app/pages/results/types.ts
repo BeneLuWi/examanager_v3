@@ -23,7 +23,7 @@ export interface ExamResultsResponse {
 }
 
 export interface StudentResultsResponse extends Student {
-  result: ResultEntry[]
+  result?: ResultEntry[]
 }
 
 export interface StudentResult {
