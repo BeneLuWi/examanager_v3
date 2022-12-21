@@ -5,6 +5,7 @@ import os
 import uvicorn
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
+from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
 
 from server.api.api_v1.routers.auth_api.utils import init_admin_user
@@ -39,7 +40,7 @@ def custom_openapi():
 
 
 def configure_static(fasts_api_app):
-    static_path = "../frontend/web-app-boilerplate/build"
+    static_path = "../app/build"
     if os.path.exists(static_path):
         logger.info("Mounted StaticFiles in FastApi app")
         fasts_api_app.mount("/", StaticFiles(directory=static_path, html=True), name="react static files")
@@ -50,6 +51,16 @@ def configure_static(fasts_api_app):
 app = FastAPI()
 
 app.include_router(api_router)
+
+
+@app.exception_handler(404)
+async def custom_404_handler(_, __):
+    """
+    This redirects any routes, the server does not define to the frontend, where the routing takes place
+    """
+    return RedirectResponse("/")
+
+
 configure_static(app)
 
 if settings.INIT_ADMIN_USER:
