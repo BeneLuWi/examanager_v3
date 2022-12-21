@@ -40,6 +40,14 @@ oauth2_scheme = OAuth2PasswordBearer(
 )
 
 
+def check_access(user: User, model):
+    if (owner_id := getattr(model, "owner_id", None)) is not None and owner_id != str(user.id):
+        raise HTTPException(
+            status_code=401,
+            detail="No Access to Object",
+        )
+
+
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 

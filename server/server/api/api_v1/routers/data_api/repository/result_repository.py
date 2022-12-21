@@ -116,6 +116,16 @@ async def list_student_result_responses(exam: Exam, school_class_id: str) -> Lis
     return list(map(lambda result: StudentResultResponse.parse_obj(result), students_with_student_result))
 
 
+async def find_result(exam_id: ObjectId | str, student_id: ObjectId | str) -> Optional[StudentResult]:
+    exam_id = str(exam_id)
+    student_id = str(student_id)
+
+    if (
+        student_result := await result_collection.find_one({"$and": [{"student_id": student_id}, {"exam_id": exam_id}]})
+    ) is not None:
+        return StudentResult.parse_obj(student_result)
+
+
 async def find_result_by_id_in_db(result_id: ObjectId | str) -> Optional[StudentResult]:
     if type(result_id) is str:
         result_id = ObjectId(result_id)

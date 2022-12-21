@@ -3,8 +3,9 @@ import Form from "react-bootstrap/Form"
 import { Button, InputGroup } from "react-bootstrap"
 import { Exam } from "../exams/types"
 import { ResultEntry, StudentResultsResponse } from "./types"
-import { useCreateResult } from "./api"
+import { useCreateResult, useDeleteResult } from "./api"
 import ModalWrapper from "../../components/modal-wrapper/ModalWrapper"
+import ConfirmButton from "../../components/confirm-button/ConfirmButton"
 
 type StudentResultFormProps = {
   studentResultsResponse: StudentResultsResponse
@@ -32,7 +33,7 @@ const StudentResultForm: FunctionComponent<StudentResultFormProps> = ({
     studentResultsResponse.result ?? defaultResultEntries(exam)
   )
   const { mutate: createResult } = useCreateResult()
-
+  const { mutate: deleteResult } = useDeleteResult(exam, studentResultsResponse)
   /*******************************************************************************************************************
    *
    *  Functions
@@ -44,6 +45,11 @@ const StudentResultForm: FunctionComponent<StudentResultFormProps> = ({
       student_id: studentResultsResponse._id,
       points_per_task: pointsPerTask,
     })
+    toggleEdit()
+  }
+
+  const handleDelete = () => {
+    deleteResult()
     toggleEdit()
   }
 
@@ -101,9 +107,9 @@ const StudentResultForm: FunctionComponent<StudentResultFormProps> = ({
           <Button variant="primary" className="me-2" onClick={submit}>
             Speichern
           </Button>
-          <Button variant="secondary" onClick={toggleEdit}>
-            Abbrechen
-          </Button>
+          <ConfirmButton onSuccess={handleDelete} question="Klausurergebnis Löschen?">
+            Ergebnis löschen
+          </ConfirmButton>
         </div>
       </div>
     </ModalWrapper>

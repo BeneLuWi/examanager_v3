@@ -6,6 +6,7 @@ from server.api.api_v1.routers.auth_api.models import User, Role
 from server.api.api_v1.routers.auth_api.utils import (
     get_current_user_with_scope,
     validate_token_with_scope,
+    check_access,
 )
 from server.api.api_v1.routers.data_api.controllers.school_class_controller import get_school_class_by_id
 from server.api.api_v1.routers.data_api.models import (
@@ -27,6 +28,7 @@ from server.api.api_v1.routers.data_api.repository.result_repository import (
     list_results_from_db_by_exam_id_and_school_class_id,
     list_student_result_responses,
     find_result_by_ids,
+    find_result,
 )
 from server.api.api_v1.routers.data_api.repository.student_repository import (
     find_student_by_id_in_db,
@@ -153,5 +155,12 @@ async def update_result(update_result_request: StudentResult):
 
 
 @result_router.delete("/result")
-async def delete_result(result_id):
-    return await delete_result_in_db(result_id=result_id)
+async def delete_result(
+    exam_id: str, student_id: str, user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name])
+):
+    student_result = await find_result(exam_id, student_id)
+    if student_result is not None:
+        check_access(user, student_result)
+        return await delete_result_in_db(result_id=student_result.id)
+    else:
+        return False

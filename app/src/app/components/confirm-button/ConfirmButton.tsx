@@ -7,6 +7,7 @@ type ConfirmButtonProps = {
   onSuccess: VoidFunction
   variant?: ButtonVariant
   question: string
+  className?: string
 }
 
 const ConfirmButton: FunctionComponent<PropsWithChildren<ConfirmButtonProps>> = ({
@@ -14,6 +15,7 @@ const ConfirmButton: FunctionComponent<PropsWithChildren<ConfirmButtonProps>> = 
   onSuccess,
   variant = "danger",
   question,
+  className,
 }) => {
   /*******************************************************************************************************************
    *
@@ -45,10 +47,10 @@ const ConfirmButton: FunctionComponent<PropsWithChildren<ConfirmButtonProps>> = 
 
   return (
     <>
-      <Button variant={variant} onClick={open}>
+      <Button onClick={open} {...{ className, variant }}>
         {children}
       </Button>
-      <ModalWrapper options={{ size: "sm" }} show={show} close={close} title={question}>
+      <ModalWrapper options={{ size: "sm" }} title={question} {...{ show, close }}>
         <div className="d-flex justify-content-around">
           <Button onClick={handleSubmit} variant="primary">
             OK
