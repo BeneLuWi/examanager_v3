@@ -101,7 +101,7 @@ const StudentResultForm: FunctionComponent<StudentResultFormProps> = ({
           <Button variant="primary" className="me-2" onClick={submit}>
             Speichern
           </Button>
-          <Button variant="secondary" onClick={submit}>
+          <Button variant="secondary" onClick={toggleEdit}>
             Abbrechen
           </Button>
         </div>

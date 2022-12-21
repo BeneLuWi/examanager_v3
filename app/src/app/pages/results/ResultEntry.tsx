@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react"
+import React, { FunctionComponent, useState } from "react"
 import { useResultContext } from "./StudentResultList"
 import DrawerModal from "../../components/drawer-modal/DrawerModal"
 import { Card, Col, ListGroup, Row } from "react-bootstrap"
@@ -16,8 +16,7 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
    *******************************************************************************************************************/
 
   const { exam, schoolClass, setExam } = useResultContext()
-
-  const { isSuccess, isIdle, data: examResults } = useFetchResults(schoolClass?._id, exam?._id)
+  const { data: examResults } = useFetchResults(schoolClass?._id, exam?._id)
   /*******************************************************************************************************************
    *
    *  Functions
@@ -33,9 +32,8 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
    *  Rendering
    *
    *******************************************************************************************************************/
-  if (isIdle || !examResults) return <div />
   return (
-    <DrawerModal show={isSuccess} close={close}>
+    <DrawerModal show={!!exam} close={close} closeCallback={() => setExam(undefined)}>
       <div className="page-header">
         {schoolClass?.name} - {exam?.name}
       </div>
@@ -45,7 +43,7 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
             <Card.Title>
               <i className="bi bi-people" /> Schüler:innen in {schoolClass?.name}
             </Card.Title>
-            {examResults.studentResults.map((studentResultsResponse) => (
+            {examResults?.studentResults.map((studentResultsResponse) => (
               <StudentResultItem
                 key={studentResultsResponse._id}
                 studentResultsResponse={studentResultsResponse}
@@ -62,16 +60,16 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
               </Card.Title>
               <p>
                 <div>
-                  <div className="fw-bold">{examResults.exam.name}</div>
-                  {examResults.exam.description}
+                  <div className="fw-bold">{examResults?.exam.name}</div>
+                  {examResults?.exam.description}
                 </div>
               </p>
               <p>
-                <i className="bi bi-patch-check" /> {examResults.exam.tasks.reduce((a, b) => a + b.max_points, 0)}{" "}
+                <i className="bi bi-patch-check" /> {examResults?.exam.tasks.reduce((a, b) => a + b.max_points, 0)}{" "}
                 Punkte
               </p>
               <p>
-                <i className="bi bi-check2-square" /> {examResults.exam.tasks.length} Aufgaben
+                <i className="bi bi-check2-square" /> {examResults?.exam.tasks.length} Aufgaben
               </p>
             </Card.Body>
           </Card>
