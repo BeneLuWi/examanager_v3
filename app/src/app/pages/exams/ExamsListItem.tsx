@@ -3,6 +3,7 @@ import { Exam } from "./types"
 import { ListGroup } from "react-bootstrap"
 import DrawerModal from "../../components/drawer-modal/DrawerModal"
 import ExamOverview from "./exam-details/ExamOverview"
+import LetterIcon from "../../components/letter-icon/LetterIcon"
 
 type ExamsListItemProps = {
   exam: Exam
@@ -31,7 +32,8 @@ const ExamsListItem: FunctionComponent<ExamsListItemProps> = ({ exam }) => {
 
   return (
     <>
-      <ListGroup.Item action onClick={open}>
+      <ListGroup.Item action onClick={open} className="d-flex">
+        <LetterIcon name={exam.name} />
         <div>
           <div className="fw-bold">{exam.name}</div>
           {exam.description}

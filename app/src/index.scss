@@ -23,10 +23,15 @@ code {
 ***********************************************************************************************************************/
 
 $exa-blue: #4F64A4;
+$exa-dark: #4C5B87;
+$exa-bright: #26C1ED;
+$exa-orange: #EF9362;
+$exa-red: #BA2E0B;
+$exa-green: #77A33E;
 
 $custom-colors: (
         "primary": $exa-blue,
-        "info": #6d44ea,
+        "info": $exa-orange,
 );
 
 $primary: #4F64A4;
@@ -51,6 +56,12 @@ $body-color: $exa-font-color;
 $list-group-color: $exa-font-color !important;
 
 $body-bg: #f6f6f6;
+
+.bg-exa-orange{
+  background-color: $exa-orange;
+  color: $exa-blue-800;
+}
+
 
 /***********************************************************************************************************************
 *
