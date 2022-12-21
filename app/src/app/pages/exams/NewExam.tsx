@@ -61,7 +61,7 @@ const NewExam: FunctionComponent<NewExamProps> = ({}) => {
             <Form.Control {...register("name")} type="text" placeholder="" />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Description</Form.Label>
+            <Form.Label>Beschreibung</Form.Label>
             <Form.Control {...register("description")} type="text" placeholder="(optional)" />
           </Form.Group>
           <Button variant="success" type="submit">

@@ -89,7 +89,7 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
             <Form.Control {...register("name")} type="text" placeholder="Name" defaultValue={task.name} />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Beschreibung</Form.Label>
+            <Form.Label>Erreichbare Punktzahl</Form.Label>
             <Form.Control {...register("max_points")} type="number" defaultValue={task.max_points} />
           </Form.Group>
           <Button variant="primary" type="submit" className="me-2">

@@ -47,7 +47,7 @@ const NewSchoolClass: FunctionComponent<NewSchoolClassProps> = () => {
             <Form.Control {...register("name")} type="text" placeholder="Name" />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Beschreibsung</Form.Label>
+            <Form.Label>Beschreibung</Form.Label>
             <Form.Control {...register("description")} type="text" placeholder="Beschreibung (optional)" />
           </Form.Group>
           <Button variant="success" type="submit">

@@ -2,7 +2,7 @@ import React, { FunctionComponent, useState } from "react"
 import { Exam } from "./types"
 import { ListGroup } from "react-bootstrap"
 import DrawerModal from "../../components/drawer-modal/DrawerModal"
-import ExamDetails from "./exam-details/ExamDetails"
+import ExamOverview from "./exam-details/ExamOverview"
 
 type ExamsListItemProps = {
   exam: Exam
@@ -40,7 +40,7 @@ const ExamsListItem: FunctionComponent<ExamsListItemProps> = ({ exam }) => {
 
       <DrawerModal show={edit} close={close}>
         <div className="page-header">{exam.name}</div>
-        <ExamDetails exam={exam} />
+        <ExamOverview exam={exam} />
       </DrawerModal>
     </>
   )
