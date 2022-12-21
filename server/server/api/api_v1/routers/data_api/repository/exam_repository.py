@@ -58,13 +58,13 @@ async def update_exam_in_db(exam: Exam) -> Exam:
     del exam_dict["_id"]
 
     if len(exam_dict) >= 1:
-        update_result = await exam_collection.update_one({"_id": exam.id}, {"$set": exam_dict})
-        if update_result.modified_count == 1:
-            if (updated_user := await exam_collection.find_one({"_id": exam.id})) is not None:
-                return updated_user
+        update_exam = await exam_collection.update_one({"_id": exam.id}, {"$set": exam_dict})
+        if update_exam.modified_count == 1:
+            if (updated_exam := await exam_collection.find_one({"_id": exam.id})) is not None:
+                return Exam.parse_obj(updated_exam)
 
-    if (existing_user := await exam_collection.find_one({"_id": exam.id})) is not None:
-        return existing_user
+    if (existing_exam := await exam_collection.find_one({"_id": exam.id})) is not None:
+        return Exam.parse_obj(existing_exam)
 
     raise RuntimeError(f"exam {exam.name} not found")
 
