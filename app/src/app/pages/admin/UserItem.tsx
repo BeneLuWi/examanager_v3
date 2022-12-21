@@ -45,7 +45,7 @@ const UserItem: FunctionComponent<UserItemProps> = ({ user }) => {
       toast("Passwort muss mindestens 5 Zeichen lang sein", { type: "error" })
     } else {
       axios
-        .put("api/update_password", {
+        .put("api/admin/update_password", {
           _id: user._id,
           password: password,
         })
