@@ -180,3 +180,17 @@ async def update_password(
         )
 
     return await update_user_password_by_request(update_password_request=update_password_request)
+
+
+@router.put("/admin/update_password", response_model=User)
+async def update_password_admin(
+    update_password_request: UpdatePasswordRequest,
+    user: User = Security(get_current_user_with_scope, scopes=[Role.ADMIN.name]),
+):
+    """
+    This method lets the current user change his password. The user can only change his own password. To access this
+    method a JWT is required but with no role requirements.
+    :return: database response if successful, else error message and 500
+    """
+
+    return await update_user_password_by_request(update_password_request=update_password_request)

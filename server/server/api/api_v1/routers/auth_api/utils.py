@@ -198,9 +198,12 @@ def parse_update_user_request_to_user_model(update_user_request: UpdateUserReque
     )
 
 
-def parse_update_password_request_to_user_model(update_password_request: UpdatePasswordRequest) -> UpdateUserModel:
+async def parse_update_password_request_to_user_model(
+    update_password_request: UpdatePasswordRequest,
+) -> UpdateUserModel:
+    user = await user_collection.find_one({"_id": str(update_password_request.id)})
     return UpdateUserModel(
-        username=update_password_request.username,
+        username=user["username"],
         password=get_password_hash(update_password_request.password),
         role=None,
     )
@@ -241,7 +244,9 @@ async def update_user_by_request(update_user_request: UpdateUserRequest):
 
 
 async def update_user_password_by_request(update_password_request: UpdatePasswordRequest) -> User:
-    return await update_user_in_db(user_model=parse_update_password_request_to_user_model(update_password_request))
+    return await update_user_in_db(
+        user_model=await parse_update_password_request_to_user_model(update_password_request)
+    )
 
 
 async def update_user_in_db(user_model: UpdateUserModel) -> User:
