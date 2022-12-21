@@ -37,10 +37,10 @@ const ModalWrapper: FunctionComponent<PropsWithChildren<ModalWrapperProps>> = ({
 
   return (
     <Modal show={show} {...options} onHide={close} centered>
-      <Modal.Header className={"justify-content-between"}>
+      <Modal.Header className="justify-content-between">
         <Modal.Title>{title}</Modal.Title>
-        <div className="btn btn-icon btn-xl ms-2" aria-label="Close" onClick={close}>
-          <i className="bi bi-x fs-1" />
+        <div className="btn btn-icon" aria-label="Close" onClick={close}>
+          <i className="bi bi-x" />
         </div>
       </Modal.Header>
       <Modal.Body>{children}</Modal.Body>

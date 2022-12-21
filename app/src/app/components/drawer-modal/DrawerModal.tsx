@@ -55,7 +55,7 @@ const DrawerModal: FunctionComponent<PropsWithChildren<DrawerModalProps>> = ({ c
           ref={modalRef}
           onClick={handleClick}
           className="position-fixed w-100 h-100 bg-dark bg-opacity-25 overflow-auto p-2"
-          style={{ left: 0, top: 0, opacity: styles.opacity, zIndex: 99 }}
+          style={{ left: 0, top: 0, opacity: styles.opacity, zIndex: 99, backdropFilter: "blur(2px)" }}
         >
           <a.aside style={{ ...drawerStyle, ...styles }} className="bg-body">
             <Button onClick={close} variant="outline-secondary" className="m-3 position-absolute">
