@@ -18,7 +18,7 @@ const RatingItem: FunctionComponent<RatingItemProps> = ({ rating, totalPoints, u
    *
    *******************************************************************************************************************/
   const [edit, setEdit] = useState(false)
-  const [percentage, setPercentage] = useState<number>(round(rating.percentage))
+  const [percentage, setPercentage] = useState(round(rating.percentage))
 
   /*******************************************************************************************************************
    *
@@ -26,7 +26,10 @@ const RatingItem: FunctionComponent<RatingItemProps> = ({ rating, totalPoints, u
    *
    *******************************************************************************************************************/
   const close = () => setEdit(false)
-  const open = () => setEdit(true)
+  const open = () => {
+    setEdit(true)
+    setPercentage(round(rating.percentage))
+  }
 
   const handleSubmit = () => {
     const ratingUpdate: Rating = {
@@ -57,12 +60,7 @@ const RatingItem: FunctionComponent<RatingItemProps> = ({ rating, totalPoints, u
         </div>
       </ListGroup.Item>
 
-      <ModalWrapper
-        title={`Voraussetzungen für ${rating.mss_points} MSS-Punkte`}
-        options={{ size: "sm" }}
-        show={edit}
-        close={close}
-      >
+      <ModalWrapper title={`Voraussetzungen für ${rating.mss_points} MSS-Punkte`} show={edit} close={close}>
         <Row>
           <Col xs={6}>
             <label>Prozentgrenze</label>
@@ -75,7 +73,7 @@ const RatingItem: FunctionComponent<RatingItemProps> = ({ rating, totalPoints, u
                 max={100}
                 value={percentage}
               />
-              <Form.Label className="fw-bold pt-1">%</Form.Label>
+              <InputGroup.Text id="basic-addon2">%</InputGroup.Text>
             </InputGroup>
           </Col>
           <Col>
