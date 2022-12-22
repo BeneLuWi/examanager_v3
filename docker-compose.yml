@@ -6,3 +6,13 @@ services:
     container_name: examanager-db
     ports:
       - "27017:27017"
+
+  examanager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: examanager-app
+    ports:
+      - "80:5200"
+    depends_on:
+      - mongodb
