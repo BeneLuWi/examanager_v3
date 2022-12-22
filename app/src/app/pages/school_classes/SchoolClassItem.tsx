@@ -38,9 +38,9 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
 
   return (
     <>
-      <ListGroup.Item className="d-flex justify-content-between align-items-center">
+      <ListGroup.Item className="d-flex justify-content-between align-items-center" action>
         <div className="d-flex">
-          <LetterIcon name={schoolClass.name} />
+          <LetterIcon name={schoolClass.name} id={schoolClass._id} />
           <div>
             <div className="fw-bold">{schoolClass.name}</div>
             {schoolClass.description}

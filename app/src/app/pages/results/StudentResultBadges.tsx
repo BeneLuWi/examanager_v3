@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react"
+import React, { FunctionComponent, useMemo } from "react"
 import { calcGrade } from "../exams/utils"
 import { StudentResultsResponse } from "./types"
 import { Exam } from "../exams/types"
@@ -15,6 +15,14 @@ const StudentResultBadges: FunctionComponent<StudentResultBadgesProps> = ({ exam
    *  Hooks
    *
    *******************************************************************************************************************/
+
+  const [sumOfPoints, rating] = useMemo(() => {
+    if (!studentResultsResponse.result) return [0, undefined]
+
+    const sum = studentResultsResponse.result!.reduce((sum, entry) => sum + entry.points, 0)
+
+    return [sum, calcGrade(exam, sum)]
+  }, [studentResultsResponse.result])
 
   /*******************************************************************************************************************
    *
@@ -35,18 +43,13 @@ const StudentResultBadges: FunctionComponent<StudentResultBadgesProps> = ({ exam
       </Badge>
     )
   }
-
-  const sumOfPoints = (): number => studentResultsResponse.result!.reduce((sum, entry) => sum + entry.points, 0)
-
-  const rating = calcGrade(exam, sumOfPoints())
-
   return (
     <div className="d-flex">
       <Badge bg="primary" pill className="me-1">
-        <i className="bi bi-patch-check-fill" /> {sumOfPoints()} Punkte gesamt
+        <i className="bi bi-patch-check-fill" /> {sumOfPoints} Punkte gesamt
       </Badge>
       <Badge bg="primary" pill>
-        <i className="bi bi-mortarboard-fill" /> Note {rating.text_rating}
+        <i className="bi bi-mortarboard-fill" /> Note {rating!.text_rating}
       </Badge>
     </div>
   )

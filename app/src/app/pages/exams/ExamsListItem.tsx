@@ -33,7 +33,7 @@ const ExamsListItem: FunctionComponent<ExamsListItemProps> = ({ exam }) => {
   return (
     <>
       <ListGroup.Item action onClick={open} className="d-flex">
-        <LetterIcon name={exam.name} />
+        <LetterIcon name={exam.name} id={exam._id} />
         <div>
           <div className="fw-bold">{exam.name}</div>
           {exam.description}
