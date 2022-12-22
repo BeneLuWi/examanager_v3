@@ -23,11 +23,31 @@ code {
 ***********************************************************************************************************************/
 
 $exa-blue: #4F64A4;
+
 $exa-dark: #4C5B87;
 $exa-bright: #26C1ED;
 $exa-orange: #EF9362;
 $exa-red: #BA2E0B;
 $exa-green: #77A33E;
+$exa-purple: #6C56A3;
+$exa-kaki: #A39C3E;
+$exa-blue2: #468EA3;
+$exa-brown: #A3805F;
+$exa-rost: #A35F74;
+$exa-green2: #46A350;
+
+$exa-colors: (
+        "dark":$exa-dark,
+        "bright":$exa-bright,
+        "orange":$exa-orange,
+        "red":$exa-red,
+        "green":$exa-green,
+        "purple": $exa-purple,
+        "kaki": $exa-kaki,
+        "blue2": $exa-blue2,
+        "brown": $exa-brown,
+        "rost": $exa-rost,
+        "green2": $exa-green2,);
 
 $custom-colors: (
         "primary": $exa-blue,
@@ -57,11 +77,13 @@ $list-group-color: $exa-font-color !important;
 
 $body-bg: #f6f6f6;
 
-.bg-exa-orange{
-  background-color: $exa-orange;
-  color: $exa-blue-800;
-}
 
+@each $color, $value in $exa-colors {
+  .bg-exa-#{$color} {
+    background-color: $value;
+    color: white;
+  }
+}
 
 /***********************************************************************************************************************
 *
@@ -85,6 +107,7 @@ $card-box-shadow: $box-shadow-sm;
 .card {
   transition: all 300ms ease-in-out;
 }
+
 .card:hover {
   box-shadow: 0 .25rem .5rem rgba($black, .1);
 }
