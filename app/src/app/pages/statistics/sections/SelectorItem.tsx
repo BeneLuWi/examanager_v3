@@ -1,9 +1,11 @@
 import React, { FunctionComponent } from "react"
-import Selector from "./sections/Selector"
+import { Exam } from "../../exams/types"
+import { Card } from "react-bootstrap"
+import LetterIcon from "../../../components/letter-icon/LetterIcon"
 
-type StatisticsProps = {}
+type SelectorItemProps = { exam: Exam }
 
-const Statistics: FunctionComponent<StatisticsProps> = ({}) => {
+const SelectorItem: FunctionComponent<SelectorItemProps> = ({ exam }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
@@ -23,11 +25,20 @@ const Statistics: FunctionComponent<StatisticsProps> = ({}) => {
    *******************************************************************************************************************/
 
   return (
-    <div>
-      <div className="page-header">Statistiken</div>
-      <Selector />
-    </div>
+    <Card style={{ width: "15rem" }}>
+      <Card.Body>
+        <LetterIcon
+          name={exam.name}
+          id={exam._id}
+          style={{ position: "absolute", transform: "translate(-3rem,-1.5rem)" }}
+        />
+        <Card.Title>
+          <div className="d-flex align-items-center">{exam.name}</div>
+        </Card.Title>
+        <p></p>
+      </Card.Body>
+    </Card>
   )
 }
 
-export default Statistics
+export default SelectorItem

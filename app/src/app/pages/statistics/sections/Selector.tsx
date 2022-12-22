@@ -1,14 +1,18 @@
 import React, { FunctionComponent } from "react"
-import Selector from "./sections/Selector"
+import { useFetchExams } from "../../exams/api"
+import SelectorItem from "./SelectorItem"
+import { Row } from "react-bootstrap"
 
-type StatisticsProps = {}
+type SelectorProps = {}
 
-const Statistics: FunctionComponent<StatisticsProps> = ({}) => {
+const Selector: FunctionComponent<SelectorProps> = ({}) => {
   /*******************************************************************************************************************
    *
    *  Hooks
    *
    *******************************************************************************************************************/
+
+  const { data: exams } = useFetchExams()
 
   /*******************************************************************************************************************
    *
@@ -23,11 +27,12 @@ const Statistics: FunctionComponent<StatisticsProps> = ({}) => {
    *******************************************************************************************************************/
 
   return (
-    <div>
-      <div className="page-header">Statistiken</div>
-      <Selector />
-    </div>
+    <Row className="justify-content-start gap-3">
+      {exams?.map((exam) => (
+        <SelectorItem key={exam._id} {...{ exam }} />
+      ))}
+    </Row>
   )
 }
 
-export default Statistics
+export default Selector
