@@ -12,6 +12,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: examanager-app
+    environment:
+      MONGO_HOST: "mongodb"
     ports:
       - "80:5200"
     depends_on:
