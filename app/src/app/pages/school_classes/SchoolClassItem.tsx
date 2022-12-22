@@ -40,7 +40,7 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
     <>
       <ListGroup.Item className="d-flex justify-content-between align-items-center" action>
         <div className="d-flex">
-          <LetterIcon name={schoolClass.name} id={schoolClass._id} />
+          <LetterIcon name={schoolClass.name} id={schoolClass._id} rounded />
           <div>
             <div className="fw-bold">{schoolClass.name}</div>
             {schoolClass.description}

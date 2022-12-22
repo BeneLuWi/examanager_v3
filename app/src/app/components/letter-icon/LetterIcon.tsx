@@ -4,6 +4,7 @@ type LetterIconProps = {
   name: string
   id: string
   style?: CSSProperties
+  rounded?: boolean
 }
 
 const colorClasses = [
@@ -24,7 +25,7 @@ const createIdHash = (id: string) => {
   return parseInt(id.slice(-1))
 }
 
-const LetterIcon: FunctionComponent<LetterIconProps> = ({ name, id, style }) => {
+const LetterIcon: FunctionComponent<LetterIconProps> = ({ name, id, style, rounded }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
@@ -49,7 +50,7 @@ const LetterIcon: FunctionComponent<LetterIconProps> = ({ name, id, style }) => 
 
   return (
     <div
-      className={`rounded-circle text-center align-middle me-2 ${colorClasses[idHash]}`}
+      className={`${rounded ? "rounded" : "rounded-circle"} text-center align-middle me-2 ${colorClasses[idHash]}`}
       style={{ width: size, height: size, lineHeight: size, ...style }}
     >
       <span className="fw-bolder fs-5">{name.substring(0, 1)}</span>
