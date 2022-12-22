@@ -1,8 +1,9 @@
-import React, { FunctionComponent, useState } from "react"
+import React, { CSSProperties, FunctionComponent, useState } from "react"
 
 type LetterIconProps = {
   name: string
   id: string
+  style?: CSSProperties
 }
 
 const colorClasses = [
@@ -23,7 +24,7 @@ const createIdHash = (id: string) => {
   return parseInt(id.slice(-1))
 }
 
-const LetterIcon: FunctionComponent<LetterIconProps> = ({ name, id }) => {
+const LetterIcon: FunctionComponent<LetterIconProps> = ({ name, id, style }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
@@ -49,7 +50,7 @@ const LetterIcon: FunctionComponent<LetterIconProps> = ({ name, id }) => {
   return (
     <div
       className={`rounded-circle text-center align-middle me-2 ${colorClasses[idHash]}`}
-      style={{ width: size, height: size, lineHeight: size }}
+      style={{ width: size, height: size, lineHeight: size, ...style }}
     >
       <span className="fw-bolder fs-5">{name.substring(0, 1)}</span>
     </div>
