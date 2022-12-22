@@ -1,10 +1,11 @@
-import React, { FunctionComponent, useState } from "react"
+import React, { FunctionComponent, useEffect, useState } from "react"
 import { useResultContext } from "./StudentResultList"
 import DrawerModal from "../../components/drawer-modal/DrawerModal"
-import { Card, Col, ListGroup, Row } from "react-bootstrap"
+import { Card, Col, InputGroup, ListGroup, Row } from "react-bootstrap"
 import StudentResultItem from "./StudentResultItem"
 import { useFetchResults } from "./api"
 import ListGroupCard from "../../components/list-group-card/ListGroupCard"
+import Form from "react-bootstrap/Form"
 
 type ResultEntryProps = {}
 
@@ -17,6 +18,24 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
 
   const { exam, schoolClass, setExam } = useResultContext()
   const { data: examResults } = useFetchResults(schoolClass?._id, exam?._id)
+
+  const [name, setName] = useState("")
+  const [foundStudentResults, setFoundStudentResults] = useState(examResults?.studentResults)
+
+  useEffect(() => {
+    if (!name.length) {
+      setFoundStudentResults(examResults?.studentResults)
+    }
+    setFoundStudentResults(
+      examResults?.studentResults.filter(
+        (student) => student.firstname.toLowerCase().includes(name) || student.lastname.toLowerCase().includes(name)
+      )
+    )
+  }, [name, examResults])
+
+  // Reset on Unmount
+  useEffect(() => () => setName(""), [])
+
   /*******************************************************************************************************************
    *
    *  Functions
@@ -43,13 +62,26 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
             <Card.Title>
               <i className="bi bi-people" /> Schüler:innen in {schoolClass?.name}
             </Card.Title>
-            {examResults?.studentResults.map((studentResultsResponse) => (
-              <StudentResultItem
-                key={studentResultsResponse._id}
-                studentResultsResponse={studentResultsResponse}
-                exam={examResults.exam}
+            <InputGroup className="mb-3">
+              <InputGroup.Text>
+                <i className="bi bi-search" />
+              </InputGroup.Text>
+              <Form.Control
+                onChange={(event) => setName(event.target.value)}
+                value={name}
+                placeholder="Suche"
+                aria-label="Name"
+                aria-describedby="basic-addon1"
               />
-            ))}
+            </InputGroup>
+            {examResults &&
+              foundStudentResults?.map((studentResultsResponse) => (
+                <StudentResultItem
+                  key={studentResultsResponse._id}
+                  studentResultsResponse={studentResultsResponse}
+                  exam={examResults.exam}
+                />
+              ))}
           </ListGroupCard>
         </Col>
         <Col>
