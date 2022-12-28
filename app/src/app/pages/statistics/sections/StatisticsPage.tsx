@@ -4,6 +4,8 @@ import DrawerModal from "../../../components/drawer-modal/DrawerModal"
 import { Button, Card, Col, Row } from "react-bootstrap"
 import { useFetchResults } from "../../results/api"
 import SchoolClassComposition from "../graphs/SchoolClassComposition"
+import AverageGrade from "../graphs/AverageGrade"
+import StudentResultList from "../graphs/StudentResultList"
 
 type StatisticsPageProps = {}
 
@@ -45,11 +47,11 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
   return (
     <DrawerModal {...{ show, close }}>
       {exam && schoolClass && (
-        <div>
+        <div className="h-100">
           <h2>
             Klausurergebnisse für {exam.name} von {schoolClass.name}
           </h2>
-          <div className="h-100 pt-3 pb-3" style={{ overflowY: "scroll" }}>
+          <div className="h-100 pt-3 pb-3 gy-3" style={{ overflowY: "scroll" }}>
             <Row>
               <Col>
                 <Card>
@@ -64,11 +66,6 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
                     <p>
                       <i className="bi bi-people" /> {studentResults?.studentResults.length} Schüler:innen
                     </p>
-                    <div style={{ height: 200 }}>
-                      {studentResults?.studentResults && (
-                        <SchoolClassComposition students={studentResults?.studentResults} />
-                      )}
-                    </div>
                   </Card.Body>
                 </Card>
               </Col>
@@ -92,6 +89,15 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
                   </Card.Body>
                 </Card>
               </Col>
+            </Row>
+            <Row className="mt-4">
+              <Col>
+                <AverageGrade />
+              </Col>
+              <Col />
+              <Row className="mt-4">
+                <StudentResultList />
+              </Row>
             </Row>
           </div>
         </div>
