@@ -1,4 +1,6 @@
-import { Rating } from "../exams/types"
+import { Exam, Rating } from "../exams/types"
+import React, { SetStateAction } from "react"
+import { SchoolClass } from "../school_classes/types"
 
 export interface AverageGrade {
   total: Rating
@@ -36,4 +38,12 @@ const exampleAverage: AverageGrade = {
     school_rating: "1",
     text_rating: "Sehr Gut",
   },
+}
+
+export interface StatisticsContextType {
+  exam?: Exam
+  setExam: React.Dispatch<SetStateAction<Exam | undefined>>
+
+  schoolClass?: SchoolClass
+  setSchoolClass: React.Dispatch<SetStateAction<SchoolClass | undefined>>
 }

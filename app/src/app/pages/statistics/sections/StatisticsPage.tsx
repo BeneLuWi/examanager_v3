@@ -1,0 +1,103 @@
+import React, { FunctionComponent, useEffect, useState } from "react"
+import { useStatisticsContext } from "../Statistics"
+import DrawerModal from "../../../components/drawer-modal/DrawerModal"
+import { Button, Card, Col, Row } from "react-bootstrap"
+import { useFetchResults } from "../../results/api"
+import SchoolClassComposition from "../graphs/SchoolClassComposition"
+
+type StatisticsPageProps = {}
+
+const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
+  /*******************************************************************************************************************
+   *
+   *  Hooks
+   *
+   *******************************************************************************************************************/
+
+  const { exam, schoolClass, setExam, setSchoolClass } = useStatisticsContext()
+  const [show, setShow] = useState(false)
+  const { data: studentResults } = useFetchResults(schoolClass?._id, exam?._id)
+
+  useEffect(() => {
+    if (exam && schoolClass) {
+      setShow(true)
+    }
+  }, [exam, schoolClass])
+
+  /*******************************************************************************************************************
+   *
+   *  Functions
+   *
+   *******************************************************************************************************************/
+
+  const close = () => {
+    setShow(false)
+    setExam(undefined)
+    setSchoolClass(undefined)
+  }
+
+  /*******************************************************************************************************************
+   *
+   *  Rendering
+   *
+   *******************************************************************************************************************/
+
+  return (
+    <DrawerModal {...{ show, close }}>
+      {exam && schoolClass && (
+        <div>
+          <h2>
+            Klausurergebnisse für {exam.name} von {schoolClass.name}
+          </h2>
+          <div className="h-100 pt-3 pb-3" style={{ overflowY: "scroll" }}>
+            <Row>
+              <Col>
+                <Card>
+                  <Card.Body>
+                    <Card.Title>
+                      <i className="bi bi-people-fill" /> Klasse
+                    </Card.Title>
+                    <p>
+                      <div className="fw-bold">{schoolClass.name}</div>
+                      {schoolClass.description}
+                    </p>
+                    <p>
+                      <i className="bi bi-people" /> {studentResults?.studentResults.length} Schüler:innen
+                    </p>
+                    <div style={{ height: 200 }}>
+                      {studentResults?.studentResults && (
+                        <SchoolClassComposition students={studentResults?.studentResults} />
+                      )}
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+
+              <Col>
+                <Card>
+                  <Card.Body>
+                    <Card.Title>
+                      <i className="bi bi-list-check" /> Klausur
+                    </Card.Title>
+                    <p>
+                      <div className="fw-bold">{exam.name}</div>
+                      {exam.description}
+                    </p>
+                    <p>
+                      <i className="bi bi-patch-check" /> {exam.tasks.reduce((a, b) => a + b.max_points, 0)} Punkte
+                    </p>
+                    <p>
+                      <i className="bi bi-check2-square" /> {exam.tasks.length} Aufgaben
+                    </p>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </div>
+      )}
+    </DrawerModal>
+  )
+}
+
+export default StatisticsPage

@@ -5,6 +5,8 @@ type LetterIconProps = {
   id: string
   style?: CSSProperties
   rounded?: boolean
+
+  size?: string
 }
 
 const colorClasses = [
@@ -22,10 +24,12 @@ const colorClasses = [
 
 const createIdHash = (id: string) => {
   id = id.replace(/\D/g, "")
-  return parseInt(id.slice(-1))
+  // Weird overlapping
+  // TODO find good way of semi randomness
+  return parseInt(id.slice(6, 7))
 }
 
-const LetterIcon: FunctionComponent<LetterIconProps> = ({ name, id, style, rounded }) => {
+const LetterIcon: FunctionComponent<LetterIconProps> = ({ name, id, style, rounded, size = "3rem" }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
@@ -39,8 +43,6 @@ const LetterIcon: FunctionComponent<LetterIconProps> = ({ name, id, style, round
    *  Functions
    *
    *******************************************************************************************************************/
-
-  const size = "3rem"
 
   /*******************************************************************************************************************
    *

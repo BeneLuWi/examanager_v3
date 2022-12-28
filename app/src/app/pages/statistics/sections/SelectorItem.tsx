@@ -1,8 +1,9 @@
 import React, { FunctionComponent } from "react"
 import { Exam } from "../../exams/types"
-import { Card } from "react-bootstrap"
+import { Card, ListGroup } from "react-bootstrap"
 import LetterIcon from "../../../components/letter-icon/LetterIcon"
 import { useFetchExamResultList } from "../../results/api"
+import { useStatisticsContext } from "../Statistics"
 
 type SelectorItemProps = { exam: Exam }
 
@@ -14,7 +15,7 @@ const SelectorItem: FunctionComponent<SelectorItemProps> = ({ exam }) => {
    *******************************************************************************************************************/
 
   const { data: schoolClasses } = useFetchExamResultList(exam._id)
-
+  const { setExam, setSchoolClass } = useStatisticsContext()
   /*******************************************************************************************************************
    *
    *  Functions
@@ -36,13 +37,27 @@ const SelectorItem: FunctionComponent<SelectorItemProps> = ({ exam }) => {
           style={{ position: "absolute", transform: "translate(-3rem,-1.5rem)" }}
         />
         <Card.Title>
-          <div className="d-flex align-items-center">{exam.name}</div>
+          <div>{exam.name}</div>
         </Card.Title>
-        <p>
+        <div className="small">{exam.description}</div>
+        <hr />
+        <p>Klassen mit Ergebnissen</p>
+        <ListGroup>
           {schoolClasses?.map((schoolClass) => (
-            <div>{schoolClass.name}</div>
+            <ListGroup.Item
+              key={schoolClass._id}
+              action
+              className="d-flex align-items-center"
+              onClick={() => {
+                setSchoolClass(schoolClass)
+                setExam(exam)
+              }}
+            >
+              <LetterIcon name={schoolClass.name} id={schoolClass._id} rounded size="2rem" />
+              <div>{schoolClass.name}</div>
+            </ListGroup.Item>
           ))}
-        </p>
+        </ListGroup>
       </Card.Body>
     </Card>
   )
