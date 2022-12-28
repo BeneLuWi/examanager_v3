@@ -51,7 +51,7 @@ const SchoolClassItem: FunctionComponent<SchoolClassItemProps> = ({ schoolClass 
             <i className="bi bi-list-check" /> Klausurergebnisse
           </Button>
           <Button size="sm" variant="primary" onClick={openEditSchoolClass}>
-            <i className="bi bi-people" /> Klasse bearbeiten
+            <i className="bi bi-people" /> Schüler:innen
           </Button>
         </div>
       </ListGroup.Item>
