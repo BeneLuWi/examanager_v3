@@ -1,5 +1,6 @@
 from typing import List, Set
 import pandas as pd
+import numpy as np
 
 from server.api.api_v1.routers.data_api.models import (
     ExamResultsResponse,
@@ -57,29 +58,82 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
     ]
 
     ratings_dataframe = pd.DataFrame(rating_results)
-
     student_results_df = pd.concat([student_results_df, ratings_dataframe], axis=1)
 
-    # todo
+    return student_results_df
 
-    # 6. a) Durchschnittliche Punkte nach Aufgabe bzw. Gesamtpunkte
-    # 6. b) Durchschnittliche MSS - Punkte nach Aufgabe bzw. Gesamtpunkte
 
-    # 7. a) Durchschnittliche Punkte nach Aufgabe bzw. Gesamtpunkte D(ivers)
-    # 7. b) Durchschnittliche MSS - Punkte nach Aufgabe bzw. Gesamtpunkte D(ivers)
+def create_student_results_dataframe_with_statistics(exam_results_response: ExamResultsResponse):
+    student_results_df = create_student_results_dataframe(exam_results_response)
 
-    # 8. a) Durchschnittliche Punkte nach Aufgabe bzw. Gesamtpunkte W(omen)
-    # 8. b) Durchschnittliche MSS - Punkte nach Aufgabe bzw. Gesamtpunkte W(omen)
+    # 0. Get list of tasks
+    tasks: List[Task] = exam_results_response.exam.tasks
+    task_names = [task.name for task in tasks]
 
-    # 9. a) Durchschnittliche Punkte nach Aufgabe bzw. Gesamtpunkte M(en)
-    # 9. b) Durchschnittliche MSS - Punkte nach Aufgabe bzw. Gesamtpunkte M(en)
+    columns_to_summarize = task_names
+    columns_to_summarize.extend(["Gesamtpunkte", "mss_points"])
+
+    mean_values_by_gender = student_results_df.groupby("Geschlecht")[columns_to_summarize].sum().reset_index()
+    mean_values_by_gender["Nachname"] = "Mittelwert"
+    mean_values_by_gender["Vorname"] = "(Mean)"
+
+    median_values_by_gender = student_results_df.groupby("Geschlecht")[columns_to_summarize].median().reset_index()
+    median_values_by_gender["Nachname"] = "Mittelwert"
+    median_values_by_gender["Vorname"] = "(Median)"
+
+    mean_values_absolute_series = student_results_df[columns_to_summarize].sum()
+    mean_values_absolute = mean_values_absolute_series.to_frame().T
+
+    mean_values_absolute["Nachname"] = "Mittelwert"
+    mean_values_absolute["Vorname"] = "(Mean)"
+    mean_values_absolute["Geschlecht"] = " "
+
+    median_values_absolute_series = student_results_df[columns_to_summarize].median()
+    median_values_absolute = median_values_absolute_series.to_frame().T
+
+    median_values_absolute["Nachname"] = "Mittelwert"
+    median_values_absolute["Vorname"] = "(Median)"
+    median_values_absolute["Geschlecht"] = " "
 
     # 10. Schwierigkeit
-    # 11. Trennschärfe
-    # 12. Standardabweichung
+    difficulty_series = student_results_df[columns_to_summarize].count()  # todo
+    difficulty = difficulty_series.to_frame().T
 
-    print(student_results_df.to_string())
-    return student_results_df
+    difficulty["Nachname"] = "Schwierigkeit"
+    difficulty["Vorname"] = "Difficulty"
+    difficulty["Geschlecht"] = " "
+
+    # 11. Trennschärfe
+    selectivity_series = student_results_df[columns_to_summarize].count()  # todo
+    selectivity = selectivity_series.to_frame().T
+
+    selectivity["Nachname"] = "Trennschärfe"
+    selectivity["Vorname"] = "Selectivity"
+    selectivity["Geschlecht"] = " "
+
+    # 12. Standardabweichung
+    standard_deviation_series = student_results_df[columns_to_summarize].std()
+    standard_deviation = standard_deviation_series.to_frame().T
+
+    standard_deviation["Nachname"] = "Standardabweichung"
+    standard_deviation["Vorname"] = "Standard deviation"
+    standard_deviation["Geschlecht"] = " "
+
+    statistics = pd.concat(
+        [
+            mean_values_by_gender,
+            median_values_by_gender,
+            mean_values_absolute,
+            median_values_absolute,
+            difficulty,
+            selectivity,
+            standard_deviation,
+        ]
+    )
+
+    combined_dataframe = pd.concat([student_results_df, statistics])
+    print(combined_dataframe.to_string())
+    return combined_dataframe
 
 
 def calc_max_points_for_exam(exam: Exam):
@@ -123,5 +177,5 @@ async def calculate_statistics(exam_results_response: ExamResultsResponse):
     """
     ratings: List[Rating] = exam_results_response.exam.ratings
     max_points_for_task = calc_max_points_for_exam(exam=exam_results_response.exam)
-    create_student_results_dataframe(exam_results_response=exam_results_response)
-    print(exam_results_response)
+    student_results_df = create_student_results_dataframe_with_statistics(exam_results_response=exam_results_response)
+    student_results_df.to_excel("test.xlsx")
