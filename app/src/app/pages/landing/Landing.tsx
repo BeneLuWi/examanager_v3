@@ -67,7 +67,7 @@ const Landing: FunctionComponent<LandingProps> = ({}) => {
                         <i className="bi bi-bar-chart" /> Statisiken
                       </Card.Title>
                       <ul>
-                        <li>Anzeige und Download von deskriptiven Statistiken für Klausurergebnissen</li>
+                        <li>Anzeige und Download von deskriptiven Statistiken für Klausurergebnisse</li>
                       </ul>
                     </Card.Body>
                   </Card>
