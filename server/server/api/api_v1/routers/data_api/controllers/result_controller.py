@@ -16,6 +16,7 @@ from server.api.api_v1.routers.data_api.models import (
     ExamResultsWrapper,
     StudentResultsWrapper,
     ExamResultsResponse,
+    SchoolClass,
 )
 from server.api.api_v1.routers.data_api.repository.exam_repository import find_exam_by_id_in_db
 from server.api.api_v1.routers.data_api.repository.result_repository import (
@@ -29,6 +30,7 @@ from server.api.api_v1.routers.data_api.repository.result_repository import (
     list_student_result_responses,
     find_result_by_ids,
     find_result,
+    find_school_classes_with_result,
 )
 from server.api.api_v1.routers.data_api.repository.student_repository import (
     find_student_by_id_in_db,
@@ -75,31 +77,32 @@ async def get_all_results_for_user(user: User = Security(get_current_user_with_s
     return await list_results_from_db_by_owner_id(owner_id=str(user.id))
 
 
-@result_router.get("/result/{result_id}", response_model=StudentResult)
-async def get_result_by_id(result_id, user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name])):
-    #  only return if correct owner
-    result_in_db: StudentResult = await find_result_by_id_in_db(result_id=result_id)
-    if result_in_db.owner_id == str(user.id):
-        return result_in_db
-    raise HTTPException(status_code=401, detail="Permission denied!")
+# @result_router.get("/result/{result_id}", response_model=StudentResult)
+# async def get_result_by_id(result_id, user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name])):
+#     #  only return if correct owner
+#     result_in_db: StudentResult = await find_result_by_id_in_db(result_id=result_id)
+#     if result_in_db.owner_id == str(user.id):
+#         return result_in_db
+#     raise HTTPException(status_code=401, detail="Permission denied!")
+#
+#
+# @result_router.get("/result/{student_id}", response_model=StudentResult)
+# async def get_exam_results_for_student(student_id: str):
+#     # todo
+#     raise NotImplementedError
+#
+#
+# @result_router.get("/result/{exam_id}", response_model=StudentResult)
+# async def get_results_for_exam(exam_id: str):
+#     # todo
+#     raise NotImplementedError
+#
 
-
-@result_router.get("/result/{student_id}", response_model=StudentResult)
-async def get_exam_results_for_student(student_id: str):
-    # todo
-    raise NotImplementedError
-
-
-@result_router.get("/result/{exam_id}", response_model=StudentResult)
-async def get_results_for_exam(exam_id: str):
-    # todo
-    raise NotImplementedError
-
-
-@result_router.get("/result/{school_class_id}", response_model=StudentResult)
-async def get_results_for_school_class(school_class_id: str):
-    # todo
-    raise NotImplementedError
+# @result_router.get("/result/{school_class_id}", response_model=StudentResult)
+# async def get_results_for_school_class(school_class_id: str):
+#     # todo
+#     raise NotImplementedError
+#
 
 
 @result_router.get("/result/{exam_id}/{school_class_id}", response_model=ExamResultsResponse)
@@ -117,6 +120,13 @@ async def get_exam_results_for_class(
     results = await list_student_result_responses(exam, school_class_id)
 
     return ExamResultsResponse(school_class_id=school_class_id, exam=exam, studentResults=results)
+
+
+@result_router.get("/result/{exam_id}", response_model=List[SchoolClass])
+async def get_school_classes_w_results_for_exam(exam_id):
+    school_classes = await find_school_classes_with_result(exam_id)
+
+    return school_classes
 
 
 @result_router.get("/result_old/{exam_id}/{class_id}")

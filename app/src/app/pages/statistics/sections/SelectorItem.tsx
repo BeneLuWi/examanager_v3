@@ -2,6 +2,7 @@ import React, { FunctionComponent } from "react"
 import { Exam } from "../../exams/types"
 import { Card } from "react-bootstrap"
 import LetterIcon from "../../../components/letter-icon/LetterIcon"
+import { useFetchExamResultList } from "../../results/api"
 
 type SelectorItemProps = { exam: Exam }
 
@@ -11,6 +12,8 @@ const SelectorItem: FunctionComponent<SelectorItemProps> = ({ exam }) => {
    *  Hooks
    *
    *******************************************************************************************************************/
+
+  const { data: schoolClasses } = useFetchExamResultList(exam._id)
 
   /*******************************************************************************************************************
    *
@@ -35,7 +38,11 @@ const SelectorItem: FunctionComponent<SelectorItemProps> = ({ exam }) => {
         <Card.Title>
           <div className="d-flex align-items-center">{exam.name}</div>
         </Card.Title>
-        <p></p>
+        <p>
+          {schoolClasses?.map((schoolClass) => (
+            <div>{schoolClass.name}</div>
+          ))}
+        </p>
       </Card.Body>
     </Card>
   )

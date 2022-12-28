@@ -3,7 +3,7 @@ import axios from "axios"
 import { CreateResultRequest, ExamResultsResponse, StudentResult } from "./types"
 import { toast } from "react-toastify"
 import { Exam } from "../exams/types"
-import { Student } from "../school_classes/types"
+import { SchoolClass, Student } from "../school_classes/types"
 
 export const useFetchResults = (schoolClassId?: string, examId?: string) =>
   useQuery<ExamResultsResponse, Error>(
@@ -43,3 +43,8 @@ export const useDeleteResult = (exam: Exam, student: Student) => {
     }
   )
 }
+
+export const useFetchExamResultList = (examId: string) =>
+  useQuery<SchoolClass[], Error>(["result", examId], () => axios.get(`api/result/${examId}`).then((res) => res.data), {
+    onError: () => toast("Fehler beim Laden der Ergebnisse", { type: "error" }),
+  })

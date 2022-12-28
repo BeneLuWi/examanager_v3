@@ -27,7 +27,7 @@ const Selector: FunctionComponent<SelectorProps> = ({}) => {
    *******************************************************************************************************************/
 
   return (
-    <Row className="justify-content-start gap-3">
+    <Row className="justify-content-start gap-5">
       {exams?.map((exam) => (
         <SelectorItem key={exam._id} {...{ exam }} />
       ))}
