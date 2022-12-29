@@ -63,8 +63,7 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
     return student_results_df
 
 
-def create_student_results_dataframe_with_statistics(exam_results_response: ExamResultsResponse):
-    student_results_df = create_student_results_dataframe(exam_results_response)
+def create_student_statistics_dataframe(exam_results_response: ExamResultsResponse, student_results_df: pd.DataFrame):
     # todo create different sheet for statistics
     # todo use german labels only
 
@@ -76,49 +75,48 @@ def create_student_results_dataframe_with_statistics(exam_results_response: Exam
     columns_to_summarize.extend(["Gesamtpunkte", "mss_points"])
 
     mean_values_by_gender = student_results_df.groupby("Geschlecht")[columns_to_summarize].mean().reset_index()
-    mean_values_by_gender["Nachname"] = "Mittelwert"
-    mean_values_by_gender["Vorname"] = "(Mean)"
+    mean_values_by_gender["Statistik"] = "Mittelwert (Mean)"
 
     median_values_by_gender = student_results_df.groupby("Geschlecht")[columns_to_summarize].median().reset_index()
-    median_values_by_gender["Nachname"] = "Mittelwert"
-    median_values_by_gender["Vorname"] = "(Median)"
+    median_values_by_gender["Statistik"] = "Mittelwert (Median)"
 
     mean_values_absolute_series = student_results_df[columns_to_summarize].mean()
     mean_values_absolute = mean_values_absolute_series.to_frame().T
 
-    mean_values_absolute["Nachname"] = "Mittelwert"
-    mean_values_absolute["Vorname"] = "(Mean)"
+    mean_values_absolute["Statistik"] = "Mittelwert (Mean)"
     mean_values_absolute["Geschlecht"] = " "
 
     median_values_absolute_series = student_results_df[columns_to_summarize].median()
     median_values_absolute = median_values_absolute_series.to_frame().T
 
-    median_values_absolute["Nachname"] = "Mittelwert"
-    median_values_absolute["Vorname"] = "(Median)"
+    median_values_absolute["Statistik"] = "Mittelwert (Median)"
     median_values_absolute["Geschlecht"] = " "
 
     # 10. Schwierigkeit
-    difficulty_series = student_results_df[columns_to_summarize].count()  # todo
-    difficulty = difficulty_series.to_frame().T
+    # total_reachable_per_task = pd.DataFrame([(task.name, task.max_points) for task in tasks], columns=task_names)
+    total_reached_per_task = student_results_df[columns_to_summarize].sum()  # todo
 
-    difficulty["Nachname"] = "Schwierigkeit"
-    difficulty["Vorname"] = "Difficulty"
+    # print("total_reachable_per_task")
+    # print(total_reachable_per_task)
+    print("total_reached_per_task")
+    print(total_reached_per_task)
+    difficulty = total_reached_per_task.to_frame().T
+
+    difficulty["Statistik"] = "Schwierigkeit"
     difficulty["Geschlecht"] = " "
 
     # 11. Trennschärfe
     selectivity_series = student_results_df[columns_to_summarize].count()  # todo
     selectivity = selectivity_series.to_frame().T
 
-    selectivity["Nachname"] = "Trennschärfe"
-    selectivity["Vorname"] = "Selectivity"
+    selectivity["Statistik"] = "Trennschärfe"
     selectivity["Geschlecht"] = " "
 
     # 12. Standardabweichung
     standard_deviation_series = student_results_df[columns_to_summarize].std()
     standard_deviation = standard_deviation_series.to_frame().T
 
-    standard_deviation["Nachname"] = "Standardabweichung"
-    standard_deviation["Vorname"] = "Standard deviation"
+    standard_deviation["Statistik"] = "Standardabweichung"
     standard_deviation["Geschlecht"] = " "
 
     statistics = pd.concat(
@@ -133,9 +131,7 @@ def create_student_results_dataframe_with_statistics(exam_results_response: Exam
         ]
     )
 
-    combined_dataframe = pd.concat([student_results_df, statistics])
-    print(combined_dataframe.to_string())
-    return combined_dataframe
+    return statistics
 
 
 def calc_max_points_for_exam(exam: Exam):
@@ -166,6 +162,10 @@ def get_exam_rating_for_reached_percentage(exam: Exam, reached_percentage: float
     return sorted_ratings[len(sorted_ratings) - 1]
 
 
+def create_statistics_result_object(student_statistics_df: pd.DataFrame):
+    pass
+
+
 async def calculate_statistics(exam_results_response: ExamResultsResponse):
     """
     1. Get ratings for result
@@ -179,5 +179,16 @@ async def calculate_statistics(exam_results_response: ExamResultsResponse):
     """
     ratings: List[Rating] = exam_results_response.exam.ratings
     max_points_for_task = calc_max_points_for_exam(exam=exam_results_response.exam)
-    student_results_df = create_student_results_dataframe_with_statistics(exam_results_response=exam_results_response)
-    student_results_df.to_excel("test.xlsx")
+    student_results_df = create_student_results_dataframe(exam_results_response=exam_results_response)
+    student_statistics_df = create_student_statistics_dataframe(
+        exam_results_response=exam_results_response, student_results_df=student_results_df
+    )
+    print("student_statistics_df")
+    print(student_statistics_df)
+
+    # create an Excel writer object
+    with pd.ExcelWriter("test.xlsx") as writer:
+        # use to_excel function and specify the sheet_name and index
+        # to store the dataframe in specified sheet
+        student_results_df.to_excel(writer, sheet_name="Ergebnisse", index=False)
+        student_statistics_df.to_excel(writer, sheet_name="Statistik", index=False)
