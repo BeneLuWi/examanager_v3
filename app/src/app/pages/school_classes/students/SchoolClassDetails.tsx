@@ -75,7 +75,13 @@ const SchoolClassDetails: FunctionComponent<SchoolClassDetailsProps> = ({ school
         <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
-            <Form.Control {...register("name")} type="text" placeholder="Name" defaultValue={schoolClass.name} />
+            <Form.Control
+              {...register("name")}
+              type="text"
+              placeholder="Name"
+              required
+              defaultValue={schoolClass.name}
+            />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Beschreibung</Form.Label>

@@ -79,7 +79,7 @@ const ExamDetails: FunctionComponent<ExamDetailsProps> = ({ exam }) => {
         <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
-            <Form.Control {...register("name")} type="text" placeholder="" defaultValue={exam.name} />
+            <Form.Control {...register("name")} type="text" placeholder="" required defaultValue={exam.name} />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Beschreibung</Form.Label>

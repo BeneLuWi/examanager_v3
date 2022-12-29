@@ -70,7 +70,13 @@ const StudentListItem: FunctionComponent<StudentListItemProps> = ({ student }) =
         <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Vorname</Form.Label>
-            <Form.Control {...register("firstname")} type="text" placeholder="" defaultValue={student.firstname} />
+            <Form.Control
+              {...register("firstname")}
+              type="text"
+              placeholder=""
+              required
+              defaultValue={student.firstname}
+            />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Nachname</Form.Label>
