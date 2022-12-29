@@ -1,6 +1,9 @@
-from typing import List, Set
+from typing import List, Set, Optional
 import pandas as pd
 import numpy as np
+from pydantic import ValidationError
+
+from server.api.api_v1.routers.statistics_api.models import StatisticsResult, TaskResult, StatisticsElement
 
 from server.api.api_v1.routers.data_api.models import (
     ExamResultsResponse,
@@ -84,13 +87,13 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     mean_values_absolute = mean_values_absolute_series.to_frame().T
 
     mean_values_absolute["Statistik"] = "Mittelwert (Mean)"
-    mean_values_absolute["Geschlecht"] = " "
+    mean_values_absolute["Geschlecht"] = ""
 
     median_values_absolute_series = student_results_df[columns_to_summarize].median()
     median_values_absolute = median_values_absolute_series.to_frame().T
 
     median_values_absolute["Statistik"] = "Mittelwert (Median)"
-    median_values_absolute["Geschlecht"] = " "
+    median_values_absolute["Geschlecht"] = ""
 
     # 10. Schwierigkeit
     # total_reachable_per_task = pd.DataFrame([(task.name, task.max_points) for task in tasks], columns=task_names)
@@ -103,21 +106,21 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     difficulty = total_reached_per_task.to_frame().T
 
     difficulty["Statistik"] = "Schwierigkeit"
-    difficulty["Geschlecht"] = " "
+    difficulty["Geschlecht"] = ""
 
     # 11. Trennschärfe
     selectivity_series = student_results_df[columns_to_summarize].count()  # todo
     selectivity = selectivity_series.to_frame().T
 
     selectivity["Statistik"] = "Trennschärfe"
-    selectivity["Geschlecht"] = " "
+    selectivity["Geschlecht"] = ""
 
     # 12. Standardabweichung
     standard_deviation_series = student_results_df[columns_to_summarize].std()
     standard_deviation = standard_deviation_series.to_frame().T
 
     standard_deviation["Statistik"] = "Standardabweichung"
-    standard_deviation["Geschlecht"] = " "
+    standard_deviation["Geschlecht"] = ""
 
     statistics = pd.concat(
         [
@@ -162,11 +165,128 @@ def get_exam_rating_for_reached_percentage(exam: Exam, reached_percentage: float
     return sorted_ratings[len(sorted_ratings) - 1]
 
 
-def create_statistics_result_object(student_statistics_df: pd.DataFrame):
-    pass
+def create_statistics_element(student_statistics_df: pd.DataFrame, column_name, metric_name) -> StatisticsElement:
+    # logger.info(f"Create statistics element for {column_name} and {metric_name}")
+    metric_data = student_statistics_df[student_statistics_df["Statistik"] == metric_name]
+    values_total = metric_data[metric_data["Geschlecht"] == ""]
+    values_d = metric_data[metric_data["Geschlecht"] == "d"]
+    values_m = metric_data[metric_data["Geschlecht"] == "m"]
+    values_w = metric_data[metric_data["Geschlecht"] == "w"]
+
+    value_total = values_total[column_name].squeeze()
+    value_d = values_d[column_name].squeeze()
+    value_m = values_m[column_name].squeeze()
+    value_w = values_w[column_name].squeeze()
+
+    if type(value_total) is pd.Series:
+        value_total = 0
+
+    if type(value_d) is pd.Series:
+        value_d = 0
+
+    if type(value_m) is pd.Series:
+        value_m = 0
+
+    if type(value_w) is pd.Series:
+        value_w = 0
+
+    try:
+        return StatisticsElement(
+            name=column_name, value_total=value_total, value_d=value_d, value_w=value_w, value_m=value_m
+        )
+    except ValidationError as v_e:
+        print(v_e)
 
 
-async def calculate_statistics(exam_results_response: ExamResultsResponse):
+def create_task_result_object(student_statistics_df: pd.DataFrame, columns_to_process, metric_name) -> TaskResult:
+    statistics: List[StatisticsElement] = list()
+    for column in columns_to_process:
+        statistics.append(
+            create_statistics_element(
+                student_statistics_df=student_statistics_df, column_name=column, metric_name=metric_name
+            )
+        )
+    return TaskResult(name=metric_name, statistics=statistics)
+
+
+def create_statistics_result_object(student_statistics_df: pd.DataFrame, columns_to_process) -> StatisticsResult:
+    # metric_names = ["Mittelwert (Mean)", "Mittelwert (Median)", "Schwierigkeit", "Trennschärfe"]
+    # for metric in metric_names:
+    #    create_task_result_object(student_statistics_df=student_statistics_df, columns_to_process=columns_to_process,
+    #                              metric_name=metric)
+
+    mean_result = create_task_result_object(
+        student_statistics_df=student_statistics_df,
+        columns_to_process=columns_to_process,
+        metric_name="Mittelwert (Mean)",
+    )
+
+    median_result = create_task_result_object(
+        student_statistics_df=student_statistics_df,
+        columns_to_process=columns_to_process,
+        metric_name="Mittelwert (Median)",
+    )
+
+    standard_deviation_result = create_task_result_object(
+        student_statistics_df=student_statistics_df,
+        columns_to_process=columns_to_process,
+        metric_name="Standardabweichung",
+    )
+
+    difficulty_result = create_task_result_object(
+        student_statistics_df=student_statistics_df, columns_to_process=columns_to_process, metric_name="Schwierigkeit"
+    )
+
+    correlation_result = create_task_result_object(
+        student_statistics_df=student_statistics_df, columns_to_process=columns_to_process, metric_name="Trennschärfe"
+    )
+
+    self_assessment_result = create_task_result_object(
+        student_statistics_df=student_statistics_df,
+        columns_to_process=columns_to_process,
+        metric_name="Selbsteinschätzung",
+    )
+
+    return StatisticsResult(
+        mean=mean_result,
+        median=median_result,
+        standard_deviation=standard_deviation_result,
+        difficulty=difficulty_result,
+        correlation=correlation_result,
+        self_assessment=self_assessment_result,
+    )
+
+
+async def calculate_statistics_object(exam_results_response: ExamResultsResponse):
+    """
+    1. Get ratings for result
+    2. Calculate max points for tasks: List[Task] in exam
+    3. for each in studentResults: List[StudentResultResponse]
+        a) for each in  ResultEntryResponse(ResultEntry, Task):
+        calculate number of points i.e. calculate points for each submitted task
+        b) For the sum of points over all tasks for each Student calculate the grading (calc_grade)
+    :param exam_results_response:
+    :return:
+    """
+
+    student_results_df = create_student_results_dataframe(exam_results_response=exam_results_response)
+    student_statistics_df = create_student_statistics_dataframe(
+        exam_results_response=exam_results_response, student_results_df=student_results_df
+    )
+
+    tasks: List[Task] = exam_results_response.exam.tasks
+    task_names = [task.name for task in tasks]
+
+    columns_to_summarize = task_names
+    columns_to_summarize.extend(["Gesamtpunkte", "mss_points"])
+
+    statistics: StatisticsResult = create_statistics_result_object(
+        student_statistics_df=student_statistics_df, columns_to_process=columns_to_summarize
+    )
+    return statistics
+
+
+async def calculate_statistics_excel(exam_results_response: ExamResultsResponse):
     """
     1. Get ratings for result
     2. Calculate max points for tasks: List[Task] in exam
