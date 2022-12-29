@@ -65,6 +65,8 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
 
 def create_student_results_dataframe_with_statistics(exam_results_response: ExamResultsResponse):
     student_results_df = create_student_results_dataframe(exam_results_response)
+    # todo create different sheet for statistics
+    # todo use german labels only
 
     # 0. Get list of tasks
     tasks: List[Task] = exam_results_response.exam.tasks
@@ -73,7 +75,7 @@ def create_student_results_dataframe_with_statistics(exam_results_response: Exam
     columns_to_summarize = task_names
     columns_to_summarize.extend(["Gesamtpunkte", "mss_points"])
 
-    mean_values_by_gender = student_results_df.groupby("Geschlecht")[columns_to_summarize].sum().reset_index()
+    mean_values_by_gender = student_results_df.groupby("Geschlecht")[columns_to_summarize].mean().reset_index()
     mean_values_by_gender["Nachname"] = "Mittelwert"
     mean_values_by_gender["Vorname"] = "(Mean)"
 
@@ -81,7 +83,7 @@ def create_student_results_dataframe_with_statistics(exam_results_response: Exam
     median_values_by_gender["Nachname"] = "Mittelwert"
     median_values_by_gender["Vorname"] = "(Median)"
 
-    mean_values_absolute_series = student_results_df[columns_to_summarize].sum()
+    mean_values_absolute_series = student_results_df[columns_to_summarize].mean()
     mean_values_absolute = mean_values_absolute_series.to_frame().T
 
     mean_values_absolute["Nachname"] = "Mittelwert"
