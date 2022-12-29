@@ -12,8 +12,8 @@ router = APIRouter()
 
 @router.get("/create_statistics_excel")
 async def create_statistics_excel(
-    exam_id: str = "63a18a09c3b9c4046a567311",
-    school_class_id: str = "63a18a01c3b9c4046a567310",
+    exam_id: str = "63adc5ae2771a4243b1adc7d",
+    school_class_id: str = "63adc5ab2771a4243b1adc59",
     user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name]),
 ):
     exam_results_response: ExamResultsResponse = await get_exam_results_for_class(
@@ -25,8 +25,8 @@ async def create_statistics_excel(
 
 @router.get("/calculate_statistics", response_model=StatisticsResult)
 async def calculate_statistics(
-    exam_id: str = "63a18a09c3b9c4046a567311",
-    school_class_id: str = "63a18a01c3b9c4046a567310",
+    exam_id: str = "63adc5ae2771a4243b1adc7d",
+    school_class_id: str = "63adc5ab2771a4243b1adc59",
     user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name]),
 ) -> StatisticsResult:
     exam_results_response: ExamResultsResponse = await get_exam_results_for_class(
