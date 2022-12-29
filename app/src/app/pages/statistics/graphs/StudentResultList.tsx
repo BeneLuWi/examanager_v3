@@ -1,8 +1,6 @@
 import React, { FunctionComponent, useState } from "react"
 import { useStatisticsContext } from "../Statistics"
 import { useFetchResults } from "../../results/api"
-import { Card } from "react-bootstrap"
-import ListGroupCard from "../../../components/list-group-card/ListGroupCard"
 import { GradeMode } from "../types"
 import StudentResultItem from "./StudentResultItem"
 import Table from "react-bootstrap/Table"
