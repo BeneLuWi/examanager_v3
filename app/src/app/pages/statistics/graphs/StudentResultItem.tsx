@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useMemo } from "react"
-import { ListGroup } from "react-bootstrap"
 import { StudentResultsResponse } from "../../results/types"
 import { GradeMode } from "../types"
 import { calcGrade } from "../../exams/utils"
@@ -44,8 +43,11 @@ const StudentResultItem: FunctionComponent<StudentResultItemProps> = ({ studentR
       <td>{studentResultsResponse.lastname}</td>
       <td>{studentResultsResponse.firstname}</td>
       <td>{studentResultsResponse.gender}</td>
-      <td>{rating?.text_rating}</td>
+      <td>{rating && rating[mode]}</td>
       <td>{sumOfPoints}</td>
+      {studentResultsResponse.result?.map((result) => (
+        <td key={result._id}>{result.points}</td>
+      ))}
     </tr>
   )
 }

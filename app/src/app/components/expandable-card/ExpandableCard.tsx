@@ -33,7 +33,7 @@ const ExpandableCard: FunctionComponent<PropsWithChildren<ExpandableCardProps>> 
         <Card.Title onClick={toggleExpanded}>
           {title} <i className={`bi ${expanded ? "bi-caret-down-fill" : "bi-caret-up-fill"}`} />{" "}
         </Card.Title>
-        <Spring from={{ maxHeight: 0 }} to={{ maxHeight: expanded ? 400 : 0 }}>
+        <Spring from={{ height: 0 }} to={{ height: expanded ? 400 : 0 }}>
           {(styles) => <a.div style={{ ...styles, overflowY: "scroll" }}>{children}</a.div>}
         </Spring>
       </Card.Body>

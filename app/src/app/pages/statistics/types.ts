@@ -50,3 +50,5 @@ export interface StatisticsContextType {
 }
 
 export type GradeMode = "mss_points" | "decimal_rating" | "school_rating" | "text_rating"
+
+export const gradesModeList: GradeMode[] = ["mss_points", "decimal_rating", "school_rating", "text_rating"]
