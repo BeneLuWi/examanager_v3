@@ -71,7 +71,7 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     tasks: List[Task] = exam_results_response.exam.tasks
     task_names = [task.name for task in tasks]
 
-    columns_to_summarize = task_names
+    columns_to_summarize = task_names.copy()
     columns_to_summarize.extend(["Gesamtpunkte", "mss_points"])
 
     # 1 Mean
@@ -94,7 +94,30 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     median_values_absolute["Geschlecht"] = ""
 
     # 10. Schwierigkeit
-    # total_reachable_per_task = pd.DataFrame([(task.name, task.max_points) for task in tasks], columns=task_names)
+    reachable_per_task = pd.DataFrame({task.name: task.max_points for task in tasks}, columns=task_names, index=[0])
+    # reachable_per_task["Sorting"]="per_task"
+    number_of_w = len(student_results_df[student_results_df["Geschlecht"] == "w"])
+    number_of_d = len(student_results_df[student_results_df["Geschlecht"] == "d"])
+    number_of_m = len(student_results_df[student_results_df["Geschlecht"] == "m"])
+    number_total = len(student_results_df)
+    if number_of_w + number_of_d + number_of_m != number_total:
+        raise RuntimeError("BLUBB")
+
+    reachable_total = reachable_per_task * number_total
+    reachable_w = reachable_per_task * number_of_w
+    reachable_m = reachable_per_task * number_of_m
+    reachable_d = reachable_per_task * number_of_d
+
+    # todo calculate sum reached (total and by gender -> groupby)
+
+    # todo calculate difficulty = (total_reachable / sum_reached) * 100
+    # todo calculate difficulty_w = (reachable_w / reached_w) * 100
+
+    print("reachable_per_task")
+    print(reachable_per_task)
+    print("reachable_per_task")
+
+    # todo this is blödsinn^^
     total_reached_per_task = student_results_df[columns_to_summarize].sum()  # todo
     difficulty = total_reached_per_task.to_frame().T
 
@@ -102,6 +125,28 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     difficulty["Geschlecht"] = ""
 
     # 11. Trennschärfe
+
+    """
+    part-whole Korrelation
+    Trennschäfe der einzelnen Aufgaben
+    Pearsons Correlation: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.corr.html
+
+    
+    points_reached: double[] = (Erreichte Punkte in Aufgabe X pro Student)
+    exam_points_reached: double[] = (Erreichte Punkte in Exam Y pro Student)
+
+    # len(points_reached) == len(Students_with_results)
+    # len(exam_points_reached) == len(Students_with_results)
+
+    exam_points_reached -= points_reached
+
+    if len(Students_with_results) < 2:
+        return 0
+
+    Corr(x, y)
+    
+    """
+
     selectivity_series = student_results_df[columns_to_summarize].count()  # todo
     selectivity = selectivity_series.to_frame().T
 
