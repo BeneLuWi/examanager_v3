@@ -6,6 +6,7 @@ import ListGroupCard from "../../../components/list-group-card/ListGroupCard"
 import { GradeMode } from "../types"
 import StudentResultItem from "./StudentResultItem"
 import Table from "react-bootstrap/Table"
+import ExpandableCard from "../../../components/expandable-card/ExpandableCard"
 
 type StudentResultListProps = {}
 
@@ -32,28 +33,25 @@ const StudentResultList: FunctionComponent<StudentResultListProps> = ({}) => {
    *******************************************************************************************************************/
 
   return (
-    <Card>
-      <Card.Body>
-        <Card.Title>Ergebnisse</Card.Title>
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Nachname</th>
-              <th>Vorname</th>
-              <th>Geschlecht</th>
-              <th>Note</th>
-              <th>Erreichte Punkte</th>
-            </tr>
-          </thead>
-          <tbody>
-            {examResults &&
-              examResults.studentResults.map((studentResult) => (
-                <StudentResultItem key={studentResult._id} studentResultsResponse={studentResult} mode={mode} />
-              ))}
-          </tbody>
-        </Table>
-      </Card.Body>
-    </Card>
+    <ExpandableCard title="Ergebnisse">
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Nachname</th>
+            <th>Vorname</th>
+            <th>Geschlecht</th>
+            <th>Note</th>
+            <th>Erreichte Punkte</th>
+          </tr>
+        </thead>
+        <tbody>
+          {examResults &&
+            examResults.studentResults.map((studentResult) => (
+              <StudentResultItem key={studentResult._id} studentResultsResponse={studentResult} mode={mode} />
+            ))}
+        </tbody>
+      </Table>
+    </ExpandableCard>
   )
 }
 
