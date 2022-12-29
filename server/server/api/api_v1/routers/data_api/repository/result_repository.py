@@ -5,12 +5,13 @@ from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 from pymongo.results import InsertOneResult
 
-from server.database import result_collection, student_collection
+from server.database import result_collection, student_collection, school_class_collection
 from server.api.api_v1.routers.data_api.models import (
     StudentResult,
     CreateResultRequest,
     StudentResultResponse,
     Exam,
+    SchoolClass,
 )
 from server.config import ExamManagerSettings
 
@@ -114,6 +115,49 @@ async def list_student_result_responses(exam: Exam, school_class_id: str) -> Lis
             ]
 
     return list(map(lambda result: StudentResultResponse.parse_obj(result), students_with_student_result))
+
+
+async def find_school_classes_with_result(exam_id: ObjectId | str) -> List[SchoolClass]:
+    """
+    Get School Classes with Exam Results
+    :param exam_id: Exam to find Results for
+    :return: List of School Classes
+    """
+    exam_id = str(exam_id)
+    # Get all Students with Results
+    pipeline = [
+        {"$match": {"exam_id": exam_id}},
+        {"$addFields": {"student_obj_id": {"$toObjectId": "$student_id"}}},
+        {"$lookup": {"from": "students", "localField": "student_obj_id", "foreignField": "_id", "as": "student"}},
+        {"$addFields": {"student": {"$first": "$student"}}},
+    ]
+
+    results_with_students = await result_collection.aggregate(pipeline).to_list(1000)
+
+    # Find School Classes for Students
+    school_class_set: set[ObjectId] = set()
+
+    # Get List of unique School Class IDs
+    for r_w_s in results_with_students:
+        school_class_id = r_w_s["student"]["school_class_id"]
+        school_class_set.add(ObjectId(school_class_id))
+
+    school_class_list = list(school_class_set)
+
+    # Fetch the School Class Objects
+    school_classes = await school_class_collection.find({"_id": {"$in": school_class_list}}).to_list(1000)
+
+    return list(map(lambda sc: SchoolClass.parse_obj(sc), school_classes))
+
+
+async def find_result(exam_id: ObjectId | str, student_id: ObjectId | str) -> Optional[StudentResult]:
+    exam_id = str(exam_id)
+    student_id = str(student_id)
+
+    if (
+        student_result := await result_collection.find_one({"$and": [{"student_id": student_id}, {"exam_id": exam_id}]})
+    ) is not None:
+        return StudentResult.parse_obj(student_result)
 
 
 async def find_result_by_id_in_db(result_id: ObjectId | str) -> Optional[StudentResult]:

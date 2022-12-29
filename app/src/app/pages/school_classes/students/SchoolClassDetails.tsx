@@ -6,6 +6,7 @@ import Form from "react-bootstrap/Form"
 import ConfirmButton from "../../../components/confirm-button/ConfirmButton"
 import { useDeleteSchoolClass, useUpdateSchoolClass } from "../api"
 import { FieldValues, useForm } from "react-hook-form"
+import SchoolClassComposition from "../../statistics/graphs/SchoolClassComposition"
 
 type SchoolClassDetailsProps = {
   schoolClass: SchoolClass
@@ -64,11 +65,13 @@ const SchoolClassDetails: FunctionComponent<SchoolClassDetailsProps> = ({ school
           <p>Name: {schoolClass.name}</p>
           <p>Beschreibung: {schoolClass.description}</p>
           <p>Anzahl der Schüler:innen: {students?.length}</p>
+          <div style={{ height: 200 }}>{students && <SchoolClassComposition students={students} />}</div>
+
           <Button onClick={open}>Bearbeiten</Button>
         </Card.Body>
       </Card>
 
-      <ModalWrapper size="lg" show={show} close={close} title={`${schoolClass.name} bearbeiten`}>
+      <ModalWrapper options={{ size: "lg" }} show={show} close={close} title={`${schoolClass.name} bearbeiten`}>
         <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>

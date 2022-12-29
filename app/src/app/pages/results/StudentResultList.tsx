@@ -1,22 +1,26 @@
-import React, { FunctionComponent } from "react"
-import { ExamContextType } from "./types"
-import ExamsList from "./ExamsList"
-import { Col, Row } from "react-bootstrap"
-import NewExam from "./NewExam"
-import { useFetchExams } from "./api"
+import React, { FunctionComponent, useEffect, useState } from "react"
+import { Exam } from "../exams/types"
+import { SchoolClass } from "../school_classes/types"
+import { ResultContextType } from "./types"
+import ResultEntry from "./ResultEntry"
+import ExamSelector from "./ExamSelector"
 
-type ExamsProps = {}
+type ResultsProps = {
+  schoolClass: SchoolClass
+}
 
-const ExamContext = React.createContext<ExamContextType>(null!)
+const ResultContext = React.createContext<ResultContextType>(null!)
 
-export const useExamContext = () => React.useContext(ExamContext)
+export const useResultContext = () => React.useContext(ResultContext)
 
-const Exams: FunctionComponent<ExamsProps> = ({}) => {
+const StudentResultList: FunctionComponent<ResultsProps> = ({ schoolClass }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
    *
    *******************************************************************************************************************/
+
+  const [exam, setExam] = useState<Exam>()
 
   /*******************************************************************************************************************
    *
@@ -31,18 +35,11 @@ const Exams: FunctionComponent<ExamsProps> = ({}) => {
    *******************************************************************************************************************/
 
   return (
-    <div>
-      <div className="page-header">Klausuren</div>
-      <Row>
-        <Col xs={8}>
-          <ExamsList />
-        </Col>
-        <Col>
-          <NewExam />
-        </Col>
-      </Row>
-    </div>
+    <ResultContext.Provider value={{ exam, schoolClass, setExam }}>
+      <ExamSelector />
+      <ResultEntry />
+    </ResultContext.Provider>
   )
 }
 
-export default Exams
+export default StudentResultList

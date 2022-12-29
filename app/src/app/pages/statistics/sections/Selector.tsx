@@ -1,22 +1,18 @@
 import React, { FunctionComponent } from "react"
-import { ExamContextType } from "./types"
-import ExamsList from "./ExamsList"
-import { Col, Row } from "react-bootstrap"
-import NewExam from "./NewExam"
-import { useFetchExams } from "./api"
+import { useFetchExams } from "../../exams/api"
+import SelectorItem from "./SelectorItem"
+import { Row } from "react-bootstrap"
 
-type ExamsProps = {}
+type SelectorProps = {}
 
-const ExamContext = React.createContext<ExamContextType>(null!)
-
-export const useExamContext = () => React.useContext(ExamContext)
-
-const Exams: FunctionComponent<ExamsProps> = ({}) => {
+const Selector: FunctionComponent<SelectorProps> = ({}) => {
   /*******************************************************************************************************************
    *
    *  Hooks
    *
    *******************************************************************************************************************/
+
+  const { data: exams } = useFetchExams()
 
   /*******************************************************************************************************************
    *
@@ -31,18 +27,12 @@ const Exams: FunctionComponent<ExamsProps> = ({}) => {
    *******************************************************************************************************************/
 
   return (
-    <div>
-      <div className="page-header">Klausuren</div>
-      <Row>
-        <Col xs={8}>
-          <ExamsList />
-        </Col>
-        <Col>
-          <NewExam />
-        </Col>
-      </Row>
-    </div>
+    <Row className="justify-content-start gap-5">
+      {exams?.map((exam) => (
+        <SelectorItem key={exam._id} {...{ exam }} />
+      ))}
+    </Row>
   )
 }
 
-export default Exams
+export default Selector

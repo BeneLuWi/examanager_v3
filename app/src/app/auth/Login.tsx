@@ -76,12 +76,12 @@ const Login: FunctionComponent<LoginProps> = () => {
                 <img src={process.env.PUBLIC_URL + "/logo.png"} alt="Examanager Logo" style={{ width: 200 }} />
               </div>
               <Form.Group className="mb-3" controlId="formBasicUsername">
-                <Form.Label>Username</Form.Label>
+                <Form.Label>Name</Form.Label>
                 <Form.Control name="username" type="text" placeholder="Enter Username" disabled={loading} />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
+                <Form.Label>Passwort</Form.Label>
                 <Form.Control name="password" type="password" placeholder="Enter Password" disabled={loading} />
               </Form.Group>
 

@@ -82,14 +82,14 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
           <i className="bi bi-patch-check" /> {task.max_points} Punkte erreichbar
         </div>
       </ListGroup.Item>
-      <ModalWrapper size="lg" show={edit} close={close} title={`${task.name} bearbeiten`}>
+      <ModalWrapper options={{ size: "lg" }} show={edit} close={close} title={`${task.name} bearbeiten`}>
         <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
             <Form.Control {...register("name")} type="text" placeholder="Name" defaultValue={task.name} />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Beschreibung</Form.Label>
+            <Form.Label>Erreichbare Punktzahl</Form.Label>
             <Form.Control {...register("max_points")} type="number" defaultValue={task.max_points} />
           </Form.Group>
           <Button variant="primary" type="submit" className="me-2">

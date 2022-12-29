@@ -1,23 +1,31 @@
-import React, { FunctionComponent, useReducer } from "react"
+import React, { FunctionComponent, useMemo } from "react"
 import { ListGroup } from "react-bootstrap"
-import { Exam } from "../exams/types"
-import { StudentResultsResponse } from "./types"
-import StudentResultForm from "./StudentResultForm"
-import StudentResultBadges from "./StudentResultBadges"
+import { StudentResultsResponse } from "../../results/types"
+import { GradeMode } from "../types"
+import { calcGrade } from "../../exams/utils"
+import { useStatisticsContext } from "../Statistics"
 
 type StudentResultItemProps = {
   studentResultsResponse: StudentResultsResponse
-  exam: Exam
+  mode: GradeMode
 }
 
-const StudentResultItem: FunctionComponent<StudentResultItemProps> = ({ studentResultsResponse, exam }) => {
+const StudentResultItem: FunctionComponent<StudentResultItemProps> = ({ studentResultsResponse, mode }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
    *
    *******************************************************************************************************************/
 
-  const [edit, toggleEdit] = useReducer((state) => !state, false)
+  const { exam, schoolClass } = useStatisticsContext()
+
+  const [sumOfPoints, rating] = useMemo(() => {
+    if (!studentResultsResponse.result || !exam) return [0, undefined]
+
+    const sum = studentResultsResponse.result!.reduce((sum, entry) => sum + entry.points, 0)
+
+    return [sum, calcGrade(exam, sum)]
+  }, [studentResultsResponse.result])
 
   /*******************************************************************************************************************
    *
@@ -32,16 +40,13 @@ const StudentResultItem: FunctionComponent<StudentResultItemProps> = ({ studentR
    *******************************************************************************************************************/
 
   return (
-    <>
-      <ListGroup.Item action onClick={toggleEdit}>
-        <div className="fw-bold">
-          {studentResultsResponse.firstname} {studentResultsResponse.lastname}
-        </div>
-        <StudentResultBadges {...{ studentResultsResponse, exam }} />
-      </ListGroup.Item>
-
-      <StudentResultForm {...{ studentResultsResponse, exam, toggleEdit, edit }} />
-    </>
+    <tr>
+      <td>{studentResultsResponse.lastname}</td>
+      <td>{studentResultsResponse.firstname}</td>
+      <td>{studentResultsResponse.gender}</td>
+      <td>{rating?.text_rating}</td>
+      <td>{sumOfPoints}</td>
+    </tr>
   )
 }
 

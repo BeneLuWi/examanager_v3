@@ -61,7 +61,12 @@ const StudentListItem: FunctionComponent<StudentListItemProps> = ({ student }) =
         <td>{student.lastname}</td>
         <td>{student.gender}</td>
       </tr>
-      <ModalWrapper size="lg" title={`${student.firstname} ${student.lastname} bearbeiten`} show={edit} close={close}>
+      <ModalWrapper
+        options={{ size: "sm" }}
+        title={`${student.firstname} ${student.lastname} bearbeiten`}
+        show={edit}
+        close={close}
+      >
         <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Vorname</Form.Label>

@@ -62,7 +62,7 @@ const NewUser: FunctionComponent<NewUserProps> = ({}) => {
         Nutzer:in erstellen
       </Button>
 
-      <ModalWrapper size="lg" show={show} close={close} title="Nutzer:in erstellen">
+      <ModalWrapper options={{ size: "lg" }} show={show} close={close} title="Nutzer:in erstellen">
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
             <Form.Label>Username</Form.Label>

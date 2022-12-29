@@ -45,7 +45,7 @@ const Admin: FunctionComponent<AdminProps> = ({}) => {
 
   return (
     <AdminContext.Provider value={{ users, updateUsers }}>
-      <div className="display-4">Admin</div>
+      <div className="page-header">Admin</div>
       <NewUser />
       <UserList />
     </AdminContext.Provider>

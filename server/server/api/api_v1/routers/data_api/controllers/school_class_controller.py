@@ -17,6 +17,7 @@ from server.api.api_v1.routers.data_api.repository.school_class_repository impor
     list_school_classes_from_db_by_owner_id,
     delete_school_class_in_db,
 )
+from server.api.api_v1.routers.data_api.test_data_set import create_test_dataset
 
 school_class_router = APIRouter()
 
@@ -38,6 +39,13 @@ async def create_school_class(
 @school_class_router.get("/admin/school_class", response_model=List[SchoolClass])
 async def get_all_school_classes(user: User = Security(get_current_user_with_scope, scopes=[Role.ADMIN.name])):
     return await list_school_classes_from_db()
+
+
+@school_class_router.post("/admin/sample_data")
+async def create_sample_data(
+    school_class_name: str, user: User = Security(get_current_user_with_scope, scopes=[Role.ADMIN.name])
+):
+    return await create_test_dataset(user, school_class_name)
 
 
 @school_class_router.get("/school_class", response_model=List[SchoolClass])

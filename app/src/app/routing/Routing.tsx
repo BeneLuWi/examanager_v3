@@ -7,7 +7,7 @@ import { Roles } from "../auth/types"
 import Landing from "../pages/landing/Landing"
 import SchoolClasses from "../pages/school_classes/SchoolClasses"
 import Exams from "../pages/exams/Exams"
-import Results from "../pages/results/Results"
+import StudentResultList from "../pages/results/StudentResultList"
 import Statistics from "../pages/statistics/Statistics"
 import Admin from "../pages/admin/Admin"
 

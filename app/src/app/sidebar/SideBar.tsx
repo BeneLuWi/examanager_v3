@@ -4,7 +4,6 @@ import NavItem from "./NavItem"
 import { useAuth } from "../auth"
 import { useNavigate } from "react-router-dom"
 import { Roles } from "../auth/types"
-import { useLayout } from "../layout/Layout"
 
 type SideBarProps = {}
 
@@ -30,7 +29,7 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
    *******************************************************************************************************************/
 
   return (
-    <div className="d-flex flex-column p-3 vh-100 shadow text-nowrap overflow-hidden w-100">
+    <div className="d-flex flex-column p-3 vh-100 shadow text-nowrap overflow-hidden w-100 bg-white">
       <div className="d-flex align-items-center flex-column">
         <img src={process.env.PUBLIC_URL + "/logo.png"} alt="Project Logo" style={{ width: 150 }} />
       </div>

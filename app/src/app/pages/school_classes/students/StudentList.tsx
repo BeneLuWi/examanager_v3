@@ -1,11 +1,12 @@
-import React, { FunctionComponent } from "react"
+import React, { FunctionComponent, useEffect, useState } from "react"
 import { SchoolClass } from "../types"
 import Table from "react-bootstrap/Table"
-import { Card, Col, Row } from "react-bootstrap"
+import { Card, Col, InputGroup, Row } from "react-bootstrap"
 import StudentListItem from "./StudentListItem"
 import NewStudent from "./NewStudent"
 import SchoolClassDetails from "./SchoolClassDetails"
 import { useFetchStudents } from "../api"
+import Form from "react-bootstrap/Form"
 
 type StudentListProps = {
   schoolClass: SchoolClass
@@ -19,6 +20,22 @@ const StudentList: FunctionComponent<StudentListProps> = ({ schoolClass }) => {
    *******************************************************************************************************************/
 
   const { data: students } = useFetchStudents(schoolClass)
+  const [name, setName] = useState("")
+  const [foundStudents, setFoundStudents] = useState(students)
+
+  useEffect(() => {
+    if (!name.length) {
+      setFoundStudents(students)
+    }
+    setFoundStudents(
+      students?.filter(
+        (student) => student.firstname.toLowerCase().includes(name) || student.lastname.toLowerCase().includes(name)
+      )
+    )
+  }, [name, students])
+
+  // Reset on Unmount
+  useEffect(() => () => setName(""), [])
 
   /*******************************************************************************************************************
    *
@@ -33,13 +50,25 @@ const StudentList: FunctionComponent<StudentListProps> = ({ schoolClass }) => {
    *******************************************************************************************************************/
 
   return (
-    <Row className="h-100 " style={{ overflowY: "scroll" }}>
+    <Row className="h-100 pt-3 pb-3" style={{ overflowY: "scroll" }}>
       <Col xs={8}>
         <Card>
           <Card.Body>
             <Card.Title>
               <i className="bi bi-people" /> Liste der Schüler:innen
             </Card.Title>
+            <InputGroup className="mb-3">
+              <InputGroup.Text>
+                <i className="bi bi-search" />
+              </InputGroup.Text>
+              <Form.Control
+                onChange={(event) => setName(event.target.value)}
+                value={name}
+                placeholder="Suche"
+                aria-label="Name"
+                aria-describedby="basic-addon1"
+              />
+            </InputGroup>
             <Table striped hover>
               <thead>
                 <tr>
@@ -49,7 +78,7 @@ const StudentList: FunctionComponent<StudentListProps> = ({ schoolClass }) => {
                 </tr>
               </thead>
               <tbody>
-                {students?.map((student) => (
+                {foundStudents?.map((student) => (
                   <StudentListItem key={student._id} student={student} />
                 ))}
               </tbody>

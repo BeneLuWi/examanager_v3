@@ -1,5 +1,5 @@
 import React, { CSSProperties, FunctionComponent, PropsWithChildren, useRef } from "react"
-import { useTransition, a, config, easings } from "@react-spring/web"
+import { useTransition, a, easings } from "@react-spring/web"
 import { Button, Container } from "react-bootstrap"
 
 type DrawerModalProps = {
@@ -57,7 +57,7 @@ const DrawerModal: FunctionComponent<PropsWithChildren<DrawerModalProps>> = ({ c
           className="position-fixed w-100 h-100 bg-dark bg-opacity-25 overflow-auto p-2"
           style={{ left: 0, top: 0, opacity: styles.opacity, zIndex: 99 }}
         >
-          <a.aside style={{ ...drawerStyle, ...styles }} className="bg-white">
+          <a.aside style={{ ...drawerStyle, ...styles }} className="bg-body">
             <Button onClick={close} variant="outline-secondary" className="m-3 position-absolute">
               <i className="display-6 bi bi-x-lg" />
             </Button>

@@ -1,26 +1,14 @@
-import React, { FunctionComponent, useEffect, useState } from "react"
-import { Exam } from "../exams/types"
-import { SchoolClass } from "../school_classes/types"
-import { ResultContextType } from "./types"
-import ResultEntry from "./ResultEntry"
-import ExamSelector from "./ExamSelector"
+import React, { FunctionComponent, PropsWithChildren } from "react"
+import { Card, ListGroup } from "react-bootstrap"
 
-type ResultsProps = {
-  schoolClass: SchoolClass
-}
+type ListGroupCardProps = {}
 
-const ResultContext = React.createContext<ResultContextType>(null!)
-
-export const useResultContext = () => React.useContext(ResultContext)
-
-const Results: FunctionComponent<ResultsProps> = ({ schoolClass }) => {
+const ListGroupCard: FunctionComponent<PropsWithChildren<ListGroupCardProps>> = ({ children }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
    *
    *******************************************************************************************************************/
-
-  const [exam, setExam] = useState<Exam>()
 
   /*******************************************************************************************************************
    *
@@ -35,12 +23,12 @@ const Results: FunctionComponent<ResultsProps> = ({ schoolClass }) => {
    *******************************************************************************************************************/
 
   return (
-    <ResultContext.Provider value={{ exam, schoolClass, setExam }}>
-      <div className="display-5">Klausuren</div>
-      <ExamSelector />
-      <ResultEntry />
-    </ResultContext.Provider>
+    <Card>
+      <Card.Body>
+        <ListGroup>{children}</ListGroup>
+      </Card.Body>
+    </Card>
   )
 }
 
-export default Results
+export default ListGroupCard

@@ -47,14 +47,16 @@ const NewTask: FunctionComponent<NewTaskProps> = ({ exam }) => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>Aufgabe hinzufügen</Card.Title>
+        <Card.Title>
+          <i className="bi bi-plus" /> Aufgabe hinzufügen
+        </Card.Title>
         <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
             <Form.Control {...register("name")} type="text" placeholder="Name" defaultValue="Aufgabe" />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Beschreibung</Form.Label>
+            <Form.Label>Erreichbare Punktzahl</Form.Label>
             <Form.Control {...register("max_points")} type="number" defaultValue={10} />
           </Form.Group>
           <Button variant="success" type="submit">

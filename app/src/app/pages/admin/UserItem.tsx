@@ -45,7 +45,7 @@ const UserItem: FunctionComponent<UserItemProps> = ({ user }) => {
       toast("Passwort muss mindestens 5 Zeichen lang sein", { type: "error" })
     } else {
       axios
-        .put("api/update_password", {
+        .put("api/admin/update_password", {
           _id: user._id,
           password: password,
         })
@@ -70,7 +70,7 @@ const UserItem: FunctionComponent<UserItemProps> = ({ user }) => {
       <ListGroup.Item action onClick={open}>
         {user.username} - Role: {user.role === 0 ? "User" : "Admin"}
       </ListGroup.Item>
-      <ModalWrapper size="lg" title={`${user.username} bearbeiten`} show={edit} close={close}>
+      <ModalWrapper options={{ size: "lg" }} title={`${user.username} bearbeiten`} show={edit} close={close}>
         <InputGroup className="mb-3">
           <Form.Control
             type="password"

@@ -1,17 +1,16 @@
 import React, { FunctionComponent } from "react"
-import { ExamContextType } from "./types"
-import ExamsList from "./ExamsList"
 import { Col, Row } from "react-bootstrap"
-import NewExam from "./NewExam"
-import { useFetchExams } from "./api"
+import { Exam } from "../types"
+import RatingList from "./RatingList"
+import TaskList from "./TaskList"
+import NewTask from "./NewTask"
+import ExamDetails from "./ExamDetails"
 
-type ExamsProps = {}
+type ExamOverviewProps = {
+  exam: Exam
+}
 
-const ExamContext = React.createContext<ExamContextType>(null!)
-
-export const useExamContext = () => React.useContext(ExamContext)
-
-const Exams: FunctionComponent<ExamsProps> = ({}) => {
+const ExamOverview: FunctionComponent<ExamOverviewProps> = ({ exam }) => {
   /*******************************************************************************************************************
    *
    *  Hooks
@@ -31,18 +30,20 @@ const Exams: FunctionComponent<ExamsProps> = ({}) => {
    *******************************************************************************************************************/
 
   return (
-    <div>
-      <div className="page-header">Klausuren</div>
-      <Row>
-        <Col xs={8}>
-          <ExamsList />
-        </Col>
-        <Col>
-          <NewExam />
-        </Col>
-      </Row>
-    </div>
+    <Row className="h-100 pt-3 pb-3" style={{ overflowY: "scroll" }}>
+      <Col xs={6}>
+        <RatingList exam={exam} />
+      </Col>
+      <Col xs={3}>
+        <TaskList exam={exam} />
+      </Col>
+      <Col>
+        <NewTask exam={exam} />
+        <div className="mb-4" />
+        <ExamDetails exam={exam} />
+      </Col>
+    </Row>
   )
 }
 
-export default Exams
+export default ExamOverview

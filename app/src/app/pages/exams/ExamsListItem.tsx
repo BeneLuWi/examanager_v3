@@ -2,7 +2,8 @@ import React, { FunctionComponent, useState } from "react"
 import { Exam } from "./types"
 import { ListGroup } from "react-bootstrap"
 import DrawerModal from "../../components/drawer-modal/DrawerModal"
-import ExamDetails from "./exam-details/ExamDetails"
+import ExamOverview from "./exam-details/ExamOverview"
+import LetterIcon from "../../components/letter-icon/LetterIcon"
 
 type ExamsListItemProps = {
   exam: Exam
@@ -31,7 +32,8 @@ const ExamsListItem: FunctionComponent<ExamsListItemProps> = ({ exam }) => {
 
   return (
     <>
-      <ListGroup.Item action onClick={open}>
+      <ListGroup.Item action onClick={open} className="d-flex">
+        <LetterIcon name={exam.name} id={exam._id} />
         <div>
           <div className="fw-bold">{exam.name}</div>
           {exam.description}
@@ -39,8 +41,8 @@ const ExamsListItem: FunctionComponent<ExamsListItemProps> = ({ exam }) => {
       </ListGroup.Item>
 
       <DrawerModal show={edit} close={close}>
-        <div className="display-5">{exam.name}</div>
-        <ExamDetails exam={exam} />
+        <div className="page-header">{exam.name}</div>
+        <ExamOverview exam={exam} />
       </DrawerModal>
     </>
   )
