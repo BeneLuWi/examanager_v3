@@ -59,6 +59,8 @@ async def get_school_class_by_id(
 ):
     #  only return if correct owner
     school_class_in_db: SchoolClass = await find_school_class_by_id_in_db(school_class_id=school_class_id)
+    if school_class_in_db is None:
+        raise HTTPException(status_code=404, detail="School class not found")
     if school_class_in_db.owner_id == str(user.id):
         return school_class_in_db
     raise HTTPException(status_code=401, detail="Permission denied!")
