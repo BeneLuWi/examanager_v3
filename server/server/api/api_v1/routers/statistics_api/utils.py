@@ -67,9 +67,6 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
 
 
 def create_student_statistics_dataframe(exam_results_response: ExamResultsResponse, student_results_df: pd.DataFrame):
-    # todo create different sheet for statistics
-    # todo use german labels only
-
     # 0. Get list of tasks
     tasks: List[Task] = exam_results_response.exam.tasks
     task_names = [task.name for task in tasks]
@@ -77,32 +74,28 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     columns_to_summarize = task_names
     columns_to_summarize.extend(["Gesamtpunkte", "mss_points"])
 
+    # 1 Mean
     mean_values_by_gender = student_results_df.groupby("Geschlecht")[columns_to_summarize].mean().reset_index()
     mean_values_by_gender["Statistik"] = "Mittelwert (Mean)"
 
-    median_values_by_gender = student_results_df.groupby("Geschlecht")[columns_to_summarize].median().reset_index()
-    median_values_by_gender["Statistik"] = "Mittelwert (Median)"
-
     mean_values_absolute_series = student_results_df[columns_to_summarize].mean()
+    # these next lines help to transform the series into the needed dataframe format which allows to concat then later
     mean_values_absolute = mean_values_absolute_series.to_frame().T
-
     mean_values_absolute["Statistik"] = "Mittelwert (Mean)"
     mean_values_absolute["Geschlecht"] = ""
 
+    # 2. Median
+    median_values_by_gender = student_results_df.groupby("Geschlecht")[columns_to_summarize].median().reset_index()
+    median_values_by_gender["Statistik"] = "Mittelwert (Median)"
+
     median_values_absolute_series = student_results_df[columns_to_summarize].median()
     median_values_absolute = median_values_absolute_series.to_frame().T
-
     median_values_absolute["Statistik"] = "Mittelwert (Median)"
     median_values_absolute["Geschlecht"] = ""
 
     # 10. Schwierigkeit
     # total_reachable_per_task = pd.DataFrame([(task.name, task.max_points) for task in tasks], columns=task_names)
     total_reached_per_task = student_results_df[columns_to_summarize].sum()  # todo
-
-    # print("total_reachable_per_task")
-    # print(total_reachable_per_task)
-    print("total_reached_per_task")
-    print(total_reached_per_task)
     difficulty = total_reached_per_task.to_frame().T
 
     difficulty["Statistik"] = "Schwierigkeit"
@@ -116,21 +109,24 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     selectivity["Geschlecht"] = ""
 
     # 12. Standardabweichung
-    standard_deviation_series = student_results_df[columns_to_summarize].std()
-    standard_deviation = standard_deviation_series.to_frame().T
+    standard_deviation_by_gender = student_results_df.groupby("Geschlecht")[columns_to_summarize].std().reset_index()
+    standard_deviation_by_gender["Statistik"] = "Standardabweichung"
 
-    standard_deviation["Statistik"] = "Standardabweichung"
-    standard_deviation["Geschlecht"] = ""
+    standard_deviation_series = student_results_df[columns_to_summarize].std()
+    standard_deviation_absolute = standard_deviation_series.to_frame().T
+    standard_deviation_absolute["Statistik"] = "Standardabweichung"
+    standard_deviation_absolute["Geschlecht"] = ""
 
     statistics = pd.concat(
         [
-            mean_values_by_gender,
-            median_values_by_gender,
             mean_values_absolute,
+            mean_values_by_gender,
             median_values_absolute,
+            median_values_by_gender,
+            standard_deviation_absolute,
+            standard_deviation_by_gender,
             difficulty,
             selectivity,
-            standard_deviation,
         ]
     )
 
