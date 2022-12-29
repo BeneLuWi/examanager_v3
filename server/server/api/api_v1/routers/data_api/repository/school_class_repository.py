@@ -5,6 +5,8 @@ from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 from pymongo.results import InsertOneResult
 
+from server.api.api_v1.routers.data_api.repository.result_repository import delete_results_by_school_class_id
+from server.api.api_v1.routers.data_api.repository.student_repository import delete_students_by_school_class_id
 from server.database import school_class_collection
 from server.api.api_v1.routers.data_api.models import (
     SchoolClass,
@@ -78,5 +80,12 @@ async def update_school_class_in_db(school_class: SchoolClass) -> SchoolClass:
 async def delete_school_class_in_db(school_class_id: ObjectId | str) -> bool:
     if type(school_class_id) is str:
         school_class_id = ObjectId(school_class_id)
+
+    # Delete all Results
+    await delete_results_by_school_class_id(school_class_id)
+
+    # Delete all Students
+    await delete_students_by_school_class_id(school_class_id)
+
     deleted_school_class = await school_class_collection.delete_one({"_id": school_class_id})
     return deleted_school_class.deleted_count == 1

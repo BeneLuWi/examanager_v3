@@ -12,6 +12,7 @@ from server.api.api_v1.routers.data_api.models import (
     StudentResultResponse,
     Exam,
     SchoolClass,
+    Student,
 )
 from server.config import ExamManagerSettings
 
@@ -196,3 +197,15 @@ async def delete_result_in_db(result_id: ObjectId | str) -> bool:
 
     deleted_result = await result_collection.delete_one({"_id": result_id})
     return deleted_result.deleted_count == 1
+
+
+async def delete_results_by_school_class_id(school_class_id: ObjectId | str) -> bool:
+    # Get all Students of a School Class
+    school_class_id = str(school_class_id)
+    students_raw = await student_collection.find({"school_class_id": school_class_id}).to_list(1000)
+    students = list(map(lambda sc: Student.parse_obj(sc), students_raw))
+    # Get the IDs
+    student_ids = list(map(lambda student: str(student.id), students))
+    # Now delete the results for any Student
+    deleted = await result_collection.delete_many({"student_id": {"$in": student_ids}})
+    return deleted.deleted_count > 0
