@@ -1,13 +1,13 @@
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class StatisticsElement(BaseModel):
     name: str  # name of task
-    value_total: float  #
-    value_w: Optional[float]  #
-    value_m: Optional[float]  #
-    value_d: Optional[float]  #
+    value_total: float
+    value_w: Optional[float] = Field(...)
+    value_m: Optional[float] = Field(...)
+    value_d: Optional[float] = Field(...)
 
 
 class TaskResult(BaseModel):

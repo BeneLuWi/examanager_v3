@@ -182,13 +182,13 @@ def create_statistics_element(student_statistics_df: pd.DataFrame, column_name, 
         value_total = 0
 
     if type(value_d) is pd.Series:
-        value_d = 0
+        value_d = None
 
     if type(value_m) is pd.Series:
-        value_m = 0
+        value_m = None
 
     if type(value_w) is pd.Series:
-        value_w = 0
+        value_w = None
 
     try:
         return StatisticsElement(
