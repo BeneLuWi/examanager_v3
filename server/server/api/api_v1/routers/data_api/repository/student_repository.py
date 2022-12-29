@@ -85,3 +85,9 @@ async def delete_student_in_db(student_id: ObjectId | str) -> bool:
 
     deleted_student = await student_collection.delete_one({"_id": student_id})
     return deleted_student.deleted_count == 1
+
+
+async def delete_students_by_school_class_id(school_class_id: ObjectId | str) -> bool:
+    school_class_id = str(school_class_id)
+    deleted = await student_collection.delete_many({"school_class_id": school_class_id})
+    return deleted.deleted_count > 1

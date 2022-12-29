@@ -75,7 +75,13 @@ const SchoolClassDetails: FunctionComponent<SchoolClassDetailsProps> = ({ school
         <Form onSubmit={handleSubmit((values) => performUpdate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
-            <Form.Control {...register("name")} type="text" placeholder="Name" defaultValue={schoolClass.name} />
+            <Form.Control
+              {...register("name")}
+              type="text"
+              placeholder="Name"
+              required
+              defaultValue={schoolClass.name}
+            />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Beschreibung</Form.Label>
@@ -89,7 +95,10 @@ const SchoolClassDetails: FunctionComponent<SchoolClassDetailsProps> = ({ school
           <Button variant="primary" type="submit" className="me-3">
             Speichern
           </Button>
-          <ConfirmButton onSuccess={() => deleteSchoolClass(schoolClass)} question={`${schoolClass.name} löschen?`}>
+          <ConfirmButton
+            onSuccess={() => deleteSchoolClass(schoolClass)}
+            question={`${schoolClass.name} und alle Schüler:innen löschen?`}
+          >
             Klasse Löschen
           </ConfirmButton>
         </Form>

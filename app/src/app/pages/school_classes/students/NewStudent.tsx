@@ -46,7 +46,7 @@ const NewStudent: FunctionComponent<NewStudentProps> = ({ schoolClass }) => {
         <Form onSubmit={handleSubmit((values) => performCreate(values))}>
           <Form.Group className="mb-3">
             <Form.Label>Vorname</Form.Label>
-            <Form.Control {...register("firstname")} type="text" placeholder="" />
+            <Form.Control {...register("firstname")} required type="text" placeholder="" />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Nachname</Form.Label>

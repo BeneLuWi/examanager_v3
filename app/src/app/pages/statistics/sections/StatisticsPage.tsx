@@ -51,7 +51,7 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
           <h2>
             Klausurergebnisse für {exam.name} von {schoolClass.name}
           </h2>
-          <div className="h-100 pt-3 pb-3 gy-3" style={{ overflowY: "scroll" }}>
+          <div className="h-100 p-3" style={{ overflowY: "scroll" }}>
             <Row>
               <Col>
                 <Card>
@@ -91,13 +91,16 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
               </Col>
             </Row>
             <Row className="mt-4">
-              <Col>
+              <Col xs={6}>
                 <AverageGrade />
               </Col>
               <Col />
-              <Row className="mt-4">
+            </Row>
+
+            <Row className="mt-4">
+              <Col>
                 <StudentResultList />
-              </Row>
+              </Col>
             </Row>
           </div>
         </div>
