@@ -95,7 +95,10 @@ const SchoolClassDetails: FunctionComponent<SchoolClassDetailsProps> = ({ school
           <Button variant="primary" type="submit" className="me-3">
             Speichern
           </Button>
-          <ConfirmButton onSuccess={() => deleteSchoolClass(schoolClass)} question={`${schoolClass.name} löschen?`}>
+          <ConfirmButton
+            onSuccess={() => deleteSchoolClass(schoolClass)}
+            question={`${schoolClass.name} und alle Schüler:innen löschen?`}
+          >
             Klasse Löschen
           </ConfirmButton>
         </Form>
