@@ -45,6 +45,8 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
             "Geschlecht": student_result_response.gender,
         }
         result_entry: ResultEntryResponse
+        if not student_result_response.result:
+            break
         for result_entry in student_result_response.result:
             student_dict[result_entry.name] = result_entry.points
         student_results_df = pd.concat([student_results_df, pd.DataFrame(student_dict, index=[index])], axis=0)
@@ -67,6 +69,8 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
 
     ratings_dataframe = pd.DataFrame(rating_results)
     student_results_df = pd.concat([student_results_df, ratings_dataframe], axis=1)
+
+    student_results_df = student_results_df.round(1)
 
     return student_results_df
 
@@ -132,9 +136,7 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
 
     reached_all = pd.concat([reached_total, reached_by_gender])
 
-    reached_as_dict = reached_all.to_dict()
-
-    difficulty_df = reachable_all.set_index("Geschlecht").div(reached_all.set_index("Geschlecht"), fill_value=0)
+    difficulty_df = reached_all.set_index("Geschlecht").div(reachable_all.set_index("Geschlecht"), fill_value=0)
     difficulty_df = difficulty_df * 100
     difficulty_df.reset_index(inplace=True)
     difficulty_df = difficulty_df.assign(Statistik="Schwierigkeit")
