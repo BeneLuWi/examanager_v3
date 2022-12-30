@@ -100,29 +100,44 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     number_of_d = len(student_results_df[student_results_df["Geschlecht"] == "d"])
     number_of_m = len(student_results_df[student_results_df["Geschlecht"] == "m"])
     number_total = len(student_results_df)
-    if number_of_w + number_of_d + number_of_m != number_total:
-        raise RuntimeError("BLUBB")
+    assert number_of_w + number_of_d + number_of_m == number_total
 
     reachable_total = reachable_per_task * number_total
+    reachable_total["Geschlecht"] = ""
     reachable_w = reachable_per_task * number_of_w
+    reachable_w["Geschlecht"] = "w"
     reachable_m = reachable_per_task * number_of_m
+    reachable_m["Geschlecht"] = "m"
     reachable_d = reachable_per_task * number_of_d
+    reachable_d["Geschlecht"] = "d"
 
-    # todo calculate sum reached (total and by gender -> groupby)
+    reachable_all = pd.concat([reachable_total, reachable_d, reachable_m, reachable_w])
+    reachable_all["Gesamtpunkte"] = reachable_all.sum(axis=1)
+    print("reachable_all")
+    print(reachable_all.to_string())
 
-    # todo calculate difficulty = (total_reachable / sum_reached) * 100
-    # todo calculate difficulty_w = (reachable_w / reached_w) * 100
+    columns_for_difficulty = task_names.copy()
+    columns_for_difficulty.append("Gesamtpunkte")
 
-    print("reachable_per_task")
-    print(reachable_per_task)
-    print("reachable_per_task")
+    reached_total = student_results_df[columns_for_difficulty].sum()
+    reached_total = reached_total.to_frame().T
+    # reached_total["Statistik"] = "Summe erreichte Punkte"
+    reached_total["Geschlecht"] = ""
 
-    # todo this is blödsinn^^
-    total_reached_per_task = student_results_df[columns_to_summarize].sum()  # todo
-    difficulty = total_reached_per_task.to_frame().T
+    reached_by_gender = student_results_df.groupby("Geschlecht")[columns_for_difficulty].sum().reset_index()
+    # reached_by_gender["Statistik"] = "Summe erreichte Punkte"
 
-    difficulty["Statistik"] = "Schwierigkeit"
-    difficulty["Geschlecht"] = ""
+    reached_all = pd.concat([reached_total, reached_by_gender])
+
+    reached_as_dict = reached_all.to_dict()
+
+    difficulty_df = reachable_all.set_index("Geschlecht").div(reached_all.set_index("Geschlecht"), fill_value=0)
+    difficulty_df = difficulty_df * 100
+    difficulty_df.reset_index(inplace=True)
+    difficulty_df = difficulty_df.assign(Statistik="Schwierigkeit")
+    # difficulty_df = reachable_all.subtract(reached_all, axis="columns")#  * 100
+    print("difficulty_df")
+    print(difficulty_df.to_string())
 
     # 11. Trennschärfe
 
@@ -173,16 +188,17 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
             median_values_by_gender,
             standard_deviation_absolute,
             standard_deviation_by_gender,
-            difficulty,
+            difficulty_df,
             selectivity,
         ]
     )
     # todo fix round
     statistics.round(1)
 
-    # todo rename mss points
-
     statistics.rename(columns={"mss_points": "MSS Punkte"}, inplace=True)
+
+    print("statistics")
+    print(statistics.to_string())
 
     return statistics
 
@@ -377,8 +393,6 @@ async def calculate_statistics_excel(exam_results_response: ExamResultsResponse)
     :param exam_results_response:
     :return:
     """
-    ratings: List[Rating] = exam_results_response.exam.ratings
-    max_points_for_task = calc_max_points_for_exam(exam=exam_results_response.exam)
     student_results_df = create_student_results_dataframe(exam_results_response=exam_results_response)
     student_statistics_df = create_student_statistics_dataframe(
         exam_results_response=exam_results_response, student_results_df=student_results_df
