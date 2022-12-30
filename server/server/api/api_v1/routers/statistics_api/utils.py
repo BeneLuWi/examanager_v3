@@ -45,8 +45,8 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
             "Geschlecht": student_result_response.gender,
         }
         result_entry: ResultEntryResponse
-        if not student_result_response.result:
-            break
+        if student_result_response.result is None:
+            continue
         for result_entry in student_result_response.result:
             student_dict[result_entry.name] = result_entry.points
         student_results_df = pd.concat([student_results_df, pd.DataFrame(student_dict, index=[index])], axis=0)
