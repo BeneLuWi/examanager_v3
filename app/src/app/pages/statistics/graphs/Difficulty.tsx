@@ -40,7 +40,7 @@ const Difficulty: FunctionComponent<DifficultyProps> = () => {
                 }}
               >
                 <YAxis interval={0} />
-                <XAxis dataKey="name" />
+                <XAxis dataKey="name" tick={{ fontSize: 12 }} interval={0} />
                 <Tooltip />
                 <Bar animationBegin={700} dataKey="value_total" fill={ExaColors.bright} />
                 <Bar animationBegin={700} dataKey="value_m" fill={ExaColors.green} />
