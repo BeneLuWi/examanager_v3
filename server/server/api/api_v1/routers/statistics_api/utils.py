@@ -46,6 +46,7 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
         }
         result_entry: ResultEntryResponse
         if student_result_response.result is None:
+            logger.info(f"{student_result_response.firstname} {student_result_response.lastname} is missing results")
             continue
         for result_entry in student_result_response.result:
             student_dict[result_entry.name] = result_entry.points
@@ -73,6 +74,25 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
     student_results_df = student_results_df.round(1)
 
     return student_results_df
+
+
+def calculate_trennschaerfe_for_df(students_results_subset: pd.DataFrame, task_names):
+    gesamtpunkte = students_results_subset["Gesamtpunkte"]
+    aufgabenpunkte = students_results_subset[task_names]
+
+    correlations_dict = dict()
+    for aufgabe_name, punkte_nach_student_series in aufgabenpunkte.items():
+        exam_points_reached = gesamtpunkte - punkte_nach_student_series
+        value = exam_points_reached.corr(punkte_nach_student_series)
+        correlations_dict[aufgabe_name] = value
+
+    correlations_df = pd.DataFrame(correlations_dict, index=[1])
+    print("correlations_df")
+    print(correlations_df)
+
+    # print("aufgabenpunkte")
+    # print(aufgabenpunkte)
+    points_reached_difference = aufgabenpunkte.sub(gesamtpunkte, axis=0).abs()
 
 
 def create_student_statistics_dataframe(exam_results_response: ExamResultsResponse, student_results_df: pd.DataFrame):
@@ -149,10 +169,15 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     # print(gesamtpunkte)
     aufgabenpunkte = student_results_df[task_names]
 
-    for student_index, row in aufgabenpunkte.iterrows():
-        for name, aufgabe in row.iteritems():
-            gesamt = gesamtpunkte[student_index]
-            print(f"Index {student_index}: {name} = {aufgabe} von {gesamt}")
+    correlations_dict = dict()
+    for aufgabe_name, punkte_nach_student_series in aufgabenpunkte.items():
+        exam_points_reached = gesamtpunkte - punkte_nach_student_series
+        value = exam_points_reached.corr(punkte_nach_student_series)
+        correlations_dict[aufgabe_name] = value
+
+    correlations_df = pd.DataFrame(correlations_dict, index=[1])
+    print("correlations_df")
+    print(correlations_df)
 
     # print("aufgabenpunkte")
     # print(aufgabenpunkte)
@@ -163,9 +188,6 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     points_reached_difference = points_reached_difference.add_prefix("diff")
     result = pd.concat([aufgabenpunkte, points_reached_difference], axis=1).corr()
     result = result[task_names].reset_index()["index"]
-    print("result")
-    print(result)
-    print(result)
 
     """
     part-whole Korrelation
@@ -219,12 +241,7 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
         ]
     )
     statistics = statistics.round(1)
-
     statistics.rename(columns={"mss_points": "MSS Punkte"}, inplace=True)
-
-    print("statistics")
-    print(statistics.to_string())
-
     return statistics
 
 
