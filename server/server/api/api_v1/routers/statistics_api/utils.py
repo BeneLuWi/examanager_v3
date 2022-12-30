@@ -36,14 +36,16 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
     student_results_df = pd.DataFrame()
 
     # 2. Add people and results
-    student_result_response: StudentResultResponse
     index = 0
+    student_result_response: StudentResultResponse
     for student_result_response in exam_results_response.studentResults:
         student_dict = {
             "Nachname": student_result_response.lastname,
             "Vorname": student_result_response.firstname,
             "Geschlecht": student_result_response.gender,
         }
+        if student_result_response.self_assessment is not None:
+            student_dict["Selbsteinschätzung"] = student_result_response.self_assessment
         result_entry: ResultEntryResponse
         if student_result_response.result is None:
             logger.info(f"{student_result_response.firstname} {student_result_response.lastname} is missing results")
@@ -72,6 +74,17 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
     student_results_df = pd.concat([student_results_df, ratings_dataframe], axis=1)
 
     student_results_df = student_results_df.round(1)
+
+    student_results_df.rename(
+        columns={
+            "percentage": "Prozentgrenze",
+            "mss_points": "MSS Punkte",
+            "decimal_rating": "Note",
+            "school_rating": "Schulnote",
+            "text_rating": "Textnote",
+        },
+        inplace=True,
+    )
 
     return student_results_df
 
@@ -254,26 +267,17 @@ def create_statistics_element(student_statistics_df: pd.DataFrame, column_name, 
     value_m = values_m[column_name].squeeze()
     value_w = values_w[column_name].squeeze()
 
-    digits_to_round = 1
     if type(value_total) is pd.Series:
         value_total = 0
-    else:
-        value_total = round(value_total, digits_to_round)
 
     if type(value_d) is pd.Series:
         value_d = None
-    else:
-        value_d = round(value_d, digits_to_round)
 
     if type(value_m) is pd.Series:
         value_m = None
-    else:
-        value_m = round(value_m, digits_to_round)
 
     if type(value_w) is pd.Series:
         value_w = None
-    else:
-        value_w = round(value_w, digits_to_round)
 
     try:
         return StatisticsElement(
@@ -300,7 +304,7 @@ def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: 
     #    create_task_result_object(student_statistics_df=student_statistics_df, columns_to_process=columns_to_process,
     #                              metric_name=metric)#
 
-    # todo mittelwert mean und median für mss (und note) als getrennte Statistik
+    # mittelwert mean und median für mss (und note) als getrennte Statistik
 
     task_names = [task.name for task in tasks]
 
