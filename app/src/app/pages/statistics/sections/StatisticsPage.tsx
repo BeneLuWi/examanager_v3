@@ -11,6 +11,8 @@ import Correlation from "../graphs/Correlation"
 import MeanMSS from "../graphs/MeanMSS"
 import MedianMSS from "../graphs/MedianMSS"
 import StandardDeviation from "../graphs/StandardDeviation"
+import SchoolClassComposition from "../graphs/SchoolClassComposition"
+import SelfAssessment from "../graphs/SelfAssessment"
 
 type StatisticsPageProps = {}
 
@@ -51,7 +53,7 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
 
   return (
     <DrawerModal {...{ show, close }}>
-      {exam && schoolClass && (
+      {exam && schoolClass && studentResults && (
         <div className="h-100">
           <h2>
             Klausurergebnisse für {exam.name} von {schoolClass.name}
@@ -60,7 +62,7 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
             <Row>
               <Col>
                 <Card>
-                  <Card.Body>
+                  <Card.Body style={{ height: 250 }}>
                     <Card.Title>
                       <i className="bi bi-people-fill" /> Klasse
                     </Card.Title>
@@ -74,7 +76,19 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
                   </Card.Body>
                 </Card>
               </Col>
+              <Col xs={6}>
+                <Card>
+                  <Card.Body style={{ height: 250 }}>
+                    <Card.Title>
+                      <i className="bi bi-people-fill" /> Zusammenstellung
+                    </Card.Title>
+                    <SchoolClassComposition students={studentResults.studentResults} />
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
 
+            <Row className="mt-4">
               <Col>
                 <Card>
                   <Card.Body>
@@ -119,7 +133,7 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
                 <StandardDeviation />
               </Col>
               <Col xs={6}>
-                <MedianPoints />
+                <SelfAssessment />
               </Col>
             </Row>
 

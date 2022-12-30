@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useMemo } from "react"
 import { Gender, Student } from "../../school_classes/types"
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts"
+import { ExaColors } from "../../../components/colors/colors"
 
 type SchoolClassCompositionProps = {
   students: Student[]
@@ -41,17 +42,17 @@ const SchoolClassComposition: FunctionComponent<SchoolClassCompositionProps> = (
     {
       gender: "Männlich",
       amount: numM,
-      color: "#77A33E",
+      color: ExaColors.green,
     },
     {
       gender: "Weiblich",
       amount: numW,
-      color: "#EF9362",
+      color: ExaColors.brown,
     },
     {
       gender: "Divers",
       amount: numD,
-      color: "#A39C3E",
+      color: ExaColors.kaki,
     },
   ]
 
@@ -76,7 +77,7 @@ const SchoolClassComposition: FunctionComponent<SchoolClassCompositionProps> = (
           nameKey="gender"
           cx="50%"
           cy="50%"
-          outerRadius={"60%"}
+          outerRadius={"50%"}
           fill="blue"
           label={(datum) => `${datum.gender}: ${datum.amount}`}
         >
