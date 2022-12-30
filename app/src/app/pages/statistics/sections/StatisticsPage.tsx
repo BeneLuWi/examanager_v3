@@ -13,6 +13,7 @@ import MedianMSS from "../graphs/MedianMSS"
 import StandardDeviation from "../graphs/StandardDeviation"
 import SchoolClassComposition from "../graphs/SchoolClassComposition"
 import SelfAssessment from "../graphs/SelfAssessment"
+import ExamDetails from "../graphs/ExamDetails"
 
 type StatisticsPageProps = {}
 
@@ -62,7 +63,7 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
             <Row>
               <Col>
                 <Card>
-                  <Card.Body style={{ height: 250 }}>
+                  <Card.Body>
                     <Card.Title>
                       <i className="bi bi-people-fill" /> Klasse
                     </Card.Title>
@@ -89,25 +90,7 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
             </Row>
 
             <Row className="mt-4">
-              <Col>
-                <Card>
-                  <Card.Body>
-                    <Card.Title>
-                      <i className="bi bi-list-check" /> Klausur
-                    </Card.Title>
-                    <p>
-                      <div className="fw-bold">{exam.name}</div>
-                      {exam.description}
-                    </p>
-                    <p>
-                      <i className="bi bi-patch-check" /> {exam.tasks.reduce((a, b) => a + b.max_points, 0)} Punkte
-                    </p>
-                    <p>
-                      <i className="bi bi-check2-square" /> {exam.tasks.length} Aufgaben
-                    </p>
-                  </Card.Body>
-                </Card>
-              </Col>
+              <ExamDetails exam={exam} />
             </Row>
 
             <Row className="mt-4">
