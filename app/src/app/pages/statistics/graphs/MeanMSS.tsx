@@ -5,6 +5,7 @@ import { useFetchStatistics } from "../api"
 import { useStatisticsContext } from "../Statistics"
 import { ExaColors } from "../../../components/colors/colors"
 import { graphPresets } from "./presets"
+import CustomTooltip from "./CustomTooltip"
 
 type MeanMSSProps = {}
 
@@ -41,7 +42,7 @@ const MeanMSS: FunctionComponent<MeanMSSProps> = () => {
               >
                 <YAxis domain={[0, 15]} interval={0} tick={{ fontSize: 12 }} tickCount={16} />
                 <XAxis dataKey="name" />
-                <Tooltip />
+                <Tooltip content={CustomTooltip} />
                 <Bar animationBegin={700} dataKey="value_total" fill={ExaColors.bright} />
                 <Bar animationBegin={700} dataKey="value_m" fill={ExaColors.green} />
                 <Bar animationBegin={700} dataKey="value_w" fill={ExaColors.brown} />
