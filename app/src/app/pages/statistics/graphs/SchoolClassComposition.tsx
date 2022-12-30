@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo } from "react"
+import React, { FunctionComponent } from "react"
 import { Gender, Student } from "../../school_classes/types"
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts"
 import { ExaColors } from "../../../components/colors/colors"
