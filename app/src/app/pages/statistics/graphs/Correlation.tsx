@@ -33,7 +33,7 @@ const Correlation: FunctionComponent<CorrelationProps> = () => {
           {statistics ? (
             <ResponsiveContainer>
               <BarChart
-                data={statistics.difficulty.statistics}
+                data={statistics.correlation.statistics}
                 margin={{
                   top: 10,
                   right: 10,
