@@ -57,7 +57,7 @@ const StudentResultForm: FunctionComponent<StudentResultFormProps> = ({
 
   const onChangePointsReached = (value: string, task: ResultEntry) => {
     // Parse to a Float with 2 Digits
-    let numValue = parseFloat(parseFloat(value).toFixed(2))
+    let numValue = parseFloat(parseFloat(value).toFixed(1))
 
     // Validate
     if (numValue > task.max_points) {
