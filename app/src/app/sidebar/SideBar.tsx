@@ -38,7 +38,7 @@ const SideBar: FunctionComponent<SideBarProps> = () => {
       <Nav variant="pills" className="flex-column">
         <NavItem title="Home" icon="bi bi-house" path="/" />
         <NavItem title="Klassen" icon="bi bi-people" path="/classes" />
-        <NavItem title="Klausuren" icon="bi bi-list" path="/exams" />
+        <NavItem title="Klausuren" icon="bi bi-list-check" path="/exams" />
         <NavItem title="Statistiken" icon="bi bi-bar-chart" path="/statistics" />
         {auth.auth?.role === Roles.ADMIN ? <NavItem title="Admin" icon="bi bi-clipboard-check" path="/admin" /> : <></>}
         <hr />
