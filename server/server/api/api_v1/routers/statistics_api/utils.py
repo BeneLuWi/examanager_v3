@@ -77,22 +77,21 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
 
 
 def calculate_trennschaerfe_for_df(students_results_subset: pd.DataFrame, task_names):
-    gesamtpunkte = students_results_subset["Gesamtpunkte"]
-    aufgabenpunkte = students_results_subset[task_names]
+    gesamtpunkte_der_studenten = students_results_subset["Gesamtpunkte"]
+
+    alle_aufgabenpunkte = students_results_subset[task_names]
 
     correlations_dict = dict()
-    for aufgabe_name, punkte_nach_student_series in aufgabenpunkte.items():
-        exam_points_reached = gesamtpunkte - punkte_nach_student_series
-        value = exam_points_reached.corr(punkte_nach_student_series)
-        correlations_dict[aufgabe_name] = value
+    for aufgabe_name, punkte_der_studenten_zur_aufgabe in alle_aufgabenpunkte.items():
+        if len(gesamtpunkte_der_studenten) < 2:
+            correlations_dict[aufgabe_name] = pd.Series(0, index=range(len(task_names)))
+        else:
+            gesamtpunkte_angepasst = gesamtpunkte_der_studenten - punkte_der_studenten_zur_aufgabe
+            value = punkte_der_studenten_zur_aufgabe.corr(gesamtpunkte_angepasst)
+            correlations_dict[aufgabe_name] = value
 
     correlations_df = pd.DataFrame(correlations_dict, index=[1])
-    print("correlations_df")
-    print(correlations_df)
-
-    # print("aufgabenpunkte")
-    # print(aufgabenpunkte)
-    points_reached_difference = aufgabenpunkte.sub(gesamtpunkte, axis=0).abs()
+    return correlations_df
 
 
 def create_student_statistics_dataframe(exam_results_response: ExamResultsResponse, student_results_df: pd.DataFrame):
@@ -103,8 +102,13 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     columns_to_summarize = task_names.copy()
     columns_to_summarize.extend(["Gesamtpunkte", "mss_points"])
 
+    students_grouped_by_gender = student_results_df.groupby("Geschlecht")
+    students_male = student_results_df[student_results_df["Geschlecht"] == "m"]
+    students_female = student_results_df[student_results_df["Geschlecht"] == "w"]
+    students_diverse = student_results_df[student_results_df["Geschlecht"] == "d"]
+
     # 1 Mean
-    mean_values_by_gender = student_results_df.groupby("Geschlecht")[columns_to_summarize].mean().reset_index()
+    mean_values_by_gender = students_grouped_by_gender[columns_to_summarize].mean().reset_index()
     mean_values_by_gender["Statistik"] = "Mittelwert (Mean)"
 
     mean_values_absolute_series = student_results_df[columns_to_summarize].mean()
@@ -114,7 +118,7 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     mean_values_absolute["Geschlecht"] = ""
 
     # 2. Median
-    median_values_by_gender = student_results_df.groupby("Geschlecht")[columns_to_summarize].median().reset_index()
+    median_values_by_gender = students_grouped_by_gender[columns_to_summarize].median().reset_index()
     median_values_by_gender["Statistik"] = "Mittelwert (Median)"
 
     median_values_absolute_series = student_results_df[columns_to_summarize].median()
@@ -151,7 +155,7 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     # reached_total["Statistik"] = "Summe erreichte Punkte"
     reached_total["Geschlecht"] = ""
 
-    reached_by_gender = student_results_df.groupby("Geschlecht")[columns_for_difficulty].sum().reset_index()
+    reached_by_gender = students_grouped_by_gender[columns_for_difficulty].sum().reset_index()
     # reached_by_gender["Statistik"] = "Summe erreichte Punkte"
 
     reached_all = pd.concat([reached_total, reached_by_gender])
@@ -164,63 +168,25 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
 
     # 11. Trennschärfe
 
-    gesamtpunkte = student_results_df["Gesamtpunkte"]
-    # print("gesamtpunkte")
-    # print(gesamtpunkte)
-    aufgabenpunkte = student_results_df[task_names]
+    trennschaerfe_global = calculate_trennschaerfe_for_df(
+        students_results_subset=student_results_df, task_names=task_names
+    )
+    trennschaerfe_global["Geschlecht"] = ""
 
-    correlations_dict = dict()
-    for aufgabe_name, punkte_nach_student_series in aufgabenpunkte.items():
-        exam_points_reached = gesamtpunkte - punkte_nach_student_series
-        value = exam_points_reached.corr(punkte_nach_student_series)
-        correlations_dict[aufgabe_name] = value
+    trennschaerfe_w = calculate_trennschaerfe_for_df(students_results_subset=students_female, task_names=task_names)
+    trennschaerfe_w["Geschlecht"] = "w"
 
-    correlations_df = pd.DataFrame(correlations_dict, index=[1])
-    print("correlations_df")
-    print(correlations_df)
+    trennschaerfe_m = calculate_trennschaerfe_for_df(students_results_subset=students_male, task_names=task_names)
+    trennschaerfe_m["Geschlecht"] = "m"
 
-    # print("aufgabenpunkte")
-    # print(aufgabenpunkte)
-    points_reached_difference = aufgabenpunkte.sub(gesamtpunkte, axis=0).abs()
-    # print("points_reached_difference")
-    # print(points_reached_difference.to_string())
+    trennschaerfe_d = calculate_trennschaerfe_for_df(students_results_subset=students_diverse, task_names=task_names)
+    trennschaerfe_d["Geschlecht"] = "d"
 
-    points_reached_difference = points_reached_difference.add_prefix("diff")
-    result = pd.concat([aufgabenpunkte, points_reached_difference], axis=1).corr()
-    result = result[task_names].reset_index()["index"]
-
-    """
-    part-whole Korrelation
-    Trennschäfe der einzelnen Aufgaben
-    Pearsons Correlation: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.corr.html
-
-    
-    points_reached: double[] = (Erreichte Punkte in Aufgabe X pro Student)
-    """
-
-    """
-    exam_points_reached: double[] = (Erreichte Punkte in Exam Y pro Student)
-
-    # len(points_reached) == len(Students_with_results)
-    # len(exam_points_reached) == len(Students_with_results)
-
-    exam_points_reached -= points_reached
-
-    if len(Students_with_results) < 2:
-        return 0
-
-    Corr(x, y)
-    
-    """
-
-    selectivity_series = student_results_df[columns_to_summarize].count()  # todo
-    selectivity = selectivity_series.to_frame().T
-
-    selectivity["Statistik"] = "Trennschärfe"
-    selectivity["Geschlecht"] = ""
+    trennschaerfe_all = pd.concat([trennschaerfe_global, trennschaerfe_d, trennschaerfe_w, trennschaerfe_m])
+    trennschaerfe_all["Statistik"] = "Trennschärfe"
 
     # 12. Standardabweichung
-    standard_deviation_by_gender = student_results_df.groupby("Geschlecht")[columns_to_summarize].std().reset_index()
+    standard_deviation_by_gender = students_grouped_by_gender[columns_to_summarize].std().reset_index()
     standard_deviation_by_gender["Statistik"] = "Standardabweichung"
 
     standard_deviation_series = student_results_df[columns_to_summarize].std()
@@ -237,9 +203,9 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
             standard_deviation_absolute,
             standard_deviation_by_gender,
             difficulty_df,
-            selectivity,
+            trennschaerfe_all,
         ]
-    )
+    ).reset_index()
     statistics = statistics.round(1)
     statistics.rename(columns={"mss_points": "MSS Punkte"}, inplace=True)
     statistics.fillna(0, inplace=True)
