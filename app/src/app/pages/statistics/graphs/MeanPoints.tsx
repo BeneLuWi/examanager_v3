@@ -28,7 +28,7 @@ const MeanPoints: FunctionComponent<AverageGradeProps> = ({}) => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>{statistics?.mean.name}</Card.Title>
+        <Card.Title>Erreichte Punkte {statistics?.mean.name}</Card.Title>
         <div style={{ height: graphPresets.height }}>
           {statistics ? (
             <ResponsiveContainer>

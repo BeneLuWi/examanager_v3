@@ -28,7 +28,7 @@ const MedianPoints: FunctionComponent<MedianPointsProps> = () => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>{statistics?.median.name}</Card.Title>
+        <Card.Title>Erreichte Punkte {statistics?.median.name}</Card.Title>
         <div style={{ height: graphPresets.height }}>
           {statistics ? (
             <ResponsiveContainer>

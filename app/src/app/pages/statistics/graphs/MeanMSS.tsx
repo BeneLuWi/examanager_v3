@@ -28,7 +28,7 @@ const MeanMSS: FunctionComponent<MeanMSSProps> = () => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>{statistics?.mean_mss.name}</Card.Title>
+        <Card.Title>Note {statistics?.mean_mss.name}</Card.Title>
         <div style={{ height: graphPresets.height }}>
           {statistics ? (
             <ResponsiveContainer>

@@ -28,7 +28,7 @@ const MedianMSS: FunctionComponent<MedianMSSProps> = () => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>{statistics?.median_mss.name}</Card.Title>
+        <Card.Title>Note {statistics?.median_mss.name}</Card.Title>
         <div style={{ height: graphPresets.height }}>
           {statistics ? (
             <ResponsiveContainer>
