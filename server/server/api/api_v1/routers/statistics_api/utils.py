@@ -242,6 +242,8 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     )
     statistics = statistics.round(1)
     statistics.rename(columns={"mss_points": "MSS Punkte"}, inplace=True)
+    statistics.fillna(0, inplace=True)
+
     return statistics
 
 
