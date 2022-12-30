@@ -110,10 +110,14 @@ async def list_student_result_responses(exam: Exam, school_class_id: str) -> Lis
     # Now merge the Tasks and ResultEntries and erase all the irrelevant info from the StudentResultResponse
     for student in students_with_student_result:
         if "result" in student:
+            if "self_assessment" in student["result"]:
+                student["self_assessment"] = student["result"]["self_assessment"]
             student["result"] = [
                 result_entry | tasks[result_entry["task_id"]].dict()
                 for result_entry in student["result"]["points_per_task"]
             ]
+            if "self_assessment" in student["result"]:
+                student["self_assessment"] = student["result"]["self_assessment"]
 
     return list(map(lambda result: StudentResultResponse.parse_obj(result), students_with_student_result))
 

@@ -21,6 +21,7 @@ export const useCreateResult = () => {
   return useMutation((createResultRequest: CreateResultRequest) => axios.post("api/result", createResultRequest), {
     onSuccess: () => {
       queryClient.invalidateQueries("results")
+      queryClient.invalidateQueries("statistics")
     },
   })
 }
@@ -39,6 +40,7 @@ export const useDeleteResult = (exam: Exam, student: Student) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("results")
+        queryClient.invalidateQueries("statistics")
       },
     }
   )

@@ -97,6 +97,7 @@ class StudentResult(MongoModel):
     exam_id: str
     student_id: str
     points_per_task: List[ResultEntry]
+    self_assessment: Optional[int] = Field(description="Self Assessment of Exam Result in MSS Points", ge=0, le=15)
 
 
 class StudentResultsWrapper(BaseModel):
@@ -120,6 +121,7 @@ class CreateResultRequest(BaseModel):
     exam_id: str
     student_id: str
     points_per_task: List[ResultEntry]
+    self_assessment: Optional[int] = Field(description="Self Assessment of Exam Result in MSS Points", ge=0, le=15)
     owner_id: str | None
 
 
@@ -131,6 +133,7 @@ class ResultEntryResponse(ResultEntry, Task):
 
 class StudentResultResponse(Student):
     result: Optional[List[ResultEntryResponse]]
+    self_assessment: Optional[int] = Field(description="Self Assessment of Exam Result in MSS Points", ge=0, le=15)
 
 
 class ExamResultsResponse(MongoModel):

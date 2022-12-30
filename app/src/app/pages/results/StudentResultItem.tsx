@@ -33,7 +33,7 @@ const StudentResultItem: FunctionComponent<StudentResultItemProps> = ({ studentR
 
   return (
     <>
-      <ListGroup.Item action onClick={toggleEdit}>
+      <ListGroup.Item action onClick={toggleEdit} className="pt-3 pb-3">
         <div className="fw-bold">
           {studentResultsResponse.firstname} {studentResultsResponse.lastname}
         </div>

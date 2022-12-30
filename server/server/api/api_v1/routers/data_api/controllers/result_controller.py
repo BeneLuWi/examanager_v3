@@ -60,6 +60,7 @@ async def create_result(
                 student_id=create_result_request.student_id,
                 points_per_task=create_result_request.points_per_task,
                 owner_id=result.owner_id,
+                self_assessment=create_result_request.self_assessment,
             )
         )
     else:

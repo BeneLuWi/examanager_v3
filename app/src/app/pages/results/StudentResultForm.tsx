@@ -32,6 +32,7 @@ const StudentResultForm: FunctionComponent<StudentResultFormProps> = ({
   const [pointsPerTask, setPointsPerTask] = useState<ResultEntry[]>(
     studentResultsResponse.result ?? defaultResultEntries(exam)
   )
+  const [selfAssessment, setSelfAssessment] = useState(studentResultsResponse.self_assessment)
   const { mutate: createResult } = useCreateResult()
   const { mutate: deleteResult } = useDeleteResult(exam, studentResultsResponse)
   /*******************************************************************************************************************
@@ -44,6 +45,7 @@ const StudentResultForm: FunctionComponent<StudentResultFormProps> = ({
       exam_id: exam._id,
       student_id: studentResultsResponse._id,
       points_per_task: pointsPerTask,
+      self_assessment: selfAssessment,
     })
     toggleEdit()
   }
@@ -102,6 +104,22 @@ const StudentResultForm: FunctionComponent<StudentResultFormProps> = ({
             </InputGroup>
           </div>
         ))}
+        <hr />
+        <div className="mb-1">
+          <Form.Label htmlFor="selfAssessment">Selbsteinschätzung</Form.Label>
+          <InputGroup>
+            <Form.Control
+              value={selfAssessment}
+              onChange={(event) => setSelfAssessment(parseInt(event.target.value))}
+              type="number"
+              placeholder="(optional)"
+              max={15}
+              min={0}
+              id={"selfAssessment"}
+            />
+            <InputGroup.Text>MSS-Punkte</InputGroup.Text>
+          </InputGroup>
+        </div>
         <hr />
         <div>
           <Button variant="primary" className="me-2" onClick={submit}>

@@ -3,9 +3,16 @@ import { useStatisticsContext } from "../Statistics"
 import DrawerModal from "../../../components/drawer-modal/DrawerModal"
 import { Button, Card, Col, Row } from "react-bootstrap"
 import { useFetchResults } from "../../results/api"
-import SchoolClassComposition from "../graphs/SchoolClassComposition"
-import AverageGrade from "../graphs/AverageGrade"
+import MeanPoints from "../graphs/MeanPoints"
 import StudentResultList from "../graphs/StudentResultList"
+import MedianPoints from "../graphs/MedianPoints"
+import Difficulty from "../graphs/Difficulty"
+import Correlation from "../graphs/Correlation"
+import MeanMSS from "../graphs/MeanMSS"
+import MedianMSS from "../graphs/MedianMSS"
+import StandardDeviation from "../graphs/StandardDeviation"
+import SchoolClassComposition from "../graphs/SchoolClassComposition"
+import SelfAssessment from "../graphs/SelfAssessment"
 
 type StatisticsPageProps = {}
 
@@ -46,7 +53,7 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
 
   return (
     <DrawerModal {...{ show, close }}>
-      {exam && schoolClass && (
+      {exam && schoolClass && studentResults && (
         <div className="h-100">
           <h2>
             Klausurergebnisse für {exam.name} von {schoolClass.name}
@@ -55,7 +62,7 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
             <Row>
               <Col>
                 <Card>
-                  <Card.Body>
+                  <Card.Body style={{ height: 250 }}>
                     <Card.Title>
                       <i className="bi bi-people-fill" /> Klasse
                     </Card.Title>
@@ -69,7 +76,19 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
                   </Card.Body>
                 </Card>
               </Col>
+              <Col xs={6}>
+                <Card>
+                  <Card.Body style={{ height: 250 }}>
+                    <Card.Title>
+                      <i className="bi bi-people-fill" /> Zusammenstellung
+                    </Card.Title>
+                    <SchoolClassComposition students={studentResults.studentResults} />
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
 
+            <Row className="mt-4">
               <Col>
                 <Card>
                   <Card.Body>
@@ -90,11 +109,41 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
                 </Card>
               </Col>
             </Row>
+
             <Row className="mt-4">
               <Col xs={6}>
-                <AverageGrade />
+                <MeanMSS />
               </Col>
-              <Col />
+              <Col xs={6}>
+                <MedianMSS />
+              </Col>
+            </Row>
+
+            <Row className="mt-4">
+              <Col xs={6}>
+                <MeanPoints />
+              </Col>
+              <Col xs={6}>
+                <MedianPoints />
+              </Col>
+            </Row>
+
+            <Row className="mt-4">
+              <Col xs={6}>
+                <StandardDeviation />
+              </Col>
+              <Col xs={6}>
+                <SelfAssessment />
+              </Col>
+            </Row>
+
+            <Row className="mt-4">
+              <Col xs={6}>
+                <Difficulty />
+              </Col>
+              <Col xs={6}>
+                <Correlation />
+              </Col>
             </Row>
 
             <Row className="mt-4">
