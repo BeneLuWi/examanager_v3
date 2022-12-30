@@ -18,6 +18,8 @@ class TaskResult(BaseModel):
 class StatisticsResult(BaseModel):
     mean: TaskResult
     median: TaskResult
+    mean_mss: TaskResult
+    median_mss: TaskResult
     standard_deviation: TaskResult  # values per Task
     difficulty: TaskResult
     correlation: TaskResult
