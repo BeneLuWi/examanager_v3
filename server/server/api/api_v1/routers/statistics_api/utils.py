@@ -133,6 +133,9 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
 
     
     points_reached: double[] = (Erreichte Punkte in Aufgabe X pro Student)
+    """
+
+    """
     exam_points_reached: double[] = (Erreichte Punkte in Exam Y pro Student)
 
     # len(points_reached) == len(Students_with_results)
@@ -174,6 +177,12 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
             selectivity,
         ]
     )
+    # todo fix round
+    statistics.round(1)
+
+    # todo rename mss points
+
+    statistics.rename(columns={"mss_points": "MSS Punkte"}, inplace=True)
 
     return statistics
 
@@ -219,17 +228,26 @@ def create_statistics_element(student_statistics_df: pd.DataFrame, column_name, 
     value_m = values_m[column_name].squeeze()
     value_w = values_w[column_name].squeeze()
 
+    digits_to_round = 1
     if type(value_total) is pd.Series:
         value_total = 0
+    else:
+        value_total = round(value_total, digits_to_round)
 
     if type(value_d) is pd.Series:
         value_d = None
+    else:
+        value_d = round(value_d, digits_to_round)
 
     if type(value_m) is pd.Series:
         value_m = None
+    else:
+        value_m = round(value_m, digits_to_round)
 
     if type(value_w) is pd.Series:
         value_w = None
+    else:
+        value_w = round(value_w, digits_to_round)
 
     try:
         return StatisticsElement(
@@ -250,47 +268,73 @@ def create_task_result_object(student_statistics_df: pd.DataFrame, columns_to_pr
     return TaskResult(name=metric_name, statistics=statistics)
 
 
-def create_statistics_result_object(student_statistics_df: pd.DataFrame, columns_to_process) -> StatisticsResult:
+def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: List[Task]) -> StatisticsResult:
     # metric_names = ["Mittelwert (Mean)", "Mittelwert (Median)", "Schwierigkeit", "Trennschärfe"]
     # for metric in metric_names:
     #    create_task_result_object(student_statistics_df=student_statistics_df, columns_to_process=columns_to_process,
-    #                              metric_name=metric)
+    #                              metric_name=metric)#
+
+    # todo mittelwert mean und median für mss (und note) als getrennte Statistik
+
+    task_names = [task.name for task in tasks]
+
+    columns_to_summarize_all = task_names.copy()
+    columns_to_summarize_all.extend(["Gesamtpunkte"])
 
     mean_result = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_process,
+        columns_to_process=columns_to_summarize_all,
         metric_name="Mittelwert (Mean)",
     )
 
     median_result = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_process,
+        columns_to_process=columns_to_summarize_all,
+        metric_name="Mittelwert (Median)",
+    )
+
+    mean_mss_points = create_task_result_object(
+        student_statistics_df=student_statistics_df,
+        columns_to_process=["MSS Punkte"],
+        metric_name="Mittelwert (Mean)",
+    )
+
+    median_mss_points = create_task_result_object(
+        student_statistics_df=student_statistics_df,
+        columns_to_process=["MSS Punkte"],
         metric_name="Mittelwert (Median)",
     )
 
     standard_deviation_result = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_process,
+        columns_to_process=columns_to_summarize_all,
         metric_name="Standardabweichung",
     )
 
     difficulty_result = create_task_result_object(
-        student_statistics_df=student_statistics_df, columns_to_process=columns_to_process, metric_name="Schwierigkeit"
+        student_statistics_df=student_statistics_df,
+        columns_to_process=columns_to_summarize_all,
+        metric_name="Schwierigkeit",
     )
 
     correlation_result = create_task_result_object(
-        student_statistics_df=student_statistics_df, columns_to_process=columns_to_process, metric_name="Trennschärfe"
+        student_statistics_df=student_statistics_df,
+        columns_to_process=columns_to_summarize_all,
+        metric_name="Trennschärfe",
     )
 
+    # todo self assessment will look differently
     self_assessment_result = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_process,
+        columns_to_process=columns_to_summarize_all,
         metric_name="Selbsteinschätzung",
     )
 
     return StatisticsResult(
         mean=mean_result,
         median=median_result,
+        mean_mss=mean_mss_points,
+        median_mss=median_mss_points,
         standard_deviation=standard_deviation_result,
         difficulty=difficulty_result,
         correlation=correlation_result,
@@ -316,13 +360,8 @@ async def calculate_statistics_object(exam_results_response: ExamResultsResponse
     )
 
     tasks: List[Task] = exam_results_response.exam.tasks
-    task_names = [task.name for task in tasks]
-
-    columns_to_summarize = task_names
-    columns_to_summarize.extend(["Gesamtpunkte", "mss_points"])
-
     statistics: StatisticsResult = create_statistics_result_object(
-        student_statistics_df=student_statistics_df, columns_to_process=columns_to_summarize
+        student_statistics_df=student_statistics_df, tasks=tasks
     )
     return statistics
 
