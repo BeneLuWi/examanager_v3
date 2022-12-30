@@ -23,4 +23,5 @@ class StatisticsResult(BaseModel):
     standard_deviation: TaskResult  # values per Task
     difficulty: TaskResult
     correlation: TaskResult
-    self_assessment: TaskResult
+    self_assessment_mean: TaskResult
+    self_assessment_median: TaskResult

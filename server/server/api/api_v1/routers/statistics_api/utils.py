@@ -125,7 +125,9 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     task_names = [task.name for task in tasks]
 
     columns_to_summarize = task_names.copy()
-    columns_to_summarize.extend(["Gesamtpunkte", "MSS Punkte"])
+    columns_to_summarize.extend(
+        ["Gesamtpunkte", "MSS Punkte", "Selbsteinschätzung MSS", "Abweichung Selbsteinschätzung MSS"]
+    )
 
     students_grouped_by_gender = student_results_df.groupby("Geschlecht")
     students_male = student_results_df[student_results_df["Geschlecht"] == "m"]
@@ -233,7 +235,6 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     ).reset_index()
     statistics = statistics.round(1)
     statistics.fillna(0, inplace=True)
-
     return statistics
 
 
@@ -321,54 +322,62 @@ def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: 
 
     columns_to_summarize_all = task_names.copy()
     columns_to_summarize_all.extend(["Gesamtpunkte"])
+    columns_to_summarize_numeric = columns_to_summarize_all.copy()
+    columns_to_summarize_numeric.extend(["Selbsteinschätzung MSS", "Abweichung Selbsteinschätzung MSS"])
 
-    mean_result = create_task_result_object(
+    mean_result: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_summarize_all,
+        columns_to_process=columns_to_summarize_numeric,
         metric_name="Mittelwert (Mean)",
     )
 
-    median_result = create_task_result_object(
+    median_result: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_summarize_all,
+        columns_to_process=columns_to_summarize_numeric,
         metric_name="Mittelwert (Median)",
     )
 
-    mean_mss_points = create_task_result_object(
+    mean_mss_points: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
         columns_to_process=["MSS Punkte"],
         metric_name="Mittelwert (Mean)",
     )
 
-    median_mss_points = create_task_result_object(
+    median_mss_points: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
         columns_to_process=["MSS Punkte"],
         metric_name="Mittelwert (Median)",
     )
 
-    standard_deviation_result = create_task_result_object(
+    standard_deviation_result: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_summarize_all,
+        columns_to_process=columns_to_summarize_numeric,
         metric_name="Standardabweichung",
     )
 
-    difficulty_result = create_task_result_object(
+    difficulty_result: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
         columns_to_process=columns_to_summarize_all,
         metric_name="Schwierigkeit",
     )
 
-    correlation_result = create_task_result_object(
+    correlation_result: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
         columns_to_process=task_names,
         metric_name="Trennschärfe",
     )
 
     # todo self assessment will look differently
-    self_assessment_result = create_task_result_object(
+    self_assessment_result_mean: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_summarize_all,
-        metric_name="Selbsteinschätzung",
+        columns_to_process=["Selbsteinschätzung MSS", "Abweichung Selbsteinschätzung MSS"],
+        metric_name="Mittelwert (Mean)",
+    )
+
+    self_assessment_result_median: TaskResult = create_task_result_object(
+        student_statistics_df=student_statistics_df,
+        columns_to_process=["Selbsteinschätzung MSS", "Abweichung Selbsteinschätzung MSS"],
+        metric_name="Mittelwert (Median)",
     )
 
     return StatisticsResult(
@@ -379,7 +388,8 @@ def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: 
         standard_deviation=standard_deviation_result,
         difficulty=difficulty_result,
         correlation=correlation_result,
-        self_assessment=self_assessment_result,
+        self_assessment_median=self_assessment_result_median,
+        self_assessment_mean=self_assessment_result_mean,
     )
 
 
