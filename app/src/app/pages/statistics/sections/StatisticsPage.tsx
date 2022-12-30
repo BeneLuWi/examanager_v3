@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from "react"
 import { useStatisticsContext } from "../Statistics"
 import DrawerModal from "../../../components/drawer-modal/DrawerModal"
-import { Button, Card, Col, ListGroup, Row } from "react-bootstrap"
+import { Card, Col, Row } from "react-bootstrap"
 import { useFetchResults } from "../../results/api"
 import MeanPoints from "../graphs/MeanPoints"
 import StudentResultList from "../graphs/StudentResultList"
@@ -14,7 +14,6 @@ import StandardDeviation from "../graphs/StandardDeviation"
 import SchoolClassComposition from "../graphs/SchoolClassComposition"
 import SelfAssessment from "../graphs/SelfAssessment"
 import ExamDetails from "../graphs/ExamDetails"
-import LetterIcon from "../../../components/letter-icon/LetterIcon"
 
 type StatisticsPageProps = {}
 
