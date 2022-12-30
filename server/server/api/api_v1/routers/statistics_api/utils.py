@@ -13,7 +13,9 @@ from server.api.api_v1.routers.data_api.models import (
     StudentResultResponse,
     ResultEntryResponse,
 )
-from server.main import settings
+from server.config import ExamManagerSettings
+
+settings = ExamManagerSettings()
 
 logger = logging.getLogger(settings.APP_NAME)
 
@@ -139,6 +141,29 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     # difficulty_df = reachable_all.subtract(reached_all, axis="columns")#  * 100
 
     # 11. Trennschärfe
+
+    gesamtpunkte = student_results_df["Gesamtpunkte"]
+    # print("gesamtpunkte")
+    # print(gesamtpunkte)
+    aufgabenpunkte = student_results_df[task_names]
+
+    for student_index, row in aufgabenpunkte.iterrows():
+        for name, aufgabe in row.iteritems():
+            gesamt = gesamtpunkte[student_index]
+            print(f"Index {student_index}: {name} = {aufgabe} von {gesamt}")
+
+    # print("aufgabenpunkte")
+    # print(aufgabenpunkte)
+    points_reached_difference = aufgabenpunkte.sub(gesamtpunkte, axis=0).abs()
+    # print("points_reached_difference")
+    # print(points_reached_difference.to_string())
+
+    points_reached_difference = points_reached_difference.add_prefix("diff")
+    result = pd.concat([aufgabenpunkte, points_reached_difference], axis=1).corr()
+    result = result[task_names].reset_index()["index"]
+    print("result")
+    print(result)
+    print(result)
 
     """
     part-whole Korrelation
