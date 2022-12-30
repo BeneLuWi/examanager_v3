@@ -76,6 +76,7 @@ export const useDeleteStudent = (student: Student) => {
     onSuccess: () => {
       queryClient.invalidateQueries("students")
       queryClient.invalidateQueries("results")
+      queryClient.invalidateQueries("statistics")
     },
     onError: () => {
       toast("Schüler:in konnte nicht gelöscht werden", { type: "error" })

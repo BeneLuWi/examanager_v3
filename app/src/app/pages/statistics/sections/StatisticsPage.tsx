@@ -3,7 +3,6 @@ import { useStatisticsContext } from "../Statistics"
 import DrawerModal from "../../../components/drawer-modal/DrawerModal"
 import { Button, Card, Col, Row } from "react-bootstrap"
 import { useFetchResults } from "../../results/api"
-import SchoolClassComposition from "../graphs/SchoolClassComposition"
 import AverageGrade from "../graphs/AverageGrade"
 import StudentResultList from "../graphs/StudentResultList"
 
@@ -94,7 +93,18 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
               <Col xs={6}>
                 <AverageGrade />
               </Col>
-              <Col />
+              <Col xs={6}>
+                <AverageGrade />
+              </Col>
+            </Row>
+
+            <Row className="mt-4">
+              <Col xs={6}>
+                <AverageGrade />
+              </Col>
+              <Col xs={6}>
+                <AverageGrade />
+              </Col>
             </Row>
 
             <Row className="mt-4">

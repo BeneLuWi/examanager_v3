@@ -11,6 +11,7 @@ export const useUpdateExam = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("exams")
       queryClient.invalidateQueries("results")
+      queryClient.invalidateQueries("statistics")
     },
     onError: () => {
       toast("Fehler beim Bearbeiten", { type: "error" })

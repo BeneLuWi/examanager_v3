@@ -2,6 +2,28 @@ import { Exam, Rating } from "../exams/types"
 import React, { SetStateAction } from "react"
 import { SchoolClass } from "../school_classes/types"
 
+export interface ExamStatistics {
+  mean: Statistic
+  median: Statistic
+  standard_deviation: Statistic
+  difficulty: Statistic
+  correlation: Statistic
+  self_assessment: Statistic
+}
+
+export interface Statistic {
+  name: string
+  statistics: StatisticsData[]
+}
+
+export interface StatisticsData {
+  name: string
+  value_total: number
+  value_w: number
+  value_m: number
+  value_d: number
+}
+
 export interface AverageGrade extends Rating {
   type: string
 }

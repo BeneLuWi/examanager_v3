@@ -2,6 +2,8 @@ import React, { FunctionComponent } from "react"
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { exampleAverage } from "../types"
 import { Card } from "react-bootstrap"
+import { useFetchStatistics } from "../api"
+import { useStatisticsContext } from "../Statistics"
 
 type AverageGradeProps = {}
 
@@ -12,6 +14,9 @@ const AverageGrade: FunctionComponent<AverageGradeProps> = ({}) => {
    *
    *******************************************************************************************************************/
 
+  const { exam, schoolClass } = useStatisticsContext()
+  const { data: statistics } = useFetchStatistics(schoolClass?._id, exam?._id)
+
   /*******************************************************************************************************************
    *
    *  Rendering
@@ -21,23 +26,30 @@ const AverageGrade: FunctionComponent<AverageGradeProps> = ({}) => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>Durchschnittliche MSS-Punkte</Card.Title>
+        <Card.Title>{statistics?.mean.name}</Card.Title>
         <div style={{ height: 200 }}>
-          <ResponsiveContainer>
-            <BarChart
-              margin={{
-                top: 10,
-                right: 10,
-                left: 10,
-              }}
-              data={exampleAverage}
-            >
-              <YAxis domain={[0, 15]} tickCount={15} interval={0} />
-              <XAxis dataKey="type" />
-              <Tooltip />
-              <Bar animationBegin={700} dataKey="mss_points" fill="#8884d8" />
-            </BarChart>
-          </ResponsiveContainer>
+          {statistics ? (
+            <ResponsiveContainer>
+              <BarChart
+                data={statistics.mean.statistics}
+                margin={{
+                  top: 10,
+                  right: 10,
+                  left: 10,
+                }}
+              >
+                <YAxis domain={[0, 15]} tickCount={15} interval={0} />
+                <XAxis dataKey="name" />
+                <Tooltip />
+                <Bar animationBegin={700} dataKey="value_total" fill="#8884d8" />
+                <Bar animationBegin={700} dataKey="value_m" fill="#8884d8" />
+                <Bar animationBegin={700} dataKey="value_w" fill="#8884d8" />
+                <Bar animationBegin={700} dataKey="value_d" fill="#8884d8" />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div>Loading</div>
+          )}
         </div>
       </Card.Body>
     </Card>
