@@ -345,7 +345,7 @@ def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: 
 
     correlation_result = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_summarize_all,
+        columns_to_process=task_names,
         metric_name="Trennschärfe",
     )
 
