@@ -7,12 +7,12 @@ export interface Result {
   student_id: string
   exam_id: string
   points_per_task: []
+  self_assessment?: number
 }
 
 export interface ResultContextType {
   exam?: Exam
   schoolClass?: SchoolClass
-
   setExam: React.Dispatch<SetStateAction<Exam | undefined>>
 }
 
@@ -24,6 +24,7 @@ export interface ExamResultsResponse {
 
 export interface StudentResultsResponse extends Student {
   result?: ResultEntry[]
+  self_assessment?: number
 }
 
 export interface StudentResult {
@@ -31,6 +32,7 @@ export interface StudentResult {
   exam_id: string
   student_id: string
   points_per_task: ResultEntry[]
+  self_assessment?: number
 }
 
 export interface ResultEntry extends Task {
@@ -42,4 +44,5 @@ export interface CreateResultRequest {
   exam_id: string
   student_id: string
   points_per_task: ResultEntry[]
+  self_assessment?: number
 }

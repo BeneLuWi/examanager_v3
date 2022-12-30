@@ -48,9 +48,14 @@ const StudentResultBadges: FunctionComponent<StudentResultBadgesProps> = ({ exam
       <Badge bg="primary" pill className="me-1">
         <i className="bi bi-patch-check-fill" /> {sumOfPoints} Punkte gesamt
       </Badge>
-      <Badge bg="primary" pill>
+      <Badge bg="primary" pill className="me-1">
         <i className="bi bi-mortarboard-fill" /> Note {rating!.text_rating}
       </Badge>
+      {studentResultsResponse.self_assessment && (
+        <Badge bg="primary" pill className="me-1">
+          <i className="bi bi-mortarboard" /> Selbsteinschätzung {studentResultsResponse.self_assessment} MSS-Punkte
+        </Badge>
+      )}
     </div>
   )
 }
