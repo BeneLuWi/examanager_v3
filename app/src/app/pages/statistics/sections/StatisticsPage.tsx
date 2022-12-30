@@ -3,8 +3,14 @@ import { useStatisticsContext } from "../Statistics"
 import DrawerModal from "../../../components/drawer-modal/DrawerModal"
 import { Button, Card, Col, Row } from "react-bootstrap"
 import { useFetchResults } from "../../results/api"
-import AverageGrade from "../graphs/AverageGrade"
+import MeanPoints from "../graphs/MeanPoints"
 import StudentResultList from "../graphs/StudentResultList"
+import MedianPoints from "../graphs/MedianPoints"
+import Difficulty from "../graphs/Difficulty"
+import Correlation from "../graphs/Correlation"
+import MeanMSS from "../graphs/MeanMSS"
+import MedianMSS from "../graphs/MedianMSS"
+import StandardDeviation from "../graphs/StandardDeviation"
 
 type StatisticsPageProps = {}
 
@@ -89,21 +95,40 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
                 </Card>
               </Col>
             </Row>
+
             <Row className="mt-4">
               <Col xs={6}>
-                <AverageGrade />
+                <MeanMSS />
               </Col>
               <Col xs={6}>
-                <AverageGrade />
+                <MedianMSS />
               </Col>
             </Row>
 
             <Row className="mt-4">
               <Col xs={6}>
-                <AverageGrade />
+                <MeanPoints />
               </Col>
               <Col xs={6}>
-                <AverageGrade />
+                <MedianPoints />
+              </Col>
+            </Row>
+
+            <Row className="mt-4">
+              <Col xs={6}>
+                <StandardDeviation />
+              </Col>
+              <Col xs={6}>
+                <MedianPoints />
+              </Col>
+            </Row>
+
+            <Row className="mt-4">
+              <Col xs={6}>
+                <Difficulty />
+              </Col>
+              <Col xs={6}>
+                <Correlation />
               </Col>
             </Row>
 

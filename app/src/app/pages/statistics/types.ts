@@ -9,6 +9,8 @@ export interface ExamStatistics {
   difficulty: Statistic
   correlation: Statistic
   self_assessment: Statistic
+  mean_mss: Statistic
+  median_mss: Statistic
 }
 
 export interface Statistic {

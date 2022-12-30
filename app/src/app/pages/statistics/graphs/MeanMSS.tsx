@@ -4,10 +4,11 @@ import { Card } from "react-bootstrap"
 import { useFetchStatistics } from "../api"
 import { useStatisticsContext } from "../Statistics"
 import { ExaColors } from "../../../components/colors/colors"
+import { graphPresets } from "./presets"
 
-type AverageGradeProps = {}
+type MeanMSSProps = {}
 
-const AverageGrade: FunctionComponent<AverageGradeProps> = ({}) => {
+const MeanMSS: FunctionComponent<MeanMSSProps> = () => {
   /*******************************************************************************************************************
    *
    *  Functions
@@ -26,19 +27,19 @@ const AverageGrade: FunctionComponent<AverageGradeProps> = ({}) => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>{statistics?.mean.name}</Card.Title>
-        <div style={{ height: 200 }}>
+        <Card.Title>{statistics?.mean_mss.name}</Card.Title>
+        <div style={{ height: graphPresets.height }}>
           {statistics ? (
             <ResponsiveContainer>
               <BarChart
-                data={statistics.mean.statistics}
+                data={statistics.mean_mss.statistics}
                 margin={{
                   top: 10,
                   right: 10,
                   left: 10,
                 }}
               >
-                <YAxis domain={[0, 15]} tickCount={15} interval={0} />
+                <YAxis domain={[0, 15]} interval={0} />
                 <XAxis dataKey="name" />
                 <Tooltip />
                 <Bar animationBegin={700} dataKey="value_total" fill={ExaColors.bright} />
@@ -56,4 +57,4 @@ const AverageGrade: FunctionComponent<AverageGradeProps> = ({}) => {
   )
 }
 
-export default AverageGrade
+export default MeanMSS
