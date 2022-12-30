@@ -45,8 +45,8 @@ const SelfAssessment: FunctionComponent<SelfAssessmentProps> = () => {
                 <Tooltip content={CustomTooltip} />
                 <Bar animationBegin={700} dataKey="value_total" fill={ExaColors.bright} />
                 <Bar animationBegin={700} dataKey="value_m" fill={ExaColors.green} />
-                <Bar animationBegin={700} dataKey="value_w" fill={ExaColors.brown} />
-                <Bar animationBegin={700} dataKey="value_d" fill={ExaColors.kaki} />
+                <Bar animationBegin={700} dataKey="value_w" fill={ExaColors.red} />
+                <Bar animationBegin={700} dataKey="value_d" fill={ExaColors.purple} />
               </BarChart>
             </ResponsiveContainer>
           ) : (

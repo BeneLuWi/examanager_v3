@@ -47,12 +47,12 @@ const SchoolClassComposition: FunctionComponent<SchoolClassCompositionProps> = (
     {
       gender: "Weiblich",
       amount: numW,
-      color: ExaColors.brown,
+      color: ExaColors.red,
     },
     {
       gender: "Divers",
       amount: numD,
-      color: ExaColors.kaki,
+      color: ExaColors.purple,
     },
   ]
 
