@@ -1,9 +1,9 @@
 import React, { FunctionComponent } from "react"
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
-import { exampleAverage } from "../types"
 import { Card } from "react-bootstrap"
 import { useFetchStatistics } from "../api"
 import { useStatisticsContext } from "../Statistics"
+import { ExaColors } from "../../../components/colors/colors"
 
 type AverageGradeProps = {}
 
@@ -41,10 +41,10 @@ const AverageGrade: FunctionComponent<AverageGradeProps> = ({}) => {
                 <YAxis domain={[0, 15]} tickCount={15} interval={0} />
                 <XAxis dataKey="name" />
                 <Tooltip />
-                <Bar animationBegin={700} dataKey="value_total" fill="#8884d8" />
-                <Bar animationBegin={700} dataKey="value_m" fill="#8884d8" />
-                <Bar animationBegin={700} dataKey="value_w" fill="#8884d8" />
-                <Bar animationBegin={700} dataKey="value_d" fill="#8884d8" />
+                <Bar animationBegin={700} dataKey="value_total" fill={ExaColors.bright} />
+                <Bar animationBegin={700} dataKey="value_m" fill={ExaColors.green} />
+                <Bar animationBegin={700} dataKey="value_w" fill={ExaColors.brown} />
+                <Bar animationBegin={700} dataKey="value_d" fill={ExaColors.kaki} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
