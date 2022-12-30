@@ -45,7 +45,9 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
             "Geschlecht": student_result_response.gender,
         }
         if student_result_response.self_assessment is not None:
-            student_dict["Selbsteinschätzung"] = student_result_response.self_assessment
+            student_dict["Selbsteinschätzung MSS"] = student_result_response.self_assessment
+        else:
+            student_dict["Selbsteinschätzung MSS"] = 0
         result_entry: ResultEntryResponse
         if student_result_response.result is None:
             logger.info(f"{student_result_response.firstname} {student_result_response.lastname} is missing results")
@@ -85,6 +87,16 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
         },
         inplace=True,
     )
+    # reorder columns..
+    selbsteinschaetzung = student_results_df["Selbsteinschätzung MSS"]
+    student_results_df = student_results_df.drop(columns=["Selbsteinschätzung MSS"])
+    student_results_df.insert(
+        loc=len(student_results_df.columns), column="Selbsteinschätzung MSS", value=selbsteinschaetzung
+    )
+
+    student_results_df["Abweichung Selbsteinschätzung MSS"] = (
+        student_results_df["MSS Punkte"] - student_results_df["Selbsteinschätzung MSS"]
+    )
 
     return student_results_df
 
@@ -113,7 +125,7 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     task_names = [task.name for task in tasks]
 
     columns_to_summarize = task_names.copy()
-    columns_to_summarize.extend(["Gesamtpunkte", "mss_points"])
+    columns_to_summarize.extend(["Gesamtpunkte", "MSS Punkte"])
 
     students_grouped_by_gender = student_results_df.groupby("Geschlecht")
     students_male = student_results_df[student_results_df["Geschlecht"] == "m"]
@@ -220,7 +232,6 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
         ]
     ).reset_index()
     statistics = statistics.round(1)
-    statistics.rename(columns={"mss_points": "MSS Punkte"}, inplace=True)
     statistics.fillna(0, inplace=True)
 
     return statistics
