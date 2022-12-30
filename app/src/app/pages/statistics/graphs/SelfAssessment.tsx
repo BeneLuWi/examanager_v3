@@ -33,7 +33,7 @@ const SelfAssessment: FunctionComponent<SelfAssessmentProps> = () => {
           {statistics ? (
             <ResponsiveContainer>
               <BarChart
-                data={statistics.self_assessment.statistics}
+                data={statistics.median.statistics}
                 margin={{
                   top: 10,
                   right: 10,
