@@ -193,7 +193,7 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
         ]
     )
     # todo fix round
-    statistics.round(1)
+    statistics = statistics.round(1)
 
     statistics.rename(columns={"mss_points": "MSS Punkte"}, inplace=True)
 
