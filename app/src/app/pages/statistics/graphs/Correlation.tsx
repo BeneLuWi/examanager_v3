@@ -33,7 +33,7 @@ const Correlation: FunctionComponent<CorrelationProps> = () => {
           {statistics ? (
             <ResponsiveContainer>
               <BarChart
-                data={statistics.difficulty.statistics}
+                data={statistics.correlation.statistics}
                 margin={{
                   top: 10,
                   right: 10,
@@ -45,8 +45,8 @@ const Correlation: FunctionComponent<CorrelationProps> = () => {
                 <Tooltip content={CustomTooltip} />
                 <Bar animationBegin={700} dataKey="value_total" fill={ExaColors.bright} />
                 <Bar animationBegin={700} dataKey="value_m" fill={ExaColors.green} />
-                <Bar animationBegin={700} dataKey="value_w" fill={ExaColors.brown} />
-                <Bar animationBegin={700} dataKey="value_d" fill={ExaColors.kaki} />
+                <Bar animationBegin={700} dataKey="value_w" fill={ExaColors.red} />
+                <Bar animationBegin={700} dataKey="value_d" fill={ExaColors.purple} />
               </BarChart>
             </ResponsiveContainer>
           ) : (

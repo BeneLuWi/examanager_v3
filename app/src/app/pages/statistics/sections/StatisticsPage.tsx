@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from "react"
 import { useStatisticsContext } from "../Statistics"
 import DrawerModal from "../../../components/drawer-modal/DrawerModal"
-import { Button, Card, Col, Row } from "react-bootstrap"
+import { Button, Card, Col, ListGroup, Row } from "react-bootstrap"
 import { useFetchResults } from "../../results/api"
 import MeanPoints from "../graphs/MeanPoints"
 import StudentResultList from "../graphs/StudentResultList"
@@ -13,6 +13,8 @@ import MedianMSS from "../graphs/MedianMSS"
 import StandardDeviation from "../graphs/StandardDeviation"
 import SchoolClassComposition from "../graphs/SchoolClassComposition"
 import SelfAssessment from "../graphs/SelfAssessment"
+import ExamDetails from "../graphs/ExamDetails"
+import LetterIcon from "../../../components/letter-icon/LetterIcon"
 
 type StatisticsPageProps = {}
 
@@ -62,7 +64,7 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
             <Row>
               <Col>
                 <Card>
-                  <Card.Body style={{ height: 250 }}>
+                  <Card.Body>
                     <Card.Title>
                       <i className="bi bi-people-fill" /> Klasse
                     </Card.Title>
@@ -89,22 +91,32 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
             </Row>
 
             <Row className="mt-4">
+              <ExamDetails exam={exam} />
+            </Row>
+
+            <Row className="mt-4">
               <Col>
                 <Card>
                   <Card.Body>
-                    <Card.Title>
-                      <i className="bi bi-list-check" /> Klausur
-                    </Card.Title>
-                    <p>
-                      <div className="fw-bold">{exam.name}</div>
-                      {exam.description}
-                    </p>
-                    <p>
-                      <i className="bi bi-patch-check" /> {exam.tasks.reduce((a, b) => a + b.max_points, 0)} Punkte
-                    </p>
-                    <p>
-                      <i className="bi bi-check2-square" /> {exam.tasks.length} Aufgaben
-                    </p>
+                    <Card.Title>Legende</Card.Title>
+                    <div className="d-flex justify-content-evenly">
+                      <div className="d-flex align-items-center">
+                        <div className="rounded-circle bg-exa-bright me-1" style={{ width: "2rem", height: "2rem" }} />
+                        Gesamt
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <div className="rounded-circle bg-exa-green me-1" style={{ width: "2rem", height: "2rem" }} />
+                        Männlich
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <div className="rounded-circle bg-exa-red me-1" style={{ width: "2rem", height: "2rem" }} />
+                        Weiblich
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <div className="rounded-circle bg-exa-purple me-1" style={{ width: "2rem", height: "2rem" }} />
+                        Divers
+                      </div>
+                    </div>
                   </Card.Body>
                 </Card>
               </Col>

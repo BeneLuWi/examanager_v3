@@ -29,7 +29,7 @@ const SelectorItem: FunctionComponent<SelectorItemProps> = ({ exam }) => {
    *******************************************************************************************************************/
 
   return (
-    <Card style={{ width: "15rem" }}>
+    <Card style={{ width: "18rem" }}>
       <Card.Body>
         <LetterIcon
           name={exam.name}
