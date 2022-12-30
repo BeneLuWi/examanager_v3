@@ -1,6 +1,6 @@
-from typing import List, Set, Optional
+import logging
+from typing import List
 import pandas as pd
-import numpy as np
 from pydantic import ValidationError
 
 from server.api.api_v1.routers.statistics_api.models import StatisticsResult, TaskResult, StatisticsElement
@@ -13,6 +13,9 @@ from server.api.api_v1.routers.data_api.models import (
     StudentResultResponse,
     ResultEntryResponse,
 )
+from server.main import settings
+
+logger = logging.getLogger(settings.APP_NAME)
 
 
 def create_student_results_dataframe(exam_results_response: ExamResultsResponse):
@@ -113,8 +116,6 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
 
     reachable_all = pd.concat([reachable_total, reachable_d, reachable_m, reachable_w])
     reachable_all["Gesamtpunkte"] = reachable_all.sum(axis=1)
-    print("reachable_all")
-    print(reachable_all.to_string())
 
     columns_for_difficulty = task_names.copy()
     columns_for_difficulty.append("Gesamtpunkte")
@@ -136,8 +137,6 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     difficulty_df.reset_index(inplace=True)
     difficulty_df = difficulty_df.assign(Statistik="Schwierigkeit")
     # difficulty_df = reachable_all.subtract(reached_all, axis="columns")#  * 100
-    print("difficulty_df")
-    print(difficulty_df.to_string())
 
     # 11. Trennschärfe
 
@@ -192,7 +191,6 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
             selectivity,
         ]
     )
-    # todo fix round
     statistics = statistics.round(1)
 
     statistics.rename(columns={"mss_points": "MSS Punkte"}, inplace=True)
@@ -270,7 +268,7 @@ def create_statistics_element(student_statistics_df: pd.DataFrame, column_name, 
             name=column_name, value_total=value_total, value_d=value_d, value_w=value_w, value_m=value_m
         )
     except ValidationError as v_e:
-        print(v_e)
+        logger.error(v_e)
 
 
 def create_task_result_object(student_statistics_df: pd.DataFrame, columns_to_process, metric_name) -> TaskResult:
@@ -397,8 +395,6 @@ async def calculate_statistics_excel(exam_results_response: ExamResultsResponse)
     student_statistics_df = create_student_statistics_dataframe(
         exam_results_response=exam_results_response, student_results_df=student_results_df
     )
-    print("student_statistics_df")
-    print(student_statistics_df)
 
     # create an Excel writer object
     with pd.ExcelWriter("test.xlsx") as writer:
