@@ -39,7 +39,7 @@ const MedianMSS: FunctionComponent<MedianMSSProps> = () => {
                   left: 10,
                 }}
               >
-                <YAxis interval={0} />
+                <YAxis domain={[0, 15]} interval={0} tick={{ fontSize: 12 }} tickCount={16} />
                 <XAxis dataKey="name" />
                 <Tooltip />
                 <Bar animationBegin={700} dataKey="value_total" fill={ExaColors.bright} />
