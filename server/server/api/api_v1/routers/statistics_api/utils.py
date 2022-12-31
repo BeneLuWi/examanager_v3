@@ -36,14 +36,18 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
     student_results_df = pd.DataFrame()
 
     # 2. Add people and results
-    student_result_response: StudentResultResponse
     index = 0
+    student_result_response: StudentResultResponse
     for student_result_response in exam_results_response.studentResults:
         student_dict = {
             "Nachname": student_result_response.lastname,
             "Vorname": student_result_response.firstname,
             "Geschlecht": student_result_response.gender,
         }
+        if student_result_response.self_assessment is not None:
+            student_dict["Selbsteinschätzung MSS"] = student_result_response.self_assessment
+        else:
+            student_dict["Selbsteinschätzung MSS"] = 0
         result_entry: ResultEntryResponse
         if student_result_response.result is None:
             logger.info(f"{student_result_response.firstname} {student_result_response.lastname} is missing results")
@@ -73,6 +77,27 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
 
     student_results_df = student_results_df.round(1)
 
+    student_results_df.rename(
+        columns={
+            "percentage": "Prozentgrenze",
+            "mss_points": "MSS Punkte",
+            "decimal_rating": "Note",
+            "school_rating": "Schulnote",
+            "text_rating": "Textnote",
+        },
+        inplace=True,
+    )
+    # reorder columns..
+    selbsteinschaetzung = student_results_df["Selbsteinschätzung MSS"]
+    student_results_df = student_results_df.drop(columns=["Selbsteinschätzung MSS"])
+    student_results_df.insert(
+        loc=len(student_results_df.columns), column="Selbsteinschätzung MSS", value=selbsteinschaetzung
+    )
+
+    student_results_df["Abweichung Selbsteinschätzung MSS"] = (
+        student_results_df["MSS Punkte"] - student_results_df["Selbsteinschätzung MSS"]
+    )
+
     return student_results_df
 
 
@@ -100,7 +125,9 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     task_names = [task.name for task in tasks]
 
     columns_to_summarize = task_names.copy()
-    columns_to_summarize.extend(["Gesamtpunkte", "mss_points"])
+    columns_to_summarize.extend(
+        ["Gesamtpunkte", "MSS Punkte", "Selbsteinschätzung MSS", "Abweichung Selbsteinschätzung MSS"]
+    )
 
     students_grouped_by_gender = student_results_df.groupby("Geschlecht")
     students_male = student_results_df[student_results_df["Geschlecht"] == "m"]
@@ -207,9 +234,7 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
         ]
     ).reset_index()
     statistics = statistics.round(1)
-    statistics.rename(columns={"mss_points": "MSS Punkte"}, inplace=True)
     statistics.fillna(0, inplace=True)
-
     return statistics
 
 
@@ -254,26 +279,17 @@ def create_statistics_element(student_statistics_df: pd.DataFrame, column_name, 
     value_m = values_m[column_name].squeeze()
     value_w = values_w[column_name].squeeze()
 
-    digits_to_round = 1
     if type(value_total) is pd.Series:
         value_total = 0
-    else:
-        value_total = round(value_total, digits_to_round)
 
     if type(value_d) is pd.Series:
         value_d = None
-    else:
-        value_d = round(value_d, digits_to_round)
 
     if type(value_m) is pd.Series:
         value_m = None
-    else:
-        value_m = round(value_m, digits_to_round)
 
     if type(value_w) is pd.Series:
         value_w = None
-    else:
-        value_w = round(value_w, digits_to_round)
 
     try:
         return StatisticsElement(
@@ -300,60 +316,68 @@ def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: 
     #    create_task_result_object(student_statistics_df=student_statistics_df, columns_to_process=columns_to_process,
     #                              metric_name=metric)#
 
-    # todo mittelwert mean und median für mss (und note) als getrennte Statistik
+    # mittelwert mean und median für mss (und note) als getrennte Statistik
 
     task_names = [task.name for task in tasks]
 
     columns_to_summarize_all = task_names.copy()
     columns_to_summarize_all.extend(["Gesamtpunkte"])
+    columns_to_summarize_numeric = columns_to_summarize_all.copy()
+    columns_to_summarize_numeric.extend(["Selbsteinschätzung MSS", "Abweichung Selbsteinschätzung MSS"])
 
-    mean_result = create_task_result_object(
+    mean_result: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_summarize_all,
+        columns_to_process=columns_to_summarize_numeric,
         metric_name="Mittelwert (Mean)",
     )
 
-    median_result = create_task_result_object(
+    median_result: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_summarize_all,
+        columns_to_process=columns_to_summarize_numeric,
         metric_name="Mittelwert (Median)",
     )
 
-    mean_mss_points = create_task_result_object(
+    mean_mss_points: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
         columns_to_process=["MSS Punkte"],
         metric_name="Mittelwert (Mean)",
     )
 
-    median_mss_points = create_task_result_object(
+    median_mss_points: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
         columns_to_process=["MSS Punkte"],
         metric_name="Mittelwert (Median)",
     )
 
-    standard_deviation_result = create_task_result_object(
+    standard_deviation_result: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_summarize_all,
+        columns_to_process=columns_to_summarize_numeric,
         metric_name="Standardabweichung",
     )
 
-    difficulty_result = create_task_result_object(
+    difficulty_result: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
         columns_to_process=columns_to_summarize_all,
         metric_name="Schwierigkeit",
     )
 
-    correlation_result = create_task_result_object(
+    correlation_result: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_summarize_all,
+        columns_to_process=task_names,
         metric_name="Trennschärfe",
     )
 
     # todo self assessment will look differently
-    self_assessment_result = create_task_result_object(
+    self_assessment_result_mean: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_summarize_all,
-        metric_name="Selbsteinschätzung",
+        columns_to_process=["Selbsteinschätzung MSS", "Abweichung Selbsteinschätzung MSS"],
+        metric_name="Mittelwert (Mean)",
+    )
+
+    self_assessment_result_median: TaskResult = create_task_result_object(
+        student_statistics_df=student_statistics_df,
+        columns_to_process=["Selbsteinschätzung MSS", "Abweichung Selbsteinschätzung MSS"],
+        metric_name="Mittelwert (Median)",
     )
 
     return StatisticsResult(
@@ -364,7 +388,8 @@ def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: 
         standard_deviation=standard_deviation_result,
         difficulty=difficulty_result,
         correlation=correlation_result,
-        self_assessment=self_assessment_result,
+        self_assessment_median=self_assessment_result_median,
+        self_assessment_mean=self_assessment_result_mean,
     )
 
 
