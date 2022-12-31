@@ -20,7 +20,7 @@ async def create_statistics_excel(
         exam_id=exam_id, school_class_id=school_class_id, user=user
     )
 
-    await calculate_statistics_excel(exam_results_response=exam_results_response)
+    return await calculate_statistics_excel(exam_results_response=exam_results_response)
 
 
 @router.get("/calculate_statistics", response_model=StatisticsResult)

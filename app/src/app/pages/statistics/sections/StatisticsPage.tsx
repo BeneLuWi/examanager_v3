@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from "react"
 import { useStatisticsContext } from "../Statistics"
 import DrawerModal from "../../../components/drawer-modal/DrawerModal"
-import { Card, Col, Row } from "react-bootstrap"
+import { Button, Card, Col, Row } from "react-bootstrap"
 import { useFetchResults } from "../../results/api"
 import MeanPoints from "../graphs/MeanPoints"
 import StudentResultList from "../graphs/StudentResultList"
@@ -14,6 +14,7 @@ import StandardDeviation from "../graphs/StandardDeviation"
 import SchoolClassComposition from "../graphs/SchoolClassComposition"
 import SelfAssessment from "../graphs/SelfAssessment"
 import ExamDetails from "../graphs/ExamDetails"
+import { downloadStatistics } from "../api"
 
 type StatisticsPageProps = {}
 
@@ -58,6 +59,7 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
         <div className="h-100">
           <h2>
             Klausurergebnisse für {exam.name} von {schoolClass.name}
+            <Button onClick={() => downloadStatistics(schoolClass._id, exam._id)}>download</Button>
           </h2>
           <div className="h-100 p-3" style={{ overflowY: "scroll" }}>
             <Row>

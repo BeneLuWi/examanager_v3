@@ -28,12 +28,12 @@ const SelfAssessment: FunctionComponent<SelfAssessmentProps> = () => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>{statistics?.self_assessment.name}</Card.Title>
+        <Card.Title>Selbsteinschätzung {statistics?.self_assessment_median.name}</Card.Title>
         <div style={{ height: graphPresets.height }}>
           {statistics ? (
             <ResponsiveContainer>
               <BarChart
-                data={statistics.self_assessment.statistics}
+                data={statistics.self_assessment_median.statistics}
                 margin={{
                   top: 10,
                   right: 10,

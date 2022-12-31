@@ -8,7 +8,7 @@ export interface ExamStatistics {
   standard_deviation: Statistic
   difficulty: Statistic
   correlation: Statistic
-  self_assessment: Statistic
+  self_assessment_median: Statistic
   mean_mss: Statistic
   median_mss: Statistic
 }
