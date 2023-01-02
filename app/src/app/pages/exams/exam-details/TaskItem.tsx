@@ -4,7 +4,7 @@ import { Button, ListGroup } from "react-bootstrap"
 import ModalWrapper from "../../../components/modal-wrapper/ModalWrapper"
 import Form from "react-bootstrap/Form"
 import ConfirmButton from "../../../components/confirm-button/ConfirmButton"
-import { useUpdateExam } from "../api"
+import { useDeleteTask, useUpdateExam } from "../api"
 import { FieldValues, useForm } from "react-hook-form"
 
 type TaskItemProps = {
@@ -24,6 +24,7 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
   const { register, handleSubmit, reset } = useForm()
 
   const { mutate: updateExam } = useUpdateExam()
+  const { mutate: deleteTask } = useDeleteTask(exam, task)
 
   /*******************************************************************************************************************
    *
@@ -34,16 +35,10 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
   const close = () => setEdit(false)
   const open = () => setEdit(true)
 
-  const deleteTask = () => {
-    updateExam(
-      {
-        ...exam,
-        tasks: exam.tasks.filter((t) => t._id !== task._id),
-      },
-      {
-        onSuccess: () => close(),
-      }
-    )
+  const handleDelete = () => {
+    deleteTask(undefined, {
+      onSuccess: () => close(),
+    })
   }
 
   const performUpdate = (values: FieldValues) => {
@@ -61,7 +56,6 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
       },
       {
         onSuccess: () => {
-          reset()
           close()
         },
       }
@@ -90,12 +84,16 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Erreichbare Punktzahl</Form.Label>
-            <Form.Control {...register("max_points")} type="number" defaultValue={task.max_points} />
+            <Form.Control {...register("max_points")} type="number" step="0.1" defaultValue={task.max_points} />
           </Form.Group>
           <Button variant="primary" type="submit" className="me-2">
             Speichern
           </Button>
-          <ConfirmButton onSuccess={deleteTask} question={`${task.name} löschen?`}>
+          <ConfirmButton
+            onSuccess={handleDelete}
+            question={`${task.name} löschen?`}
+            description={`${task.name} wird auch aus der Bewertung entfernt`}
+          >
             Aufgabe Löschen
           </ConfirmButton>
         </Form>

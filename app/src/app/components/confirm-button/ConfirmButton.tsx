@@ -8,6 +8,7 @@ type ConfirmButtonProps = {
   variant?: ButtonVariant
   question: string
   className?: string
+  description?: string
 }
 
 const ConfirmButton: FunctionComponent<PropsWithChildren<ConfirmButtonProps>> = ({
@@ -16,6 +17,7 @@ const ConfirmButton: FunctionComponent<PropsWithChildren<ConfirmButtonProps>> = 
   variant = "danger",
   question,
   className,
+  description,
 }) => {
   /*******************************************************************************************************************
    *
@@ -51,6 +53,11 @@ const ConfirmButton: FunctionComponent<PropsWithChildren<ConfirmButtonProps>> = 
         {children}
       </Button>
       <ModalWrapper options={{ size: "sm" }} title={question} {...{ show, close }}>
+        {description && (
+          <div className="mb-3">
+            <i className="text-warning bi bi-exclamation-circle-fill" /> {description}
+          </div>
+        )}
         <div className="d-flex justify-content-around">
           <Button onClick={handleSubmit} variant="primary">
             OK
