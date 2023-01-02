@@ -1,13 +1,9 @@
 from typing import List
 
-from bson import ObjectId
 from fastapi import APIRouter, Security, HTTPException
 
 from server.api.api_v1.routers.auth_api.models import User, Role
-from server.api.api_v1.routers.auth_api.utils import (
-    get_current_user_with_scope,
-    validate_token_with_scope,
-)
+from server.api.api_v1.routers.auth_api.utils import get_current_user_with_scope
 from server.api.api_v1.routers.data_api.models import CreateExamRequest, Exam, Rating
 from server.api.api_v1.routers.data_api.repository.exam_repository import (
     insert_exam_in_db,
