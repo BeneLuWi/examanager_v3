@@ -57,26 +57,6 @@ class RatingsFactory:
     mss_to_decimal_rating: Dict[int, float] = {
         # This could either start at 6.0 and end with 1.0 or start at 6.7 and end with 0.7
         0: 6.0,
-        1: 5.7,
-        2: 5.3,
-        3: 5.0,
-        4: 4.7,
-        5: 4.3,
-        6: 4.0,
-        7: 3.7,
-        8: 3.3,
-        9: 3.0,
-        10: 2.7,
-        11: 2.3,
-        12: 2.0,
-        13: 1.7,
-        14: 1.3,
-        15: 1.0,
-    }
-
-    mss_to_decimal_rating_alternative: Dict[int, float] = {
-        # This could either start at 6.0 and end with 1.0 or start at 6.7 and end with 0.7
-        0: 5.7,
         1: 5.3,
         2: 5.0,
         3: 4.7,
