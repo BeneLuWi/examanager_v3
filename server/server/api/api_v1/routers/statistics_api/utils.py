@@ -240,6 +240,7 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     ).reset_index()
     statistics = statistics.round(1)
     statistics.fillna(0, inplace=True)
+    statistics.drop(["index"], axis=1, inplace=True)
     return statistics
 
 
@@ -444,6 +445,9 @@ async def calculate_statistics_excel(exam_results_response: ExamResultsResponse,
     student_statistics_df = create_student_statistics_dataframe(
         exam_results_response=exam_results_response, student_results_df=student_results_df
     )
+
+    print("student_statistics_df")
+    print(student_statistics_df.to_string())
 
     # TODO Use tmp dir
     folder_id = str(uuid.uuid1())
