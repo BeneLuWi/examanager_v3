@@ -47,12 +47,12 @@ async def delete_task_and_results(exam: Exam, task_id: str):
             if result_entry.task_id == task_id:
                 #  update student result with a list without the ones with the task id
                 student_result.points_per_task.remove(result_entry)
-                logger.info(f"Delete result of task {task_id} for student {student_result.student_id}")
+                logger.debug(f"Delete result of task {task_id} for student {student_result.student_id}")
                 await update_result_in_db(result=student_result)  # result: StudentResult
                 break
 
     # 3. delete the task itself
-    logger.info(f"Remove task {task_id} from exam {exam.id}")
+    logger.debug(f"Remove task {task_id} from exam {exam.id}")
     exam.tasks.remove(task_to_delete)
     await update_exam_in_db(exam=exam)
 
