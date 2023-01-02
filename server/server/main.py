@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+from asyncio import events
 
 import uvicorn
 from fastapi import FastAPI
@@ -64,7 +65,18 @@ async def custom_404_handler(_, __):
 configure_static(app)
 
 if settings.INIT_ADMIN_USER:
-    asyncio.run(init_admin_user(password=settings.ADMIN_USER_PASSWORD))
+    try:
+        """
+        In case the app is started via the main method below there is no event loop and asyncio.create_task would
+        cause an exception. The init_admin_user process is therefore handled independently for the terminal / docker run
+        and the call via the __main__ method
+        """
+        event_loop = events.get_running_loop()
+        if event_loop is not None:
+            asyncio.create_task(init_admin_user(password=settings.ADMIN_USER_PASSWORD))
+    except RuntimeError as err:
+        logger.warning(f"RuntimeError: {err} - this is expected if the application was started via the __main__ method")
+
 
 if __name__ == "__main__":
     uvicorn.run(app, port=5200)
