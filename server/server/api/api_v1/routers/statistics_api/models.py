@@ -25,3 +25,4 @@ class StatisticsResult(BaseModel):
     correlation: TaskResult
     self_assessment_mean: TaskResult
     self_assessment_median: TaskResult
+    self_assessment_standard_deviation: TaskResult

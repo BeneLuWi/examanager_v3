@@ -327,18 +327,16 @@ def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: 
 
     columns_to_summarize_all = task_names.copy()
     columns_to_summarize_all.extend(["Gesamtpunkte"])
-    columns_to_summarize_numeric = columns_to_summarize_all.copy()
-    columns_to_summarize_numeric.extend(["Selbsteinschätzung MSS", "Abweichung Selbsteinschätzung MSS"])
 
     mean_result: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_summarize_numeric,
+        columns_to_process=columns_to_summarize_all,
         metric_name="Mittelwert (Mean)",
     )
 
     median_result: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_summarize_numeric,
+        columns_to_process=columns_to_summarize_all,
         metric_name="Mittelwert (Median)",
     )
 
@@ -356,7 +354,7 @@ def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: 
 
     standard_deviation_result: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
-        columns_to_process=columns_to_summarize_numeric,
+        columns_to_process=columns_to_summarize_all,
         metric_name="Standardabweichung",
     )
 
@@ -385,6 +383,12 @@ def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: 
         metric_name="Mittelwert (Median)",
     )
 
+    self_assessment_result_standard_deviation: TaskResult = create_task_result_object(
+        student_statistics_df=student_statistics_df,
+        columns_to_process=["Selbsteinschätzung MSS", "Abweichung Selbsteinschätzung MSS"],
+        metric_name="Standardabweichung",
+    )
+
     return StatisticsResult(
         mean=mean_result,
         median=median_result,
@@ -395,6 +399,7 @@ def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: 
         correlation=correlation_result,
         self_assessment_median=self_assessment_result_median,
         self_assessment_mean=self_assessment_result_mean,
+        self_assessment_standard_deviation=self_assessment_result_standard_deviation,
     )
 
 
