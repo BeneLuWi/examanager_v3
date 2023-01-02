@@ -101,23 +101,6 @@ class StudentResult(MongoModel):
     self_assessment: Optional[int] = Field(description="Self Assessment of Exam Result in MSS Points", ge=0, le=15)
 
 
-class StudentResultsWrapper(BaseModel):
-    student: Student
-    student_result: StudentResult
-
-
-class ExamResultsWrapper(BaseModel):
-    school_class_id: str
-    exam: Exam
-    results: List[StudentResultsWrapper]
-
-
-###
-###
-###
-###
-
-
 class CreateResultRequest(BaseModel):
     exam_id: str
     student_id: str

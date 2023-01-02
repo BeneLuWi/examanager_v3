@@ -1,13 +1,63 @@
 import logging
 from typing import List, Dict
 
-from server.api.api_v1.routers.data_api.models import Rating
+from fastapi import HTTPException
+
+from server.api.api_v1.routers.data_api.models import (
+    Rating,
+    Task,
+    Exam,
+    StudentResultResponse,
+    StudentResult,
+    ResultEntry,
+)
+from server.api.api_v1.routers.data_api.repository.exam_repository import update_exam_in_db
+from server.api.api_v1.routers.data_api.repository.result_repository import (
+    list_all_result_responses,
+    list_results_from_db_by_exam_id,
+    delete_result_in_db,
+    update_result_in_db,
+)
 from server.config import ExamManagerSettings
 
 settings = ExamManagerSettings()
 
 logging.basicConfig(level=settings.LOGGING_LEVEL)
 logger = logging.getLogger(settings.APP_NAME)
+
+
+async def delete_task_and_results(exam: Exam, task_id: str):
+    # 1. find the task
+    task_to_delete: Task | None = None
+    task: Task
+    for task in exam.tasks:
+        if str(task.id) == task_id:
+            task_to_delete = task
+            break
+
+    if task_to_delete is None:
+        logger.error(f"Task {task_id} not found")
+        raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+
+    # 2. delete all results for this task
+    student_results: List[StudentResult] = await list_results_from_db_by_exam_id(exam_id=exam.id)  # exam_id: str
+
+    student_result: StudentResult
+    for student_result in student_results:
+        # points_per_task: List[ResultEntry]
+        result_entry: ResultEntry
+        for result_entry in student_result.points_per_task:
+            if result_entry.task_id == task_id:
+                #  update student result with a list without the ones with the task id
+                student_result.points_per_task.remove(result_entry)
+                logger.info(f"Delete result of task {task_id} for student {student_result.student_id}")
+                await update_result_in_db(result=student_result)  # result: StudentResult
+                break
+
+    # 3. delete the task itself
+    logger.info(f"Remove task {task_id} from exam {exam.id}")
+    exam.tasks.remove(task_to_delete)
+    await update_exam_in_db(exam=exam)
 
 
 class RatingsFactory:

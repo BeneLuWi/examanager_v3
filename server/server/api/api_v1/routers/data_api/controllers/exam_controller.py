@@ -13,7 +13,7 @@ from server.api.api_v1.routers.data_api.repository.exam_repository import (
     list_exams_from_db_by_owner_id,
     delete_exam_in_db,
 )
-from server.api.api_v1.routers.data_api.utils import RatingsFactory
+from server.api.api_v1.routers.data_api.utils import RatingsFactory, delete_task_and_results
 
 exam_router = APIRouter()
 
@@ -72,9 +72,6 @@ async def delete_exam(exam_id):
 @exam_router.delete("/task")
 async def delete_task(exam_id, task_id, user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name])):
     exam_in_db: Exam = await find_exam_by_id_in_db(exam_id=exam_id)
-    if exam_in_db.owner_id == str(user.id):
-        return exam_in_db
-    # todo 1. delete all results for this task
-    # todo 2. delete the task itself
-    pass
-    # return await delete_exam_in_db(exam_id=exam_id)
+    if exam_in_db.owner_id != str(user.id):
+        raise HTTPException(status_code=401, detail="Permission denied!")
+    await delete_task_and_results(exam=exam_in_db, task_id=task_id)
