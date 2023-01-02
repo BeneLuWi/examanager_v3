@@ -100,7 +100,7 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
     )
 
     student_results_df["Abweichung Selbsteinschätzung MSS"] = (
-        student_results_df["MSS Punkte"] - student_results_df["Selbsteinschätzung MSS"]
+        student_results_df["Selbsteinschätzung MSS"] - student_results_df["MSS Punkte"]
     )
 
     return student_results_df
