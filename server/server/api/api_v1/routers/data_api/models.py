@@ -61,6 +61,7 @@ class CreateTaskRequest(BaseModel):
 class Task(MongoModel):
     name: str
     max_points: float
+    deactivated_for: Optional[List[ObjectId]]  # list of ids of school classes
 
 
 class Rating(BaseModel):
