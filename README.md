@@ -1,6 +1,6 @@
 # Examanager Version 3
 
-Examanager is a web app for teachers to manage exams and their classes’ results. It allows viewing exam results, statistical analysis and data export to `Excel`
+Examanager is a web app for teachers to manage exams and their classes’ results. It allows viewing and editing exam results, statistical analysis and data export to `Excel`
 
 ## Quick Start
 
