@@ -56,7 +56,6 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
       },
       {
         onSuccess: () => {
-          reset()
           close()
         },
       }
@@ -85,7 +84,7 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Erreichbare Punktzahl</Form.Label>
-            <Form.Control {...register("max_points")} type="number" defaultValue={task.max_points} />
+            <Form.Control {...register("max_points")} type="number" step="0.1" defaultValue={task.max_points} />
           </Form.Group>
           <Button variant="primary" type="submit" className="me-2">
             Speichern
