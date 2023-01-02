@@ -403,7 +403,7 @@ def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: 
     )
 
 
-async def calculate_statistics_object(exam_results_response: ExamResultsResponse):
+async def calculate_statistics_object(exam_results_response: ExamResultsResponse, include_deactivated_tasks=False):
     """
     1. Get ratings for result
     2. Calculate max points for tasks: List[Task] in exam
@@ -412,6 +412,7 @@ async def calculate_statistics_object(exam_results_response: ExamResultsResponse
         calculate number of points i.e. calculate points for each submitted task
         b) For the sum of points over all tasks for each Student calculate the grading (calc_grade)
     :param exam_results_response:
+    :param include_deactivated_tasks:
     :return:
     """
 
@@ -427,7 +428,7 @@ async def calculate_statistics_object(exam_results_response: ExamResultsResponse
     return statistics
 
 
-async def calculate_statistics_excel(exam_results_response: ExamResultsResponse):
+async def calculate_statistics_excel(exam_results_response: ExamResultsResponse, include_deactivated_tasks=False):
     """
     1. Get ratings for result
     2. Calculate max points for tasks: List[Task] in exam
@@ -436,6 +437,7 @@ async def calculate_statistics_excel(exam_results_response: ExamResultsResponse)
         calculate number of points i.e. calculate points for each submitted task
         b) For the sum of points over all tasks for each Student calculate the grading (calc_grade)
     :param exam_results_response:
+    :param include_deactivated_tasks:
     :return:
     """
     student_results_df = create_student_results_dataframe(exam_results_response=exam_results_response)
