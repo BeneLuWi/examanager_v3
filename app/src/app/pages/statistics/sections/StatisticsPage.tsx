@@ -57,10 +57,14 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
     <DrawerModal {...{ show, close }}>
       {exam && schoolClass && studentResults && (
         <div className="h-100">
-          <h2>
-            Klausurergebnisse für {exam.name} von {schoolClass.name}
-            <Button onClick={() => downloadStatistics(schoolClass._id, exam._id)}>download</Button>
-          </h2>
+          <div className="d-flex justify-content-between p-3">
+            <h2>
+              Klausurergebnisse für {exam.name} von {schoolClass.name}
+            </h2>
+            <Button onClick={() => downloadStatistics(schoolClass._id, exam._id)}>
+              <i className="bi bi-cloud-arrow-down" /> Download
+            </Button>
+          </div>
           <div className="h-100 p-3" style={{ overflowY: "scroll" }}>
             <Row>
               <Col>
