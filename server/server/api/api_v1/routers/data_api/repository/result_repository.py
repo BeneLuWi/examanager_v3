@@ -54,7 +54,8 @@ async def list_results_from_db_by_student_id(student_id: str) -> List[StudentRes
     return list(map(lambda result: StudentResult.parse_obj(result), results))
 
 
-async def list_results_from_db_by_exam_id(exam_id: str) -> List[StudentResult]:
+async def list_results_from_db_by_exam_id(exam_id: ObjectId | str) -> List[StudentResult]:
+    exam_id = str(exam_id)
     results = await result_collection.find({"exam_id": exam_id}).to_list(1000)
     return list(map(lambda result: StudentResult.parse_obj(result), results))
 
