@@ -67,3 +67,14 @@ async def update_exam(update_exam_request: Exam):
 @exam_router.delete("/exam")
 async def delete_exam(exam_id):
     return await delete_exam_in_db(exam_id=exam_id)
+
+
+@exam_router.delete("/task")
+async def delete_task(exam_id, task_id, user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name])):
+    exam_in_db: Exam = await find_exam_by_id_in_db(exam_id=exam_id)
+    if exam_in_db.owner_id == str(user.id):
+        return exam_in_db
+    # todo 1. delete all results for this task
+    # todo 2. delete the task itself
+    pass
+    # return await delete_exam_in_db(exam_id=exam_id)
