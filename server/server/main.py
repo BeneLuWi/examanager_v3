@@ -79,4 +79,6 @@ if settings.INIT_ADMIN_USER:
 
 
 if __name__ == "__main__":
+    if settings.INIT_ADMIN_USER:
+        asyncio.run(init_admin_user(password=settings.ADMIN_USER_PASSWORD))
     uvicorn.run(app, port=5200)
