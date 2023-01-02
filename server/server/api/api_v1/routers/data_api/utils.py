@@ -7,15 +7,12 @@ from server.api.api_v1.routers.data_api.models import (
     Rating,
     Task,
     Exam,
-    StudentResultResponse,
     StudentResult,
     ResultEntry,
 )
 from server.api.api_v1.routers.data_api.repository.exam_repository import update_exam_in_db
 from server.api.api_v1.routers.data_api.repository.result_repository import (
-    list_all_result_responses,
     list_results_from_db_by_exam_id,
-    delete_result_in_db,
     update_result_in_db,
 )
 from server.config import ExamManagerSettings

@@ -83,27 +83,6 @@ async def list_results_from_db_by_exam_id_and_school_class_id(
     return list(map(lambda result: StudentResult.parse_obj(result), results))
 
 
-async def process_student_result_pipeline(exam: Exam, pipeline) -> List[StudentResultResponse]:
-    tasks = {str(task.id): task for task in exam.tasks}
-
-    # Student with StudentResult
-    students_with_student_result = await student_collection.aggregate(pipeline).to_list(1000)
-
-    # Now merge the Tasks and ResultEntries and erase all the irrelevant info from the StudentResultResponse
-    for student in students_with_student_result:
-        if "result" in student:
-            if "self_assessment" in student["result"]:
-                student["self_assessment"] = student["result"]["self_assessment"]
-            student["result"] = [
-                result_entry | tasks[result_entry["task_id"]].dict()
-                for result_entry in student["result"]["points_per_task"]
-            ]
-            if "self_assessment" in student["result"]:
-                student["self_assessment"] = student["result"]["self_assessment"]
-
-    return list(map(lambda result: StudentResultResponse.parse_obj(result), students_with_student_result))
-
-
 async def list_student_result_responses(exam: Exam, school_class_id: str) -> List[StudentResultResponse]:
     pipeline = [
         {"$match": {"school_class_id": school_class_id}},
@@ -123,29 +102,25 @@ async def list_student_result_responses(exam: Exam, school_class_id: str) -> Lis
         },
         {"$addFields": {"result": {"$first": "$result"}}},
     ]
-    return await process_student_result_pipeline(exam=exam, pipeline=pipeline)
 
+    tasks = {str(task.id): task for task in exam.tasks}
 
-async def list_all_result_responses(exam: Exam) -> List[StudentResultResponse]:
-    pipeline = [
-        {"$addFields": {"own_id": {"$toString": "$_id"}}},
-        {
-            "$lookup": {
-                "from": "results",
-                "localField": "own_id",
-                "foreignField": "student_id",
-                "as": "result",
-                "pipeline": [
-                    {
-                        "$match": {"$expr": {"$eq": [str(exam.id), "$exam_id"]}},
-                    },
-                ],
-            }
-        },
-        {"$addFields": {"result": {"$first": "$result"}}},
-    ]
+    # Student with StudentResult
+    students_with_student_result = await student_collection.aggregate(pipeline).to_list(1000)
 
-    return await process_student_result_pipeline(exam=exam, pipeline=pipeline)
+    # Now merge the Tasks and ResultEntries and erase all the irrelevant info from the StudentResultResponse
+    for student in students_with_student_result:
+        if "result" in student:
+            if "self_assessment" in student["result"]:
+                student["self_assessment"] = student["result"]["self_assessment"]
+            student["result"] = [
+                result_entry | tasks[result_entry["task_id"]].dict()
+                for result_entry in student["result"]["points_per_task"]
+            ]
+            if "self_assessment" in student["result"]:
+                student["self_assessment"] = student["result"]["self_assessment"]
+
+    return list(map(lambda result: StudentResultResponse.parse_obj(result), students_with_student_result))
 
 
 async def find_school_classes_with_result(exam_id: ObjectId | str) -> List[SchoolClass]:
