@@ -95,7 +95,11 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
           <Button variant="primary" type="submit" className="me-2">
             Speichern
           </Button>
-          <ConfirmButton onSuccess={deleteTask} question={`${task.name} löschen?`}>
+          <ConfirmButton
+            onSuccess={deleteTask}
+            question={`${task.name} löschen?`}
+            description={`${task.name} wird auch aus der Bewertung entfernt`}
+          >
             Aufgabe Löschen
           </ConfirmButton>
         </Form>
