@@ -4,6 +4,8 @@ services:
   mongodb:
     image: mongo
     container_name: examanager-db
+    ports:
+      - "27017:27017"
 
   examanager:
     build:
