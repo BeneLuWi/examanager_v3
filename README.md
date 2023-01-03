@@ -1,17 +1,20 @@
-# Examanager Version 3
+![Examanager-logos-wide.jpeg](docs%2FExamanager-logos-wide.jpeg)
 
-Examanager is a web app for teachers to manage exams and their classes’ results. It allows viewing and editing exam results, statistical analysis and data export to `Excel`
+Examanager is a web app for teachers to manage exams and their classes’ results. It allows viewing and editing exam
+results, statistical analysis and data export to `Excel`
 
 ## Quick Start
 
 ```shell
 git clone https://github.com/BeneLuWi/examanager_v3.git
 cd examanager_v3
-docker compose up
 ```
 
-visit `http://localhost:5200`
+- Initialize the `admin` user by adding the environment variable `INIT_ADMIN_USER: true` to the `examanager` service
 
-## API-Docs
+```shell
+docker compose up -d
+```
 
-[Swagger UI](http://localhost:5200/docs)
+- Visit `http://localhost:5200` and login with `admin:ChangeMe`
+- Visit the API Docs [Swagger UI](http://localhost:5200/docs)
