@@ -1,5 +1,7 @@
 ![Examanager-logos-wide.jpeg](docs%2FExamanager-logos-wide.jpeg)
 
+![Docker Image](https://img.shields.io/docker/v/beneluwi/examanager?color=%23086dd7&logo=Docker)
+
 Examanager is a web app for teachers to manage exams and their classes’ results. It allows viewing and editing exam
 results, statistical analysis and data export to `Excel`
 
