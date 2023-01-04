@@ -6,6 +6,7 @@ from tempfile import TemporaryDirectory
 from typing import List
 import pandas as pd
 from pydantic import ValidationError
+from starlette.background import BackgroundTask
 from starlette.responses import FileResponse
 
 from server.api.api_v1.routers.statistics_api.models import StatisticsResult, TaskResult, StatisticsElement
@@ -429,6 +430,17 @@ async def calculate_statistics_object(exam_results_response: ExamResultsResponse
     return statistics
 
 
+def _cleanup(folder: os.PathLike[str], file: os.PathLike[str]) -> None:
+    """
+    Cleanup after successfully returning the file
+    :param folder: Folder containing the File
+    :param file: Actual File
+    :return:
+    """
+    os.remove(file)
+    os.rmdir(folder)
+
+
 async def calculate_statistics_excel(exam_results_response: ExamResultsResponse, include_deactivated_tasks=False):
     """
     1. Get ratings for result
@@ -446,19 +458,15 @@ async def calculate_statistics_excel(exam_results_response: ExamResultsResponse,
         exam_results_response=exam_results_response, student_results_df=student_results_df
     )
 
-    print("student_statistics_df")
-    print(student_statistics_df.to_string())
-
-    # TODO Use tmp dir
-    folder_id = str(uuid.uuid1())
-    os.mkdir(os.path.join("data", folder_id))
-    path = os.path.join("data", folder_id, "Klausurergebnis.xlsx")
+    folder_path = os.path.join("data", str(uuid.uuid1()))
+    os.mkdir(folder_path)
+    file_path = os.path.join(folder_path, "Klausurergebnis.xlsx")
 
     # create an Excel writer object
-    with pd.ExcelWriter(path) as writer:
+    with pd.ExcelWriter(file_path) as writer:
         # use to_excel function and specify the sheet_name and index
         # to store the dataframe in specified sheet
         student_results_df.to_excel(writer, sheet_name="Ergebnisse", index=False)
         student_statistics_df.to_excel(writer, sheet_name="Statistik", index=False)
 
-    return FileResponse(path)
+    return FileResponse(file_path, background=BackgroundTask(_cleanup, folder_path, file_path))
