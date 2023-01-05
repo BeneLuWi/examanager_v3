@@ -6,6 +6,7 @@ from tempfile import TemporaryDirectory
 from typing import List
 import pandas as pd
 from pydantic import ValidationError
+from starlette.background import BackgroundTask
 from starlette.responses import FileResponse
 
 from server.api.api_v1.routers.statistics_api.models import StatisticsResult, TaskResult, StatisticsElement
@@ -64,11 +65,6 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
 
     student_results_df["Gesamtpunkte"] = student_results_df[task_names].sum(axis=1)
     student_results_df["Erreichte Punkte relativ"] = student_results_df["Gesamtpunkte"] / max_points_for_exam
-
-    # student_results_df = pd.concat([student_results_df, student_results_df.
-    #                               apply(lambda row: pd.Series(get_exam_rating_for_reached_percentage(
-    #    exam=exam_results_response.exam,
-    #    reached_percentage=row["Erreichte Punkte relativ"]).dict()), axis=1)], axis=0)
 
     rating_results = [
         get_exam_rating_for_reached_percentage(
@@ -160,7 +156,6 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
 
     # 10. Schwierigkeit
     reachable_per_task = pd.DataFrame({task.name: task.max_points for task in tasks}, columns=task_names, index=[0])
-    # reachable_per_task["Sorting"]="per_task"
     number_of_w = len(student_results_df[student_results_df["Geschlecht"] == "w"])
     number_of_d = len(student_results_df[student_results_df["Geschlecht"] == "d"])
     number_of_m = len(student_results_df[student_results_df["Geschlecht"] == "m"])
@@ -177,18 +172,16 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     reachable_d["Geschlecht"] = "d"
 
     reachable_all = pd.concat([reachable_total, reachable_d, reachable_m, reachable_w])
-    reachable_all["Gesamtpunkte"] = reachable_all.sum(axis=1)
+    reachable_all["Gesamtpunkte"] = reachable_all.sum(axis=1, numeric_only=True)
 
     columns_for_difficulty = task_names.copy()
     columns_for_difficulty.append("Gesamtpunkte")
 
     reached_total = student_results_df[columns_for_difficulty].sum()
     reached_total = reached_total.to_frame().T
-    # reached_total["Statistik"] = "Summe erreichte Punkte"
     reached_total["Geschlecht"] = ""
 
     reached_by_gender = students_grouped_by_gender[columns_for_difficulty].sum().reset_index()
-    # reached_by_gender["Statistik"] = "Summe erreichte Punkte"
 
     reached_all = pd.concat([reached_total, reached_by_gender])
 
@@ -196,7 +189,6 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     difficulty_df = difficulty_df * 100
     difficulty_df.reset_index(inplace=True)
     difficulty_df = difficulty_df.assign(Statistik="Schwierigkeit")
-    # difficulty_df = reachable_all.subtract(reached_all, axis="columns")#  * 100
 
     # 11. Trennschärfe
 
@@ -317,12 +309,6 @@ def create_task_result_object(student_statistics_df: pd.DataFrame, columns_to_pr
 
 
 def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: List[Task]) -> StatisticsResult:
-    # metric_names = ["Mittelwert (Mean)", "Mittelwert (Median)", "Schwierigkeit", "Trennschärfe"]
-    # for metric in metric_names:
-    #    create_task_result_object(student_statistics_df=student_statistics_df, columns_to_process=columns_to_process,
-    #                              metric_name=metric)#
-
-    # mittelwert mean und median für mss (und note) als getrennte Statistik
 
     task_names = [task.name for task in tasks]
 
@@ -371,7 +357,6 @@ def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: 
         metric_name="Trennschärfe",
     )
 
-    # todo self assessment will look differently
     self_assessment_result_mean: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
         columns_to_process=["Selbsteinschätzung MSS", "Abweichung Selbsteinschätzung MSS"],
@@ -429,6 +414,17 @@ async def calculate_statistics_object(exam_results_response: ExamResultsResponse
     return statistics
 
 
+def _cleanup(folder: os.PathLike[str], file: os.PathLike[str]) -> None:
+    """
+    Cleanup after successfully returning the file
+    :param folder: Folder containing the File
+    :param file: Actual File
+    :return:
+    """
+    os.remove(file)
+    os.rmdir(folder)
+
+
 async def calculate_statistics_excel(exam_results_response: ExamResultsResponse, include_deactivated_tasks=False):
     """
     1. Get ratings for result
@@ -446,19 +442,15 @@ async def calculate_statistics_excel(exam_results_response: ExamResultsResponse,
         exam_results_response=exam_results_response, student_results_df=student_results_df
     )
 
-    print("student_statistics_df")
-    print(student_statistics_df.to_string())
-
-    # TODO Use tmp dir
-    folder_id = str(uuid.uuid1())
-    os.mkdir(os.path.join("data", folder_id))
-    path = os.path.join("data", folder_id, "Klausurergebnis.xlsx")
+    folder_path = os.path.join("data", str(uuid.uuid1()))
+    os.mkdir(folder_path)
+    file_path = os.path.join(folder_path, "Klausurergebnis.xlsx")
 
     # create an Excel writer object
-    with pd.ExcelWriter(path) as writer:
+    with pd.ExcelWriter(file_path) as writer:
         # use to_excel function and specify the sheet_name and index
         # to store the dataframe in specified sheet
         student_results_df.to_excel(writer, sheet_name="Ergebnisse", index=False)
         student_statistics_df.to_excel(writer, sheet_name="Statistik", index=False)
 
-    return FileResponse(path)
+    return FileResponse(file_path, background=BackgroundTask(_cleanup, folder_path, file_path))
