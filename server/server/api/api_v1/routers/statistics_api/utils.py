@@ -66,11 +66,6 @@ def create_student_results_dataframe(exam_results_response: ExamResultsResponse)
     student_results_df["Gesamtpunkte"] = student_results_df[task_names].sum(axis=1)
     student_results_df["Erreichte Punkte relativ"] = student_results_df["Gesamtpunkte"] / max_points_for_exam
 
-    # student_results_df = pd.concat([student_results_df, student_results_df.
-    #                               apply(lambda row: pd.Series(get_exam_rating_for_reached_percentage(
-    #    exam=exam_results_response.exam,
-    #    reached_percentage=row["Erreichte Punkte relativ"]).dict()), axis=1)], axis=0)
-
     rating_results = [
         get_exam_rating_for_reached_percentage(
             exam=exam_results_response.exam, reached_percentage=reached_percentage
@@ -161,7 +156,6 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
 
     # 10. Schwierigkeit
     reachable_per_task = pd.DataFrame({task.name: task.max_points for task in tasks}, columns=task_names, index=[0])
-    # reachable_per_task["Sorting"]="per_task"
     number_of_w = len(student_results_df[student_results_df["Geschlecht"] == "w"])
     number_of_d = len(student_results_df[student_results_df["Geschlecht"] == "d"])
     number_of_m = len(student_results_df[student_results_df["Geschlecht"] == "m"])
@@ -185,11 +179,9 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
 
     reached_total = student_results_df[columns_for_difficulty].sum()
     reached_total = reached_total.to_frame().T
-    # reached_total["Statistik"] = "Summe erreichte Punkte"
     reached_total["Geschlecht"] = ""
 
     reached_by_gender = students_grouped_by_gender[columns_for_difficulty].sum().reset_index()
-    # reached_by_gender["Statistik"] = "Summe erreichte Punkte"
 
     reached_all = pd.concat([reached_total, reached_by_gender])
 
@@ -197,7 +189,6 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     difficulty_df = difficulty_df * 100
     difficulty_df.reset_index(inplace=True)
     difficulty_df = difficulty_df.assign(Statistik="Schwierigkeit")
-    # difficulty_df = reachable_all.subtract(reached_all, axis="columns")#  * 100
 
     # 11. Trennschärfe
 
