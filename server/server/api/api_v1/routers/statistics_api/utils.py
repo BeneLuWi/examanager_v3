@@ -309,12 +309,6 @@ def create_task_result_object(student_statistics_df: pd.DataFrame, columns_to_pr
 
 
 def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: List[Task]) -> StatisticsResult:
-    # metric_names = ["Mittelwert (Mean)", "Mittelwert (Median)", "Schwierigkeit", "Trennschärfe"]
-    # for metric in metric_names:
-    #    create_task_result_object(student_statistics_df=student_statistics_df, columns_to_process=columns_to_process,
-    #                              metric_name=metric)#
-
-    # mittelwert mean und median für mss (und note) als getrennte Statistik
 
     task_names = [task.name for task in tasks]
 
@@ -363,7 +357,6 @@ def create_statistics_result_object(student_statistics_df: pd.DataFrame, tasks: 
         metric_name="Trennschärfe",
     )
 
-    # todo self assessment will look differently
     self_assessment_result_mean: TaskResult = create_task_result_object(
         student_statistics_df=student_statistics_df,
         columns_to_process=["Selbsteinschätzung MSS", "Abweichung Selbsteinschätzung MSS"],
