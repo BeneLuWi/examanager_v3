@@ -178,7 +178,7 @@ def create_student_statistics_dataframe(exam_results_response: ExamResultsRespon
     reachable_d["Geschlecht"] = "d"
 
     reachable_all = pd.concat([reachable_total, reachable_d, reachable_m, reachable_w])
-    reachable_all["Gesamtpunkte"] = reachable_all.sum(axis=1)
+    reachable_all["Gesamtpunkte"] = reachable_all.sum(axis=1, numeric_only=True)
 
     columns_for_difficulty = task_names.copy()
     columns_for_difficulty.append("Gesamtpunkte")
