@@ -4,13 +4,9 @@ services:
   mongodb:
     image: mongo
     container_name: examanager-db
-    ports:
-      - "27017:27017"
 
   examanager:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: beneluwi/examanager
     container_name: examanager-app
     environment:
       MONGO_HOST: "mongodb"
