@@ -74,7 +74,8 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
                       <i className="bi bi-people-fill" /> Klasse
                     </Card.Title>
                     <p>
-                      <div className="fw-bold">{schoolClass.name}</div>
+                      <span className="fw-bold">{schoolClass.name}</span>
+                      <br />
                       {schoolClass.description}
                     </p>
                     <p>
