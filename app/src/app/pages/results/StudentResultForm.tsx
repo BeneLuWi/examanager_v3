@@ -6,6 +6,7 @@ import { ResultEntry, StudentResultsResponse } from "./types"
 import { useCreateResult, useDeleteResult } from "./api"
 import ModalWrapper from "../../components/modal-wrapper/ModalWrapper"
 import ConfirmButton from "../../components/confirm-button/ConfirmButton"
+import { SubmitHandler, useForm } from "react-hook-form"
 
 type StudentResultFormProps = {
   studentResultsResponse: StudentResultsResponse
@@ -16,6 +17,10 @@ type StudentResultFormProps = {
 
 const defaultResultEntries = (exam: Exam): ResultEntry[] => {
   return exam.tasks.map((task) => ({ ...task, task_id: task._id, points: 0 }))
+}
+
+type FormType = {
+  [x: string]: number
 }
 
 const StudentResultForm: FunctionComponent<StudentResultFormProps> = ({
@@ -29,23 +34,28 @@ const StudentResultForm: FunctionComponent<StudentResultFormProps> = ({
    *  Hooks
    *
    *******************************************************************************************************************/
-  const [pointsPerTask, setPointsPerTask] = useState<ResultEntry[]>(
-    studentResultsResponse.result ?? defaultResultEntries(exam)
-  )
-  const [selfAssessment, setSelfAssessment] = useState(studentResultsResponse.self_assessment)
+  const [pointsPerTask] = useState<ResultEntry[]>(studentResultsResponse.result ?? defaultResultEntries(exam))
   const { mutate: createResult } = useCreateResult()
   const { mutate: deleteResult } = useDeleteResult(exam, studentResultsResponse)
+  const { register, handleSubmit } = useForm()
+
   /*******************************************************************************************************************
    *
    *  Functions
    *
    *******************************************************************************************************************/
-  const submit = () => {
+
+  const onSubmit: SubmitHandler<FormType> = (data) => {
+    const points_per_task = pointsPerTask.map((entry) => ({
+      ...entry,
+      points: data[entry.task_id],
+    }))
+
     createResult({
       exam_id: exam._id,
       student_id: studentResultsResponse._id,
-      points_per_task: pointsPerTask,
-      self_assessment: selfAssessment,
+      points_per_task: points_per_task,
+      self_assessment: data.selfAssessment,
     })
     toggleEdit()
   }
@@ -55,27 +65,6 @@ const StudentResultForm: FunctionComponent<StudentResultFormProps> = ({
     toggleEdit()
   }
 
-  const onChangePointsReached = (value: string, task: ResultEntry) => {
-    // Parse to a Float with 2 Digits
-    let numValue = parseFloat(parseFloat(value).toFixed(1))
-
-    // Validate
-    if (numValue > task.max_points) {
-      numValue = task.max_points
-    }
-
-    setPointsPerTask(
-      pointsPerTask.map((entry) => {
-        if (entry.task_id !== task.task_id) {
-          return entry
-        }
-        return {
-          ...entry,
-          points: numValue,
-        }
-      })
-    )
-  }
   /*******************************************************************************************************************
    *
    *  Rendering
@@ -88,47 +77,54 @@ const StudentResultForm: FunctionComponent<StudentResultFormProps> = ({
         <h4>
           {studentResultsResponse.firstname} {studentResultsResponse.lastname}
         </h4>
-        {pointsPerTask.map((resultEntry) => (
-          <div key={resultEntry.task_id} className="mb-1">
-            <Form.Label htmlFor={resultEntry.task_id}>{resultEntry.name}</Form.Label>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          {pointsPerTask.map((resultEntry) => (
+            <div key={resultEntry.task_id} className="mb-1">
+              <Form.Label htmlFor={resultEntry.task_id}>{resultEntry.name}</Form.Label>
+              <InputGroup>
+                <Form.Control
+                  defaultValue={resultEntry.points}
+                  {...register(resultEntry.task_id, {
+                    valueAsNumber: true,
+                    min: 0,
+                    max: resultEntry.max_points,
+                  })}
+                  type="number"
+                  step="0.1"
+                  id={resultEntry.task_id}
+                />
+                <InputGroup.Text>von {resultEntry.max_points} Punkten</InputGroup.Text>
+              </InputGroup>
+            </div>
+          ))}
+          <hr />
+          <div className="mb-1">
+            <Form.Label htmlFor="selfAssessment">Selbsteinschätzung</Form.Label>
             <InputGroup>
               <Form.Control
-                value={resultEntry.points}
-                onChange={(event) => onChangePointsReached(event.target.value, resultEntry)}
+                defaultValue={studentResultsResponse.self_assessment}
                 type="number"
-                max={resultEntry.max_points}
-                min={0}
-                id={resultEntry.task_id}
+                {...register("selfAssessment", {
+                  valueAsNumber: true,
+                  min: 0,
+                  max: 15,
+                })}
+                placeholder="(optional)"
+                id={"selfAssessment"}
               />
-              <InputGroup.Text>von {resultEntry.max_points} Punkten</InputGroup.Text>
+              <InputGroup.Text>MSS-Punkte</InputGroup.Text>
             </InputGroup>
           </div>
-        ))}
-        <hr />
-        <div className="mb-1">
-          <Form.Label htmlFor="selfAssessment">Selbsteinschätzung</Form.Label>
-          <InputGroup>
-            <Form.Control
-              value={selfAssessment}
-              onChange={(event) => setSelfAssessment(parseInt(event.target.value))}
-              type="number"
-              placeholder="(optional)"
-              max={15}
-              min={0}
-              id={"selfAssessment"}
-            />
-            <InputGroup.Text>MSS-Punkte</InputGroup.Text>
-          </InputGroup>
-        </div>
-        <hr />
-        <div>
-          <Button variant="primary" className="me-2" onClick={submit}>
-            Speichern
-          </Button>
-          <ConfirmButton onSuccess={handleDelete} question="Klausurergebnis Löschen?">
-            Ergebnis löschen
-          </ConfirmButton>
-        </div>
+          <hr />
+          <div>
+            <Button variant="primary" className="me-2" type="submit">
+              Speichern
+            </Button>
+            <ConfirmButton onSuccess={handleDelete} question="Klausurergebnis Löschen?">
+              Ergebnis löschen
+            </ConfirmButton>
+          </div>
+        </Form>
       </div>
     </ModalWrapper>
   )
