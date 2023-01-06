@@ -44,7 +44,7 @@ const StudentResultItem: FunctionComponent<StudentResultItemProps> = ({ studentR
       <td>{studentResultsResponse.firstname}</td>
       <td>{studentResultsResponse.gender}</td>
       <td>{rating && rating[mode]}</td>
-      <td>{sumOfPoints}</td>
+      <td>{sumOfPoints.toFixed(1)}</td>
       {studentResultsResponse.result?.map((result) => (
         <td key={result._id}>{result.points}</td>
       ))}
