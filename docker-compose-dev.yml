@@ -3,6 +3,7 @@ version: "3.9"
 services:
   mongodb:
     image: mongo
+    restart: unless-stopped
     container_name: examanager-db
     ports:
       - "27017:27017"
@@ -12,6 +13,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: examanager-app
+    restart: unless-stopped
     environment:
       MONGO_HOST: "mongodb"
     ports:

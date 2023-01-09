@@ -4,10 +4,12 @@ services:
   mongodb:
     image: mongo
     container_name: examanager-db
+    restart: unless-stopped
 
   examanager:
     image: beneluwi/examanager
     container_name: examanager-app
+    restart: unless-stopped
     environment:
       MONGO_HOST: "mongodb"
     ports:
