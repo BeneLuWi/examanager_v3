@@ -12,26 +12,32 @@ router = APIRouter()
 
 @router.get("/create_statistics_excel")
 async def create_statistics_excel(
-    exam_id: str = "63b2c97f2dd5024d44403f5b",
-    school_class_id: str = "63b2c97b2dd5024d44403f37",
+    exam_id: str,
+    school_class_id: str,
+    include_deactivated_tasks=False,
     user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name]),
 ):
     exam_results_response: ExamResultsResponse = await get_exam_results_for_class(
         exam_id=exam_id, school_class_id=school_class_id, user=user
     )
 
-    return await calculate_statistics_excel(exam_results_response=exam_results_response)
+    return await calculate_statistics_excel(
+        exam_results_response=exam_results_response, include_deactivated_tasks=include_deactivated_tasks
+    )
 
 
 @router.get("/calculate_statistics", response_model=StatisticsResult)
 async def calculate_statistics(
-    exam_id: str = "63b2c97f2dd5024d44403f5b",
-    school_class_id: str = "63b2c97b2dd5024d44403f37",
+    exam_id: str,
+    school_class_id: str,
+    include_deactivated_tasks=False,
     user: User = Security(get_current_user_with_scope, scopes=[Role.USER.name]),
 ) -> StatisticsResult:
     exam_results_response: ExamResultsResponse = await get_exam_results_for_class(
         exam_id=exam_id, school_class_id=school_class_id, user=user
     )
-    statistics: StatisticsResult = await calculate_statistics_object(exam_results_response=exam_results_response)
+    statistics: StatisticsResult = await calculate_statistics_object(
+        exam_results_response=exam_results_response, include_deactivated_tasks=include_deactivated_tasks
+    )
 
     return statistics
