@@ -46,7 +46,7 @@ const StudentResultBadges: FunctionComponent<StudentResultBadgesProps> = ({ exam
   return (
     <div className="d-flex">
       <Badge bg="primary" pill className="me-1">
-        <i className="bi bi-patch-check-fill" /> {sumOfPoints} Punkte gesamt
+        <i className="bi bi-patch-check-fill" /> {sumOfPoints.toFixed(1)} Punkte gesamt
       </Badge>
       <Badge bg="primary" pill className="me-1">
         <i className="bi bi-mortarboard-fill" /> Note {rating!.text_rating}

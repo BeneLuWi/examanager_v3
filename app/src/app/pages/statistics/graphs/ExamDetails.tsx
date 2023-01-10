@@ -34,20 +34,17 @@ const ExamDetails: FunctionComponent<ExamDetailsProps> = ({ exam }) => {
             <Card.Title>
               <i className="bi bi-list-check" /> Klausur
             </Card.Title>
-            <div className="d-flex">
-              <div>
-                <p>
-                  <div className="fw-bold">{exam.name}</div>
-                  {exam.description}
-                </p>
-                <p>
-                  <i className="bi bi-patch-check" /> {exam.tasks.reduce((a, b) => a + b.max_points, 0)} Punkte
-                </p>
-                <p>
-                  <i className="bi bi-check2-square" /> {exam.tasks.length} Aufgaben
-                </p>
-              </div>
-            </div>
+            <p>
+              <span className="fw-bold">{exam.name}</span>
+              <br />
+              {exam.description}
+            </p>
+            <p>
+              <i className="bi bi-patch-check" /> {exam.tasks.reduce((a, b) => a + b.max_points, 0)} Punkte
+            </p>
+            <p>
+              <i className="bi bi-check2-square" /> {exam.tasks.length} Aufgaben
+            </p>
           </Card.Body>
         </Card>
       </Col>

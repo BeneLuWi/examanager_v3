@@ -91,10 +91,9 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
                 <i className="bi bi-info-circle" /> Klausur
               </Card.Title>
               <p>
-                <div>
-                  <div className="fw-bold">{examResults?.exam.name}</div>
-                  {examResults?.exam.description}
-                </div>
+                <span className="fw-bold">{examResults?.exam.name}</span>
+                <br />
+                {examResults?.exam.description}
               </p>
               <p>
                 <i className="bi bi-patch-check" /> {examResults?.exam.tasks.reduce((a, b) => a + b.max_points, 0)}{" "}
