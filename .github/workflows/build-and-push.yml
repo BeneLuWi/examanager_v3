@@ -29,5 +29,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/examanager:${{ steps.vars.outputs.tag }} , ${{ secrets.DOCKER_HUB_USERNAME }}/examanager:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/examanager:${{ steps.vars.outputs.tag }} , ${{ secrets.DOCKER_USERNAME }}/examanager:latest
           labels: ${{ steps.meta.outputs.labels }}
