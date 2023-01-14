@@ -46,7 +46,7 @@ const ExamDetails: FunctionComponent<ExamDetailsProps> = ({ exam }) => {
             <p>
               <i className="bi bi-check2-square" /> {exam.tasks.length} Aufgaben
             </p>
-            {<EditExamButton exam={exam} />}
+            <EditExamButton exam={exam} />
           </Card.Body>
         </Card>
       </Col>
