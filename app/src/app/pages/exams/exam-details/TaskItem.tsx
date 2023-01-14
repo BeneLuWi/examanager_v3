@@ -97,11 +97,14 @@ const TaskItem: FunctionComponent<TaskItemProps> = ({ exam, task }) => {
           <div className="fw-bold">{task.name}</div>
           <i className="bi bi-patch-check" /> {task.max_points} Punkte erreichbar
           {!!deactivatedFor?.length && (
-            <div>
-              <i className="bi bi-slash-circle" />{" "}
-              {deactivatedFor.map((d) => (
-                <span key={task._id + d}>{d}</span>
-              ))}
+            <div className="d-flex">
+              <i className="bi bi-slash-circle me-1" />
+              <div className="">
+                <div>Deaktiviert für:</div>
+                {deactivatedFor.map((d) => (
+                  <div key={task._id + d}>{d}</div>
+                ))}
+              </div>
             </div>
           )}
         </div>
