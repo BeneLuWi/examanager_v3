@@ -11,6 +11,7 @@ export interface Task {
   _id: string
   name: string
   max_points: number
+  deactivated_for?: string[]
 }
 
 export interface ExamContextType {
