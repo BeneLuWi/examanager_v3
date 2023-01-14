@@ -16,7 +16,7 @@ type StudentResultFormProps = {
 }
 
 const defaultResultEntries = (exam: Exam): ResultEntry[] => {
-  return exam.tasks.map((task) => ({ ...task, task_id: task._id, points: 0 }))
+  return exam.tasks.map((task) => ({ ...task, task_id: task._id, points: 0, deactivated: false }))
 }
 
 type FormType = {
@@ -80,8 +80,16 @@ const StudentResultForm: FunctionComponent<StudentResultFormProps> = ({
         <Form onSubmit={handleSubmit(onSubmit)}>
           {pointsPerTask.map((resultEntry) => (
             <div key={resultEntry.task_id} className="mb-1">
-              <Form.Label htmlFor={resultEntry.task_id}>{resultEntry.name}</Form.Label>
+              <Form.Label htmlFor={resultEntry.task_id}>
+                {resultEntry.name}
+                {resultEntry.deactivated && " (bei der Bewertung ignoriert)"}
+              </Form.Label>
               <InputGroup>
+                {resultEntry.deactivated && (
+                  <InputGroup.Text>
+                    <i className="bi bi-slash-circle" />
+                  </InputGroup.Text>
+                )}
                 <Form.Control
                   defaultValue={resultEntry.points}
                   {...register(resultEntry.task_id, {

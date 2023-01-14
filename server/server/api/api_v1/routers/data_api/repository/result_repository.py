@@ -13,6 +13,7 @@ from server.api.api_v1.routers.data_api.models import (
     Exam,
     SchoolClass,
     Student,
+    Task,
 )
 from server.config import ExamManagerSettings
 
@@ -108,17 +109,29 @@ async def list_student_result_responses(exam: Exam, school_class_id: str) -> Lis
     # Student with StudentResult
     students_with_student_result = await student_collection.aggregate(pipeline).to_list(1000)
 
+    def is_deactivated(task: Task) -> bool:
+        if task.deactivated_for is not None and school_class_id in task.deactivated_for:
+            return True
+        else:
+            return False
+
     # Now merge the Tasks and ResultEntries and erase all the irrelevant info from the StudentResultResponse
     for student in students_with_student_result:
-        if "result" in student:
-            if "self_assessment" in student["result"]:
-                student["self_assessment"] = student["result"]["self_assessment"]
-            student["result"] = [
-                result_entry | tasks[result_entry["task_id"]].dict()
-                for result_entry in student["result"]["points_per_task"]
-            ]
-            if "self_assessment" in student["result"]:
-                student["self_assessment"] = student["result"]["self_assessment"]
+        # Skip students without Result
+        if "result" not in student:
+            continue
+        # Extract Optional Self Assessment
+        if "self_assessment" in student["result"]:
+            student["self_assessment"] = student["result"]["self_assessment"]
+
+        student["result"] = [
+            result_entry
+            | tasks[result_entry["task_id"]].dict()
+            | {"deactivated": is_deactivated(tasks[result_entry["task_id"]])}
+            for result_entry in student["result"]["points_per_task"]
+        ]
+        if "self_assessment" in student["result"]:
+            student["self_assessment"] = student["result"]["self_assessment"]
 
     return list(map(lambda result: StudentResultResponse.parse_obj(result), students_with_student_result))
 

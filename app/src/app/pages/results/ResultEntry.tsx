@@ -51,6 +51,11 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
    *  Rendering
    *
    *******************************************************************************************************************/
+
+  const deactivatedTasks = examResults?.exam.tasks.filter(
+    ({ deactivated_for }) => schoolClass && deactivated_for?.includes(schoolClass._id)
+  )
+
   return (
     <DrawerModal show={!!exam} close={close}>
       <div className="page-header">
@@ -96,12 +101,16 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
                 {examResults?.exam.description}
               </p>
               <p>
-                <i className="bi bi-patch-check" /> {examResults?.exam.tasks.reduce((a, b) => a + b.max_points, 0)}{" "}
-                Punkte
+                <i className="bi bi-patch-check" /> {deactivatedTasks?.reduce((a, b) => a + b.max_points, 0)} Punkte
               </p>
               <p>
                 <i className="bi bi-check2-square" /> {examResults?.exam.tasks.length} Aufgaben
               </p>
+              {!!deactivatedTasks?.length && (
+                <p>
+                  <i className="bi bi-slash-circle" /> {deactivatedTasks.length} Aufgabe deaktiviert
+                </p>
+              )}
             </Card.Body>
           </Card>
         </Col>

@@ -21,7 +21,9 @@ const StudentResultItem: FunctionComponent<StudentResultItemProps> = ({ studentR
   const [sumOfPoints, rating] = useMemo(() => {
     if (!studentResultsResponse.result || !exam) return [0, undefined]
 
-    const sum = studentResultsResponse.result!.reduce((sum, entry) => sum + entry.points, 0)
+    const sum = studentResultsResponse
+      .result!.filter((entry) => !entry.deactivated)
+      .reduce((sum, entry) => sum + entry.points, 0)
 
     return [sum, calcGrade(exam, sum)]
   }, [studentResultsResponse.result])

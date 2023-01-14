@@ -49,19 +49,20 @@ const StudentResultList: FunctionComponent<StudentResultListProps> = ({}) => {
             <th>Note</th>
             <th>Gesamt</th>
             {exam?.tasks.map((task) => (
-              <th key={task._id}>{task.name}</th>
+              <th key={task._id}>
+                {task.name} {schoolClass && task.deactivated_for?.includes(schoolClass._id) && "(deaktiviert)"}
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {examResults &&
-            examResults.studentResults.map((studentResult) => (
-              <StudentResultItem
-                key={studentResult._id}
-                studentResultsResponse={studentResult}
-                mode={gradesModeList[mode]}
-              />
-            ))}
+          {examResults?.studentResults.map((studentResult) => (
+            <StudentResultItem
+              key={studentResult._id}
+              studentResultsResponse={studentResult}
+              mode={gradesModeList[mode]}
+            />
+          ))}
         </tbody>
       </Table>
     </ExpandableCard>

@@ -2,7 +2,7 @@ import React, { FunctionComponent, useState } from "react"
 import { Exam } from "./types"
 import { ListGroup } from "react-bootstrap"
 import DrawerModal from "../../components/drawer-modal/DrawerModal"
-import ExamOverview from "./exam-details/ExamOverview"
+import ExamOverview from "./exam-overview/ExamOverview"
 import LetterIcon from "../../components/letter-icon/LetterIcon"
 
 type ExamsListItemProps = {

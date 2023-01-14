@@ -38,6 +38,7 @@ export interface StudentResult {
 export interface ResultEntry extends Task {
   task_id: string
   points: number
+  deactivated: boolean
 }
 
 export interface CreateResultRequest {

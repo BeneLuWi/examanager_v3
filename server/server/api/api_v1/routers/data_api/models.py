@@ -114,6 +114,10 @@ class ResultEntryResponse(ResultEntry, Task):
     Extends the Result entry by Information about the Task
     """
 
+    deactivated: bool = Field(
+        default=False, description="Specifies if the Task is deactivated for the Student's SchoolClass"
+    )
+
 
 class StudentResultResponse(Student):
     result: Optional[List[ResultEntryResponse]]
