@@ -6,6 +6,7 @@ import StudentResultItem from "./StudentResultItem"
 import { useFetchResults } from "./api"
 import ListGroupCard from "../../components/list-group-card/ListGroupCard"
 import Form from "react-bootstrap/Form"
+import EditExamButton from "../exams/EditExamButton"
 
 type ResultEntryProps = {}
 
@@ -55,6 +56,9 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
   const deactivatedTasks = examResults?.exam.tasks.filter(
     ({ deactivated_for }) => schoolClass && deactivated_for?.includes(schoolClass._id)
   )
+  const activateTasks = examResults?.exam.tasks.filter(
+    ({ deactivated_for }) => schoolClass && !deactivated_for?.includes(schoolClass._id)
+  )
 
   return (
     <DrawerModal show={!!exam} close={close}>
@@ -101,7 +105,7 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
                 {examResults?.exam.description}
               </p>
               <p>
-                <i className="bi bi-patch-check" /> {deactivatedTasks?.reduce((a, b) => a + b.max_points, 0)} Punkte
+                <i className="bi bi-patch-check" /> {activateTasks?.reduce((a, b) => a + b.max_points, 0)} Punkte
               </p>
               <p>
                 <i className="bi bi-check2-square" /> {examResults?.exam.tasks.length} Aufgaben
@@ -111,6 +115,7 @@ const ResultEntry: FunctionComponent<ResultEntryProps> = ({}) => {
                   <i className="bi bi-slash-circle" /> {deactivatedTasks.length} Aufgabe deaktiviert
                 </p>
               )}
+              {examResults && <EditExamButton exam={examResults.exam} />}
             </Card.Body>
           </Card>
         </Col>

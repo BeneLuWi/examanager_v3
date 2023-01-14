@@ -97,7 +97,7 @@ const StatisticsPage: FunctionComponent<StatisticsPageProps> = ({}) => {
             </Row>
 
             <Row className="mt-4">
-              <ExamDetails exam={exam} />
+              <ExamDetails exam={studentResults.exam} />
             </Row>
 
             <Row className="mt-4">

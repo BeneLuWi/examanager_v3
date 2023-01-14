@@ -2,6 +2,7 @@ import React, { FunctionComponent } from "react"
 import { Exam } from "../../exams/types"
 import { Card, Col, ListGroup } from "react-bootstrap"
 import RatingList from "./RatingList"
+import EditExamButton from "../../exams/EditExamButton"
 
 type ExamDetailsProps = {
   exam: Exam
@@ -45,6 +46,7 @@ const ExamDetails: FunctionComponent<ExamDetailsProps> = ({ exam }) => {
             <p>
               <i className="bi bi-check2-square" /> {exam.tasks.length} Aufgaben
             </p>
+            {<EditExamButton exam={exam} />}
           </Card.Body>
         </Card>
       </Col>
